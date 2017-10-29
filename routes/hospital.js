@@ -9,6 +9,8 @@ router.get('/', function (req, res, next) {
         if (0 === response.code) {
             res.json(response.msg);
         } else {
+            var err = new Error(response.msg);
+            err.status = response.code;
             next(new Error(response.msg));
         }
     });
