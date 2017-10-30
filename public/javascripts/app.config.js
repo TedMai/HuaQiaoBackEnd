@@ -2,7 +2,7 @@
 
 angular
     .module('ptHuaQiao')
-    .config('$routeProvider', function ($routeProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             //  当URL 映射段为/Shadow 时，进入后台
             .when('/Shadow', {
@@ -12,4 +12,4 @@ angular
             .otherwise({
                 redirectTo: '/Shadow'
             });
-    });
+    }]);

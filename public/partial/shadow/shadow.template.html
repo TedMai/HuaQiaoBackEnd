@@ -1,1 +1,7 @@
-<h1>shadow</h1>
+<div ng-repeat="doctor in $ctrl.doctors">
+    <h1>姓名： {{doctor.name}}</h1>
+    <h2>职称： {{doctor.title}}</h2>
+    <h2>岗位： {{doctor.position}}</h2>
+    <p>简历： {{doctor.resume}}</p>
+    <p>擅长： {{doctor.field}}</p>
+</div>

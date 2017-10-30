@@ -4,6 +4,6 @@ angular
     .module('shadow.core')
     .factory('Shadow', ['$resource',
         function ($resource) {
-            return $resource('', {}, {});
+            return $resource('/hospital', {}, {});
         }
     ]);
