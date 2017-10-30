@@ -37,7 +37,7 @@ var api = {
     },
 
     fetchAllDoctors: function (callback) {
-        console.info("hospital.api.js ==> dbAllDoctors");
+        console.info("hospital.api.js ==> fetchAllDoctors");
 
         var
             // 使用mysql.config.js的配置信息创建一个MySQL连接池
