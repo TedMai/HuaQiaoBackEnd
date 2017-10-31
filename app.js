@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 const index = require('./routes/index.js');
 const hospital = require('./routes/hospital.js');
+const department = require('./routes/department.js');
 
 var app = express();
 
@@ -20,10 +21,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/hospital', hospital);
+app.use('/department', department);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

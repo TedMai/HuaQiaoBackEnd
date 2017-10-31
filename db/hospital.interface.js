@@ -1,4 +1,6 @@
 module.exports =
     {
-        queryAll: 'SELECT * FROM tb_doctor'
+        fetchHospitalList: 'SELECT * FROM tb_hospital',
+        addHospital: 'INSERT INTO tb_hospital SET ?',
+        insertHospitalGallery: 'INSERT INTO tb_gallery SET ?'
     };

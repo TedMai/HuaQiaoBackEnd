@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-var api = require('../db/hospital.api');
+var api = require('../db/department.api');
 
 router.get('/', function (req, res, next) {
-    console.log("hospital.js ==> Fetch all hospitals");
-    api.fetchHospitalList(function (response) {
+    console.log("department.js ==> Fetch all departments");
+    api.fetchDepartmentList(function (response) {
         if (0 === response.code) {
             res.json(response.msg);
         } else {
@@ -16,8 +16,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/add', function (req, res, next) {
-    console.log("hospital.js ==> Add new hospital");
-    api.addHospital(req, function (response) {
+    console.log("department.js ==> Add new department");
+    api.addDepartment(req, function (response) {
         if (0 === response.code) {
             res.json(response.msg);
         } else {
