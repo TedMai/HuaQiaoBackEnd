@@ -106,11 +106,43 @@ module.exports =
             return deferred.promise;
         },
 
+        /**
+         * 编辑 - 基本信息
+         * @param request
+         * @returns {*|Promise|promise}
+         */
         updateBasicInfo: function (request) {
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlUpdateInfo, request.params.information, function (err, result) {
                 console.info("==> updateBasicInfo ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    result: result
+                });
+            });
+
+            return deferred.promise;
+        },
+
+        /**
+         * 删除 - 基本信息
+         * @param request
+         * @returns {*|Promise|promise}
+         */
+        deleteBasicInfo: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.sqlDeleteInfo, request.params.information, function (err, result) {
+                console.info("==> deleteBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
