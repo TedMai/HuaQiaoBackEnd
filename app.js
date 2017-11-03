@@ -9,6 +9,7 @@ const index = require('./routes/index.js');
 const hospital = require('./routes/hospital.js');
 const department = require('./routes/department.js');
 const doctor = require('./routes/doctor.js');
+const backbone = require('./routes/backbone.js');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/', index);
 app.use('/hospital', hospital);
 app.use('/department', department);
 app.use('/doctor', doctor);
+app.use("/backbone", backbone);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

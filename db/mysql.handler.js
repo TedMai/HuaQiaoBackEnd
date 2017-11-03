@@ -213,6 +213,19 @@ module.exports =
             return deferred.promise;
         },
 
+        fetchDataSet: function (request) {
+            var deferred = Q.defer();
+
+            console.info("==>   fetchDataSet");
+
+            for(var table in request.params){
+                console.info(table);
+                console.info(request.params[table]);
+            }
+
+            return deferred.promise;
+        },
+
         /**
          * 扫尾 - 释放连接
          * @param request
