@@ -5,28 +5,42 @@ angular
     .component('shadow', {
         templateUrl: "partial/shadow/shadow.template.html",
         controller: [
-            'Shadow',
-            function ShadowController(Shadow) {
-                var that =  this;
+            'Pathfinder', 'Container', '$window',
+            function ShadowController(Pathfinder, Container, $window) {
+                var that = this;
 
-                Shadow.query(
+                Pathfinder.get(
                     {},
                     function (response) {
-
-                        var i,
-                            length;
-
-                        for (i = 0, length = response.length; i < length; i++) {
-                            console.info(response[i]);
+                        /**
+                         * 数据
+                         */
+                        if (response.hasOwnProperty("hospital") && response.hospital) {
+                            that.hospitals = JSON.parse(response.hospital);
                         }
-
-                        that.doctors = response;
+                        if (response.hasOwnProperty("department") && response.department) {
+                            that.departments = JSON.parse(response.department);
+                        }
+                        if (response.hasOwnProperty("doctor") && response.doctor) {
+                            that.doctors = JSON.parse(response.doctor);
+                        }
 
                     },
                     function (err) {
                         console.error(err);
                     }
                 );
+
+                this.toDetail = function (targetUrl, data) {
+                    Container.set(data);
+                    $window.location = targetUrl;
+                };
+
+                this.edit = function (target, data) {
+                    console.info("==>   Edit | " + target)
+                    Container.set(data);
+                    $window.location = '#/Edit/' + target;
+                }
             }
         ]
     });

@@ -107,6 +107,7 @@ var api = {
 
         HANDLER
             .setUpConnection({
+                tableName: 'hospital',
                 execSQL: EXEC_SQL.fetchHospitalList,
                 values: null
             })

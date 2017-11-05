@@ -5,7 +5,6 @@ module.exports = {
             response.json(request.msg);
         } else {
             var err = new Error(request.msg);
-            err.status = request.code;
             next(err);
         }
     }

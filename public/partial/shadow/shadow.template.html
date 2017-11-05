@@ -1,8 +1,81 @@
-<h1>后台</h1>
-<div ng-repeat="doctor in $ctrl.doctors">
-    <h1>姓名： {{doctor.name}}</h1>
-    <h2>职称： {{doctor.title}}</h2>
-    <h2>岗位： {{doctor.position}}</h2>
-    <p>简历： {{doctor.resume}}</p>
-    <p>擅长： {{doctor.field}}</p>
-</div>
+<h1>医院</h1>
+<h2>
+    <a ng-click="$ctrl.edit('Hospital', {})">新增</a>
+</h2>
+<table>
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>地址</th>
+        <th>电话</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="hospital in $ctrl.hospitals">
+        <td>
+            <a ng-click="$ctrl.toDetail('#/Hospital', hospital)">{{hospital.name}}</a>
+        </td>
+        <td>{{hospital.address}}</td>
+        <td>{{hospital.contact}}</td>
+        <td>
+            <a ng-click="$ctrl.edit('Hospital', hospital)">编辑</a>
+            <a>删除</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h1>科室</h1>
+<h2>
+    <a ng-click="$ctrl.edit('Department', {})">新增</a>
+</h2>
+<table>
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>隶属单位</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="department in $ctrl.departments">
+        <td>
+            <a ng-click="$ctrl.toDetail('#/Department', department)">{{department.name}}</a>
+        </td>
+        <td>{{department.hospital}}</td>
+        <td>
+            <a ng-click="$ctrl.edit('Department', department)">编辑</a>
+            <a>删除</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h1>医生</h1>
+<h2>
+    <a ng-click="$ctrl.edit('Doctor', {})">新增</a>
+</h2>
+<table>
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>职称</th>
+        <th>岗位</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="doctor in $ctrl.doctors">
+        <td>
+            <a ng-click="$ctrl.toDetail('#/Doctor', doctor)">{{doctor.name}}</a>
+        </td>
+        <td>{{doctor.title}}</td>
+        <td>{{doctor.position}}</td>
+        <td>
+            <a ng-click="$ctrl.edit('Doctor', doctor)">编辑</a>
+            <a>删除</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

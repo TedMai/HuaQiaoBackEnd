@@ -8,7 +8,23 @@ angular
             .when('/Shadow', {
                 template: '<shadow></shadow>'
             })
-            //  当浏览器地址不能匹配我们任何一个路由规则时，触发重定向到/Hospital
+            //  当URL 映射段为/Hospital 时，进入医院
+            .when('/Hospital', {
+                template: '<hospital></hospital>'
+            })
+            //  当URL 映射段为/Department 时，进入科室
+            .when('/Department', {
+                template: '<department></department>'
+            })
+            //  当URL 映射段为/Doctor 时，进入医生
+            .when('/Doctor', {
+                template: '<doctor></doctor>'
+            })
+            //  当URL 映射段为/Edit/XXX 时，进入 新建/编辑 页面
+            .when('/Edit/:target', {
+                template: '<create></create>'
+            })
+            //  当浏览器地址不能匹配我们任何一个路由规则时，触发重定向到/Shadow
             .otherwise({
                 redirectTo: '/Shadow'
             });

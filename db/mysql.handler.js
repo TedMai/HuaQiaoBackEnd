@@ -3,7 +3,7 @@ const MYSQL = require('mysql');
 const CODE = require('./mysql.code');
 const CONFIG = require('./mysql.config');
 
-module.exports =
+var handler =
     {
         // 使用mysql.config.js的配置信息创建一个MySQL连接池
         pool: MYSQL.createPool(CONFIG.mysql),
@@ -197,6 +197,7 @@ module.exports =
 
             console.info("==>   fetchList");
             request.connection.query(request.params.execSQL, request.params.values, function (err, result) {
+
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -206,6 +207,7 @@ module.exports =
                 }
                 deferred.resolve({
                     connection: request.connection,
+                    tableName: request.params.tableName,
                     result: result
                 });
             });
@@ -214,14 +216,46 @@ module.exports =
         },
 
         fetchDataSet: function (request) {
-            var deferred = Q.defer();
+            var item,
+                value,
+                promises = [],
+                deferred = Q.defer();
 
             console.info("==>   fetchDataSet");
 
-            for(var table in request.params){
-                console.info(table);
-                console.info(request.params[table]);
+            for (item in request.params) {
+
+                value = {
+                    connection: request.connection,
+                    params: {
+                        tableName: item,
+                        execSQL: request.params[item],
+                        values: null
+                    }
+                };
+
+                promises.push(handler.fetchList(value));
             }
+
+            Q.all(promises)
+                .then(
+                    function (result) {
+                        var final = {};
+
+                        console.info("==>  Q.all  ==>  callback");
+                        result.forEach(function (element) {
+                            final[element.tableName] = JSON.stringify(element.result);
+                        });
+
+                        deferred.resolve({
+                            connection: request.connection,
+                            result: final
+                        });
+                    },
+                    function (error) {
+                        deferred.reject(error);
+                    }
+                );
 
             return deferred.promise;
         },
@@ -279,3 +313,5 @@ module.exports =
             });
         }
     };
+
+module.exports = handler;

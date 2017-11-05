@@ -5,7 +5,8 @@ const api = require('../db/shadow.api');
 
 router.get('/', function (req, res, next) {
     console.log("shadow.js ==> Fetch data set.");
-    api.initialization(function (request) {
+    api.initialization(req, function (request) {
+        console.info("shadow.js ==> Render page.");
         render.renderPage(request, res, next);
     });
 });

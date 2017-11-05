@@ -2,7 +2,11 @@
 
 // Define 'ptHuaQiao' module
 
-angular.module('ptHuaQiao',[
+angular.module('ptHuaQiao', [
     'ngRoute',
-    'shadow'
+    'shadow',
+    'hospital',
+    'department',
+    'doctor',
+    'create'
 ]);
