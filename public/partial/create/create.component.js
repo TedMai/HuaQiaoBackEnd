@@ -8,7 +8,6 @@ angular
             'Container', '$location', '$scope', '$http',
             function (Container, $location, $scope, $http) {
                 var
-                    that = this,
                     data = Container.get();
                 /**
                  * 赋值
@@ -51,11 +50,9 @@ angular
                  */
                 this.uploadFile = function () {
                     console.info("==> Upload file");
-                    console.info(this.file);
-                    console.info($scope);
 
                     var formData = new FormData();
-                    formData.append("file", $scope.file);
+                    formData.append("file", $scope.myFile);
 
                     $http.post(
                         "/image",
