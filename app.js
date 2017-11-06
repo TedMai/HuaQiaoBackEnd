@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 // const department = require('./routes/department.js');
 // const doctor = require('./routes/doctor.js');
 const backbone = require('./routes/backbone.js');
+const processor =  require('./routes/processor.js');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/department', department);
 // app.use('/doctor', doctor);
 app.use("/backbone", backbone);
+app.use("/image", processor);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
