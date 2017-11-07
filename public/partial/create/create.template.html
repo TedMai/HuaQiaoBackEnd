@@ -17,13 +17,13 @@
     <h2>坐标：[{{$ctrl.hospital.axisX}} , {{$ctrl.hospital.axisY}}]</h2>
 
     <h2>医院图片</h2>
-    <input type="file" file-model="myFile">
+    <input type="file" file-model="myFile"><button ng-click=$ctrl.uploadFile()>上传</button>
     <div>
-        <img ng-src="{{imageUrl}}" style="max-width:300px;max-height:300px;margin:0 auto;display:block;"/>
+        <img ng-src="{{$ctrl.uploadImageUrl}}" style="max-width:300px;max-height:300px;margin:0 auto;display:block;"/>
     </div>
 
-    <button ng-click=$ctrl.uploadFile()>嗯嗯</button>
-
+    <br />
+    <button ng-click=$ctrl.save("hospital")>保存</button>
 </div>
 
 <div ng-show={{$ctrl.showDepartment}}>
@@ -32,6 +32,9 @@
 
     <h3>简介：</h3>
     <textarea>{{$ctrl.department.description}}</textarea>
+
+    <br />
+    <button ng-click=$ctrl.save("department")>保存</button>
 </div>
 
 <div ng-show={{$ctrl.showDoctor}}>
@@ -40,4 +43,7 @@
 
     <h3>职位：</h3>
     <textarea>{{$ctrl.doctor.position}}</textarea>
+
+    <br />
+    <button ng-click=$ctrl.save("doctor")>保存</button>
 </div>

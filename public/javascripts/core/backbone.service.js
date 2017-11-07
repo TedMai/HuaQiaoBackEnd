@@ -7,6 +7,11 @@ angular
             return $resource('/backbone', {}, {});
         }
     ])
+    .factory('Table', ['$resource',
+        function ($resource) {
+            return $resource("/backbone/table/:name", {name: '@name'}, {});
+        }
+    ])
     .factory('Container', function () {
         /**
          * define parameter object

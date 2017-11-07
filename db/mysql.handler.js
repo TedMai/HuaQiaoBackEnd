@@ -2,6 +2,7 @@ const Q = require('q');
 const MYSQL = require('mysql');
 const CODE = require('./mysql.code');
 const CONFIG = require('./mysql.config');
+const FORMAT = require('./utility.date');
 
 var handler =
     {
@@ -222,9 +223,7 @@ var handler =
                 deferred = Q.defer();
 
             console.info("==>   fetchDataSet");
-
             for (item in request.params) {
-
                 value = {
                     connection: request.connection,
                     params: {
@@ -240,10 +239,20 @@ var handler =
             Q.all(promises)
                 .then(
                     function (result) {
-                        var final = {};
+                        var i,
+                            length,
+                            final = {};
 
                         console.info("==>  Q.all  ==>  callback");
                         result.forEach(function (element) {
+                            if (element.tableName === "hospital") {
+                                for (i = 0, length = element.result.length; i < length; i++) {
+                                    if (element.result[i].hasOwnProperty("founding")) {
+                                        Date.prototype.format = FORMAT.format;
+                                        element.result[i].founding = new Date(element.result[i].founding).format("yyyy-MM-dd");
+                                    }
+                                }
+                            }
                             final[element.tableName] = JSON.stringify(element.result);
                         });
 
@@ -311,6 +320,29 @@ var handler =
                 code: request.code,
                 msg: request.errMsg
             });
+        },
+
+        transformResponse: function (request) {
+            var i,
+                length,
+                deferred = Q.defer();
+
+            console.info("==>   transformResponse");
+            for (i = 0, length = request.result.length; i < length; i++) {
+                console.info(request.result[i]);
+                if (request.result[i].hasOwnProperty("founding")) {
+                    Date.prototype.format = FORMAT.format;
+                    request.result[i].founding = new Date(request.result[i].founding).format("yyyy-MM-dd");
+                    console.info(request.result[i].founding);
+                }
+            }
+
+            deferred.resolve({
+                connection: request.connection,
+                result: request.result
+            });
+
+            return deferred.promise;
         }
     };
 

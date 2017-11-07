@@ -4,7 +4,7 @@ angular
     .module('ptHuaQiao')
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-            //  当URL 映射段为/Shadow 时，进入后台
+            //  当URL 映射段为/Shadow 时，进入后台首页
             .when('/Shadow', {
                 template: '<shadow></shadow>'
             })
