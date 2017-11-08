@@ -18,6 +18,7 @@ var api = {
                 gallery: request.body.gallery
             })
             .then(HANDLER.beginTransaction)
+            .then(HANDLER.transformRequest)
             .then(HANDLER.setBasicInfo)
             .then(HANDLER.insertGallery)
             .then(HANDLER.commitTransaction)
@@ -91,7 +92,6 @@ var api = {
                 values: null
             })
             .then(HANDLER.fetchList)
-            .then(HANDLER.transformResponse)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

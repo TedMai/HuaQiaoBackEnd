@@ -169,21 +169,32 @@ var handler =
         insertGallery: function (request) {
             var deferred = Q.defer();
 
-            request.params.gallery.relative = request.result.insertId;
-            request.connection.query(request.params.sqlInsertGallery, request.params.gallery, function (err, result) {
-                console.info("==> insertGallery ==> callback |  " + err);
-                if (err) {
-                    deferred.reject({
-                        connection: request.connection,
-                        code: CODE.failedCode,
-                        errMsg: err
-                    });
-                }
+            /**
+             * 未找到上传图集 直接跳过
+             */
+            if(!request.params.gallery.hasOwnProperty("imageurl")||
+                request.params.gallery.imageurl === ""){
                 deferred.resolve({
                     connection: request.connection,
-                    result: result
+                    result: "DONE"
                 });
-            });
+            } else {
+                request.params.gallery.relative = request.result.insertId;
+                request.connection.query(request.params.sqlInsertGallery, request.params.gallery, function (err, result) {
+                    console.info("==> insertGallery ==> callback |  " + err);
+                    if (err) {
+                        deferred.reject({
+                            connection: request.connection,
+                            code: CODE.failedCode,
+                            errMsg: err
+                        });
+                    }
+                    deferred.resolve({
+                        connection: request.connection,
+                        result: result
+                    });
+                });
+            }
 
             return deferred.promise;
         },
@@ -239,20 +250,10 @@ var handler =
             Q.all(promises)
                 .then(
                     function (result) {
-                        var i,
-                            length,
-                            final = {};
+                        var final = {};
 
                         console.info("==>  Q.all  ==>  callback");
                         result.forEach(function (element) {
-                            if (element.tableName === "hospital") {
-                                for (i = 0, length = element.result.length; i < length; i++) {
-                                    if (element.result[i].hasOwnProperty("founding")) {
-                                        Date.prototype.format = FORMAT.format;
-                                        element.result[i].founding = new Date(element.result[i].founding).format("yyyy-MM-dd");
-                                    }
-                                }
-                            }
                             final[element.tableName] = JSON.stringify(element.result);
                         });
 
@@ -320,6 +321,26 @@ var handler =
                 code: request.code,
                 msg: request.errMsg
             });
+        },
+
+        /**
+         * 转化时间格式
+         * 将 iso-8601 datetime 转换成 MySQL 可识别的 datetime
+         * @param request
+         * @returns {Promise|*|promise}
+         */
+        transformRequest: function (request) {
+            var deferred = Q.defer();
+
+            console.info("==>   transformRequest");
+            console.info(request.params.information);
+
+            Date.prototype.format = FORMAT.format;
+            request.params.information.founding = new Date(request.params.information.founding).format("yyyy-MM-dd");
+
+            deferred.resolve(request);
+
+            return deferred.promise;
         },
 
         transformResponse: function (request) {

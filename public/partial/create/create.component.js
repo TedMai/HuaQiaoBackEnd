@@ -17,6 +17,12 @@ angular
                     case '/Edit/Hospital':
                         this.showHospital = true;
                         this.hospital = data;
+                        /**
+                         * 时间转化为Date对象
+                         */
+                        if (data.hasOwnProperty("founding")) {
+                            this.hospital.founding = new Date(data.founding);
+                        }
                         break;
                     case '/Edit/Department':
                         this.showDepartment = true;

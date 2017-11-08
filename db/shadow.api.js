@@ -75,6 +75,7 @@ var api = {
     },
 
     query: function (request, response) {
+
         switch (request.params.name){
             case 'hospital':
                 // HOSPITAL.deleteHospital(request, response);
