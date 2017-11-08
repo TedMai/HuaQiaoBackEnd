@@ -20,7 +20,7 @@
         <td>{{hospital.contact}}</td>
         <td>
             <a ng-click="$ctrl.edit('Hospital', hospital)">编辑</a>
-            <a ng-click="$ctrl.delete('Hospital', hospital.hid)">删除</a>
+            <a ng-click="$ctrl.delete('hospital', hospital.hid)">删除</a>
         </td>
     </tr>
     </tbody>
@@ -46,7 +46,7 @@
         <td>{{department.hospital}}</td>
         <td>
             <a ng-click="$ctrl.edit('Department', department)">编辑</a>
-            <a>删除</a>
+            <a ng-click="$ctrl.delete('department', department.did)">删除</a>
         </td>
     </tr>
     </tbody>
@@ -74,7 +74,7 @@
         <td>{{doctor.position}}</td>
         <td>
             <a ng-click="$ctrl.edit('Doctor', doctor)">编辑</a>
-            <a>删除</a>
+            <a ng-click="$ctrl.delete('doctor', doctor.id)">删除</a>
         </td>
     </tr>
     </tbody>

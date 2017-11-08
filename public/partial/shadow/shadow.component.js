@@ -54,14 +54,14 @@ angular
                         function (response) {
                             console.info(response);
                             if (response.code === 0) {
-                                switch(target){
-                                    case 'Hospital':
+                                switch (target) {
+                                    case 'hospital':
                                         that.hospitals.remove("hid", id);
                                         break;
-                                    case 'Department':
+                                    case 'department':
                                         that.departments.remove("did", id);
                                         break;
-                                    case 'Doctor':
+                                    case 'doctor':
                                         that.doctors.remove("id", id);
                                         break;
                                     default:
@@ -74,6 +74,7 @@ angular
                         },
                         function (error) {
                             console.error(error);
+                            $window.alert(error);
                         });
                 }
             }

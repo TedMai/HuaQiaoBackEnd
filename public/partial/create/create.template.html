@@ -1,4 +1,4 @@
-<div ng-show={{$ctrl.showHospital}}>
+<div ng-show=$ctrl.showHospital>
     <form name="hospitalForm" ng-submit=$ctrl.save("hospital") novalidate>
         <h2>名称：</h2>
         <input type="text" name="hospitalName" placeholder="请输入医院名称" ng-model=$ctrl.hospital.name ng-maxlength="20"
@@ -24,39 +24,72 @@
         <input type="text" name="hospitalPhone" placeholder="请输入医院电话" ng-model=$ctrl.hospital.contact>
 
         <h2>坐标：</h2>
-        <input type="number" name="hospitalAxisX" placeholder="经度" ng-model=$ctrl.hospital.axisX required>  -
+        <input type="number" name="hospitalAxisX" placeholder="经度" ng-model=$ctrl.hospital.axisX required> -
         <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model=$ctrl.hospital.axisY required>
-        <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required" >* 必填项</span>
+        <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required">* 必填项</span>
 
         <h2>医院图片</h2>
-        <input type="file" file-model="myFile"><button ng-click=$ctrl.uploadFile()>上传</button>
+        <input type="file" file-model="myFile">
+        <button ng-click=$ctrl.uploadFile()>上传</button>
 
         <br/><br/>
         <button type="submit" ng-disabled="hospitalForm.$invalid">提交</button>
-        <!--<div>-->
-        <!--<img ng-src=$ctrl.uploadImageUrl style="max-width:300px;max-height:300px;margin:0 auto;display:block;"/>-->
-        <!--</div>-->
     </form>
 </div>
 
-<div ng-show={{$ctrl.showDepartment}}>
-    <h1>名称：</h1>
-    <input type="text" required value="{{$ctrl.department.name}}" ng-maxlength="16"/>
 
-    <h3>简介：</h3>
-    <textarea>{{$ctrl.department.description}}</textarea>
+<div ng-show=$ctrl.showDepartment>
+    <form name="departmentForm" ng-submit=$ctrl.save("department") novalidate>
+        <h3>名称：</h3>
+        <input type="text" name="departmentName" placeholder="请输入科室名称" ng-model=$ctrl.department.name ng-maxlength="20"
+               required/>
+        <span ng-show=departmentForm.departmentName.$error.required>* 必填项</span>
+        <span ng-show=departmentForm.departmentName.$error.maxlength>超出最大输入长度</span>
 
-    <br/>
-    <button ng-click=$ctrl.save("department")>保存</button>
+        <h3>简介：</h3>
+        <textarea name="departmentDescription" placeholder="请输入科室简介" ng-model=$ctrl.department.description
+                  ng-minlength="14" required></textarea>
+        <span ng-show=departmentForm.departmentDescription.$error.required>* 必填项</span>
+        <span ng-show=departmentForm.departmentDescription.$error.minlength>最少输入14个字</span>
+
+        <h3>隶属医院</h3>
+        <select required></select>
+
+        <br/><br/>
+        <button type="submit" ng-disabled="departmentForm.$invalid">提交</button>
+    </form>
 </div>
 
-<div ng-show={{$ctrl.showDoctor}}>
-    <h1>名称：</h1>
-    <input type="text" required value="{{$ctrl.doctor.name}}" ng-maxlength="16"/>
+<div ng-show=$ctrl.showDoctor>
+    <form name="doctorForm" ng-submit=$ctrl.save("doctor") novalidate>
+        <h3>名称：</h3>
+        <input type="text" name="doctorName" placeholder="请输入医生名字" ng-model=$ctrl.doctor.name ng-maxlength="20"
+               required/>
+        <span ng-show=doctorForm.doctorName.$error.required>* 必填项</span>
+        <span ng-show=doctorForm.doctorName.$error.maxlength>超出最大输入长度</span>
 
-    <h3>职位：</h3>
-    <textarea>{{$ctrl.doctor.position}}</textarea>
+        <h3>职位：</h3>
+        <input type="text" name="doctorPosition" placeholder="请输入医生职位" ng-model=$ctrl.doctor.position ng-maxlength="20"
+               required/>
+        <span ng-show=doctorForm.doctorPosition.$error.required>* 必填项</span>
+        <span ng-show=doctorForm.doctorPosition.$error.maxlength>超出最大输入长度</span>
 
-    <br/>
-    <button ng-click=$ctrl.save("doctor")>保存</button>
+        <h3>职称：</h3>
+        <input type="text" name="doctorTitle" placeholder="请输入医生职称" ng-model=$ctrl.doctor.title ng-maxlength="20"
+               required/>
+        <span ng-show=doctorForm.doctorTitle.$error.required>* 必填项</span>
+        <span ng-show=doctorForm.doctorTitle.$error.maxlength>超出最大输入长度</span>
+
+        <h3>简历：</h3>
+        <textarea name="doctorResume" placeholder="请输入医生简历" ng-model=$ctrl.doctor.resume></textarea>
+
+        <h3>擅长领域：</h3>
+        <textarea name="doctorField" placeholder="请输入擅长领域" ng-model=$ctrl.doctor.field></textarea>
+
+        <h3>隶属科室</h3>
+        <select required></select>
+
+        <br/><br/>
+        <button type="submit" ng-disabled="doctorForm.$invalid">提交</button>
+    </form>
 </div>

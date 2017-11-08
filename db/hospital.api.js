@@ -62,11 +62,12 @@ var api = {
      * @param response
      */
     deleteHospital: function (request, response) {
+        console.info("deleteHospital    ==>     ID: " + request.params.id);
 
         HANDLER
             .setUpConnection({
                 sqlDeleteInfo: EXEC_SQL.deleteHospital,
-                information: [4]
+                information: [request.params.id]
             })
             .then(HANDLER.deleteBasicInfo)
             .then(HANDLER.cleanup)

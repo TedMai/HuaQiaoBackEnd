@@ -44,9 +44,8 @@ router.post("/table/:name/id/:id", function (req, res, next) {
     console.log(req.body);
     console.log(req.query);
 
-    res.json({
-        code: 0,
-        msg: "OK"
+    api.delete(req, function (request) {
+        res.json(request);
     });
 });
 
