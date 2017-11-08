@@ -20,7 +20,7 @@
         <td>{{hospital.contact}}</td>
         <td>
             <a ng-click="$ctrl.edit('Hospital', hospital)">编辑</a>
-            <a>删除</a>
+            <a ng-click="$ctrl.delete('Hospital', hospital.hid)">删除</a>
         </td>
     </tr>
     </tbody>

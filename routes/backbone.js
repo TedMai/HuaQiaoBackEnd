@@ -22,28 +22,31 @@ router.get('/table/:name/id/:id', function (req, res, next) {
 });
 
 router.post("/table/:name", function (req, res, next) {
-    console.log("backbone.js ==> insert.");
+    console.log("backbone.js ==> insert | edit");
     console.log(req.params);
     console.log(req.body);
+    console.log(req.query);
 
-    api.insert(req, function (request) {
-        res.json({
-            code: 0,
-            msg: "success"
+    if (req.query && req.query.hasOwnProperty("id")) {
+        api.update(req, function (request) {
+            res.json(request);
         });
-    });
+    } else {
+        api.insert(req, function (request) {
+            res.json(request);
+        });
+    }
 });
 
 router.post("/table/:name/id/:id", function (req, res, next) {
-    console.log("backbone.js ==> edit.");
+    console.log("backbone.js ==> delete");
     console.log(req.params);
     console.log(req.body);
+    console.log(req.query);
 
-    api.update(req, function (request) {
-        res.json({
-            code: 0,
-            msg: "success"
-        });
+    res.json({
+        code: 0,
+        msg: "OK"
     });
 });
 

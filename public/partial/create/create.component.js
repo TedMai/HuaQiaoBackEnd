@@ -61,7 +61,8 @@ angular
 
                     Table.save(
                         {
-                            name: name
+                            name: name,
+                            id: this.hospital.hid
                         },
                         {
                             information: this.hospital,
@@ -73,12 +74,20 @@ angular
                         },
                         function (response) {
                             console.log(response);
+                            if (response.code === 0) {
+                                $window.alert("保存成功");
+                            } else {
+                                $window.alert(response.msg);
+                            }
+                            $location.path("/");
                         },
                         function (error) {
                             console.error(error);
+                            $location.path("/");
                         }
                     );
-                }
-            }
+                };
+                /** end of save **/
+            }   /** end of controller **/
         ]
     });

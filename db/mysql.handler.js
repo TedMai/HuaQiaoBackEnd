@@ -333,10 +333,9 @@ var handler =
             var deferred = Q.defer();
 
             console.info("==>   transformRequest");
-            console.info(request.params.information);
-
             Date.prototype.format = FORMAT.format;
-            request.params.information.founding = new Date(request.params.information.founding).format("yyyy-MM-dd");
+            request.body.information.founding = new Date(request.body.information.founding).format("yyyy-MM-dd");
+            console.info(request.body.information);
 
             deferred.resolve(request);
 

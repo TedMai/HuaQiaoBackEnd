@@ -12,6 +12,11 @@ angular
             return $resource("/backbone/table/:name", {name: '@name'}, {});
         }
     ])
+    .factory('Cleaner', ['$resource',
+        function ($resource) {
+            return $resource("/backbone/table/:name/id/:id", {name: '@name', id: '@id'}, {});
+        }
+    ])
     .factory('Container', function () {
         /**
          * define parameter object

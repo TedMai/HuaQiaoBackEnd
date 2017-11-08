@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('shadow', ['backbone.core']);
+angular.module('shadow', ['backbone.core','utility.core']);

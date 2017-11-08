@@ -10,6 +10,8 @@ var api = {
      */
     addHospital: function (request, response) {
 
+        HANDLER.transformRequest(request);
+
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addHospital,
@@ -18,7 +20,6 @@ var api = {
                 gallery: request.body.gallery
             })
             .then(HANDLER.beginTransaction)
-            .then(HANDLER.transformRequest)
             .then(HANDLER.setBasicInfo)
             .then(HANDLER.insertGallery)
             .then(HANDLER.commitTransaction)
@@ -38,10 +39,12 @@ var api = {
      */
     editHospital: function (request, response) {
 
+        HANDLER.transformRequest(request);
+
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editHospital,
-                information: [request.body.information, request.body.information.hid]
+                information: [request.body.information, request.query.id]
             })
             .then(HANDLER.updateBasicInfo)
             .then(HANDLER.cleanup)
@@ -49,7 +52,7 @@ var api = {
                 response(result);
             })
             .catch(function (request) {
-                HANDLER.onReject(request, response);
+                HANDLER.onRejectWithRollback(request, response);
             });
     },
 
@@ -73,10 +76,6 @@ var api = {
             .catch(function (request) {
                 HANDLER.onReject(request, response);
             });
-    },
-
-    fetchHospitalDetail: function (req, res) {
-
     },
 
     /**
