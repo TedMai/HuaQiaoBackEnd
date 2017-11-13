@@ -17,6 +17,11 @@ angular
             return $resource("/backbone/table/:name/id/:id", {name: '@name', id: '@id'}, {});
         }
     ])
+    .factory('SelectHelper', ['$resource',
+        function ($resource) {
+            return $resource('/backbone/select/:name', {name: '@name'}, {});
+        }
+    ])
     .factory('Container', function () {
         /**
          * define parameter object

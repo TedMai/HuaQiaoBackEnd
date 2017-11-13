@@ -102,6 +102,47 @@ var api = {
             default:
                 break;
         }
+    },
+
+    selectOptions: function(request, response){
+
+        switch (request.params.name) {
+            case 'department':
+                HANDLER
+                    .setUpConnection({
+                        execSQL: EXEC_SQL.extractHospitalSelect
+                    })
+                    .then(HANDLER.fetchList)
+                    .then(HANDLER.cleanup)
+                    .then(function (result) {
+                        response(result);
+                    })
+                    .catch(function (request) {
+                        HANDLER.onReject(request, response);
+                    });
+                break;
+            case 'doctor':
+                HANDLER
+                    .setUpConnection({
+                        execSQL: EXEC_SQL.extractDepartmentSelect
+                    })
+                    .then(HANDLER.fetchList)
+                    .then(HANDLER.cleanup)
+                    .then(function (result) {
+                        response(result);
+                    })
+                    .catch(function (request) {
+                        HANDLER.onReject(request, response);
+                    });
+                break;
+            default:
+                response({
+                    code: CODE.failedCode,
+                    msg: "Parameter - " + request.params.name + " not found."
+                });
+                break;
+        }
+
     }
 
 };

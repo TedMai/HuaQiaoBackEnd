@@ -14,19 +14,8 @@ var api = {
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addDoctor,
                 sqlInsertGallery: EXEC_SQL.insertDoctorGallery,
-                information: {
-                    name: "陈扬俊",
-                    title: "副主任医师",
-                    position: "内镜中心主任",
-                    resume: "大学本科，毕业于福建中医学院，曾于福建医科大学附一医院深造心血管内科，于省立医院进修胃镜操作及诊疗",
-                    field: "擅长高血压病、冠心病、心律失常等心血管病及胃镜、胃肠道疾病的诊治",
-                    department: 22
-                },
-                gallery: {
-                    imageurl: "20170929/201709290911091537.jpeg",
-                    type: 2,
-                    relative: 0
-                }
+                information: request.body.information,
+                gallery: request.body.gallery
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.setBasicInfo)

@@ -1,6 +1,6 @@
 <h1>医院</h1>
 <h2>
-    <a ng-click="$ctrl.edit('Hospital', {})">新增</a>
+    <a ng-click="$ctrl.edit('hospital', {})">新增</a>
 </h2>
 <table>
     <thead>
@@ -19,16 +19,18 @@
         <td>{{hospital.address}}</td>
         <td>{{hospital.contact}}</td>
         <td>
-            <a ng-click="$ctrl.edit('Hospital', hospital)">编辑</a>
+            <a ng-click="$ctrl.edit('hospital', hospital)">编辑</a>
             <a ng-click="$ctrl.delete('hospital', hospital.hid)">删除</a>
         </td>
     </tr>
     </tbody>
 </table>
 
+<hr>
+
 <h1>科室</h1>
 <h2>
-    <a ng-click="$ctrl.edit('Department', {})">新增</a>
+    <a ng-click="$ctrl.edit('department', {})">新增</a>
 </h2>
 <table>
     <thead>
@@ -43,18 +45,20 @@
         <td>
             <a ng-click="$ctrl.toDetail('#/Department', department)">{{department.name}}</a>
         </td>
-        <td>{{department.hospital}}</td>
+        <td>{{department.hospitalName}}</td>
         <td>
-            <a ng-click="$ctrl.edit('Department', department)">编辑</a>
+            <a ng-click="$ctrl.edit('department', department)">编辑</a>
             <a ng-click="$ctrl.delete('department', department.did)">删除</a>
         </td>
     </tr>
     </tbody>
 </table>
 
+<hr>
+
 <h1>医生</h1>
 <h2>
-    <a ng-click="$ctrl.edit('Doctor', {})">新增</a>
+    <a ng-click="$ctrl.edit('doctor', {})">新增</a>
 </h2>
 <table>
     <thead>
@@ -62,6 +66,7 @@
         <th>姓名</th>
         <th>职称</th>
         <th>岗位</th>
+        <th>科室</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -72,8 +77,9 @@
         </td>
         <td>{{doctor.title}}</td>
         <td>{{doctor.position}}</td>
+        <td>{{doctor.departmentName}}</td>
         <td>
-            <a ng-click="$ctrl.edit('Doctor', doctor)">编辑</a>
+            <a ng-click="$ctrl.edit('doctor', doctor)">编辑</a>
             <a ng-click="$ctrl.delete('doctor', doctor.id)">删除</a>
         </td>
     </tr>

@@ -21,6 +21,18 @@ router.get('/table/:name/id/:id', function (req, res, next) {
     });
 });
 
+router.get("/select/:name", function (req, res, next) {
+    console.log("backbone.js ==> Initialize select ..");
+    console.log(req.params);
+
+    api.selectOptions(req, function (request) {
+        console.log("backbone.js ==> selectOptions ==> callback");
+        console.info(request);
+        res.json(request);
+    });
+
+});
+
 router.post("/table/:name", function (req, res, next) {
     console.log("backbone.js ==> insert | edit");
     console.log(req.params);

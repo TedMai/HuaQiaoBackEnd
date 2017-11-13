@@ -5,13 +5,18 @@ angular
     .component('shadow', {
         templateUrl: "partial/shadow/shadow.template.html",
         controller: [
-            'Pathfinder', 'Container', 'Cleaner', 'ArrayHelper', '$window',
-            function ShadowController(Pathfinder, Container, Cleaner, ArrayHelper, $window) {
+            'Pathfinder', 'SelectHelper', 'Container', 'Cleaner', 'ArrayHelper', '$window',
+            function ShadowController(Pathfinder, SelectHelper, Container, Cleaner, ArrayHelper, $window) {
                 var that = this;
 
                 Pathfinder.get(
                     {},
                     function (response) {
+                        var i,
+                            j,
+                            length,
+                            count;
+
                         /**
                          * 数据
                          */
@@ -20,9 +25,26 @@ angular
                         }
                         if (response.hasOwnProperty("department") && response.department) {
                             that.departments = JSON.parse(response.department);
+                            for (i = 0, length = that.departments.length; i < length; i++) {
+                                for (j = 0, count = that.hospitals.length; j < count; j++) {
+                                    if (that.departments[i].hospital === that.hospitals[j].hid) {
+                                        that.departments[i].hospitalName = that.hospitals[j].name;
+                                        break;
+                                    }
+                                }
+                            }
                         }
+
                         if (response.hasOwnProperty("doctor") && response.doctor) {
                             that.doctors = JSON.parse(response.doctor);
+                            for (i = 0, length = that.doctors.length; i < length; i++) {
+                                for (j = 0, count = that.departments.length; j < count; j++) {
+                                    if (that.doctors[i].department === that.departments[j].did) {
+                                        that.doctors[i].departmentName = that.departments[j].name;
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                     },
@@ -38,8 +60,36 @@ angular
 
                 this.edit = function (target, data) {
                     console.info("==>   Edit | " + target);
-                    Container.set(data);
-                    $window.location = '#/Edit/' + target;
+
+                    switch (target) {
+                        case 'hospital':
+                            Container.set(data);
+                            $window.location = '#/Edit/' + target;
+                            break;
+                        case 'department':
+                        case 'doctor':
+                            SelectHelper.get(
+                                {
+                                    name: target
+                                },
+                                function (response) {
+                                    console.log(response);
+                                    if (response.code === 0) {
+                                        Container.set({
+                                            data: data,
+                                            select: response.msg
+                                        });
+                                        $window.location = '#/Edit/' + target;
+                                    }
+                                },
+                                function (error) {
+                                    console.error(error);
+                                }
+                            );
+                            break;
+                        default:
+                            break;
+                    }
                 };
 
                 this.delete = function (target, id) {

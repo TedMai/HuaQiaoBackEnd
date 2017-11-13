@@ -8,5 +8,7 @@ angular.module('ptHuaQiao', [
     'hospital',
     'department',
     'doctor',
-    'create'
+    'create.hospital',
+    'create.department',
+    'create.doctor'
 ]);

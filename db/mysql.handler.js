@@ -227,6 +227,11 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 获取所有数据
+         * @param request
+         * @returns {*|Promise|promise}
+         */
         fetchDataSet: function (request) {
             var item,
                 value,

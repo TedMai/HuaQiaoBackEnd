@@ -1,0 +1,37 @@
+<form name="hospitalForm" ng-submit=$ctrl.save("hospital") novalidate>
+    <h1>添加医院</h1>
+    <h3>名称：</h3>
+    <input type="text" name="hospitalName" placeholder="请输入医院名称" ng-model=$ctrl.hospital.name ng-maxlength="20"
+           required/>
+    <span ng-show=hospitalForm.hospitalName.$error.required>* 必填项</span>
+    <span ng-show=hospitalForm.hospitalName.$error.maxlength>超出最大输入长度</span>
+
+    <h3>简介：</h3>
+    <textarea name="hospitalDescription" placeholder="请输入医院简介" ng-model=$ctrl.hospital.description ng-minlength="14"
+              required></textarea>
+    <span ng-show=hospitalForm.hospitalDescription.$error.required>* 必填项</span>
+    <span ng-show=hospitalForm.hospitalDescription.$error.minlength>最少输入14个字</span>
+
+    <h3>成立时间：</h3>
+    <input type="date" name="hospitalFounding" ng-model=$ctrl.hospital.founding required>
+    <span ng-show=hospitalForm.hospitalFounding.$error.required>* 必选项</span>
+
+    <h3>地址：</h3>
+    <input type="text" name="hospitalAddress" placeholder="请输入医院地址" ng-model=$ctrl.hospital.address required>
+    <span ng-show=hospitalForm.hospitalAddress.$error.required>* 必填项</span>
+
+    <h3>电话：</h3>
+    <input type="text" name="hospitalPhone" placeholder="请输入医院电话" ng-model=$ctrl.hospital.contact>
+
+    <h3>坐标：</h3>
+    <input type="number" name="hospitalAxisX" placeholder="经度" ng-model=$ctrl.hospital.axisX required> -
+    <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model=$ctrl.hospital.axisY required>
+    <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required">* 必填项</span>
+
+    <br/><br/>
+    <button type="submit" ng-disabled="hospitalForm.$invalid">提交</button>
+</form>
+
+<h3>医院图片</h3>
+<input type="file" file-model="myFile">
+<button ng-click=$ctrl.uploadFile()>上传</button>

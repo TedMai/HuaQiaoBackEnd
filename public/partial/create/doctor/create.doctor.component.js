@@ -1,12 +1,12 @@
 'use strict';
 
 angular
-    .module('create')
-    .component('create', {
-        templateUrl: "partial/create/create.template.html",
+    .module('create.doctor')
+    .component('create.doctor', {
+        templateUrl: "partial/create/doctor/create.doctor.template.html",
         controller: [
-            'Container', 'Table', 'SelectHelper', 'FileUpload', '$location', '$scope', '$window',
-            function (Container, Table, SelectHelper, FileUpload, $location, $scope, $window) {
+            'Container', 'Table', 'SelectHelper', 'FileUpload', '$scope', '$location', '$window',
+            function (Container, Table, SelectHelper, FileUpload, $scope, $location, $window) {
                 var
                     that = this,
                     data = Container.get();
@@ -14,26 +14,8 @@ angular
                 /**
                  * 赋值
                  */
-                switch ($location.path()) {
-                    case '/Edit/Hospital':
-                        this.hospital = data;
-                        /**
-                         * 时间转化为Date对象
-                         */
-                        if (data.hasOwnProperty("founding")) {
-                            this.hospital.founding = new Date(data.founding);
-                        }
-                        break;
-                    case '/Edit/Department':
-                        this.department = data;
-                        break;
-                    case '/Edit/Doctor':
-                        this.doctor = data;
-                        break;
-                    default:
-                        break;
-                }
-
+                this.doctor = data.data;
+                this.departmentSelect = data.select;
                 /**
                  * 添加图片上传服务
                  */
@@ -60,10 +42,10 @@ angular
                     Table.save(
                         {
                             name: name,
-                            id: this.hospital.hid
+                            id: this.doctor.id
                         },
                         {
-                            information: this.hospital,
+                            information: this.doctor,
                             gallery: {
                                 imageurl: this.relativeImageUrl,
                                 type: 0,
@@ -86,19 +68,7 @@ angular
                     );
                 };
                 /** end of save **/
-                
-                SelectHelper.get(
-                    {},
-                    function (response) {
-                        if(response.code === 0){
-                            that.hospitalSelect = JSON.parse(response.msg.hospital);
-                            that.departmentSelect = JSON.parse(response.msg.department);
-                        }
-                    },
-                    function (error) {
-                        console.error(error);
-                    }
-                )
+
             }   /** end of controller **/
         ]
     });
