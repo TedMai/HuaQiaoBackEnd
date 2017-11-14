@@ -48,7 +48,7 @@ angular
                             information: this.doctor,
                             gallery: {
                                 imageurl: this.relativeImageUrl,
-                                type: 0,
+                                type: 2,
                                 relative: 0
                             }
                         },
@@ -57,7 +57,7 @@ angular
                             if (response.code === 0) {
                                 $window.alert("保存成功");
                             } else {
-                                $window.alert(response.msg);
+                                $window.alert(response.msg.code);
                             }
                             $location.path("/");
                         },

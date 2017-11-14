@@ -40,13 +40,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editDepartment,
-                information: [{
-                    name: "内科",
-                    description: "莆田华侨医院内科是集临床、保健、康复、教学和科研为一体的临床重点科室。现有副主任医师3人，主治医师2人，主管护师 1 人。科室设有床位33张，每个房间按A类病房标准配置, 有独立卫生间、洗漱设施、热水、空调、电视等设施。科室拥有进口电子胃镜、心电监护仪、微量推注泵、输液泵、心电图机、快速血糖测量仪等先进设备。能开展神经、消化、心血管、内分泌、呼吸、血液、肾脏、风湿、中毒等专科疾病的诊治，以消化、内分泌、心脑血管作为龙头带动其他专业发展。",
-                    parent: 0,
-                    hospital: 3
-                },
-                    22]
+                information: [request.body.information, request.query.id]
             })
             .then(HANDLER.updateBasicInfo)
             .then(HANDLER.cleanup)
@@ -68,7 +62,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlDeleteInfo: EXEC_SQL.deleteDepartment,
-                information: [23]
+                information: [request.params.id]
             })
             .then(HANDLER.deleteBasicInfo)
             .then(HANDLER.cleanup)

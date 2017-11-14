@@ -161,6 +161,52 @@ var handler =
             return deferred.promise;
         },
 
+        oneStepDelete: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.execSQLs[request.params.index], request.params.information, function (err, result) {
+                console.info("==> oneStepDelete ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+
+                request.params.index = request.params.index + 1;
+                request.result =  result;
+                deferred.resolve(request);
+            });
+
+            return deferred.promise;
+        },
+
+        /**
+         * 删除数据集
+         * 实现串行操作
+         * @param request
+         * @returns {Promise|*|promise}
+         */
+        deleteDataSet: function (request) {
+            var i,
+                length,
+                promise,
+                tasks = [];
+
+            for (i = 0, length = request.params.execSQLs.length; i < length; i++) {
+                tasks.push(handler.oneStepDelete);
+            }
+
+            promise = Q(request);
+
+            for (i = 0, length = tasks.length; i < length; i++) {
+                promise = promise.then(tasks[i]);
+            }
+
+            return promise;
+        },
+
         /**
          * 插入图片
          * @param request
@@ -172,8 +218,8 @@ var handler =
             /**
              * 未找到上传图集 直接跳过
              */
-            if(!request.params.gallery.hasOwnProperty("imageurl")||
-                request.params.gallery.imageurl === ""){
+            if (!request.params.gallery.hasOwnProperty("imageurl") ||
+                request.params.gallery.imageurl === "") {
                 deferred.resolve({
                     connection: request.connection,
                     result: "DONE"
@@ -197,7 +243,8 @@ var handler =
             }
 
             return deferred.promise;
-        },
+        }
+        ,
 
         /**
          * 获取列表
@@ -225,10 +272,12 @@ var handler =
             });
 
             return deferred.promise;
-        },
+        }
+        ,
 
         /**
          * 获取所有数据
+         * 实现并行操作
          * @param request
          * @returns {*|Promise|promise}
          */
@@ -273,7 +322,8 @@ var handler =
                 );
 
             return deferred.promise;
-        },
+        }
+        ,
 
         /**
          * 扫尾 - 释放连接
@@ -291,7 +341,8 @@ var handler =
             });
 
             return deferred.promise;
-        },
+        }
+        ,
 
         /**
          * 错误处理
@@ -307,7 +358,8 @@ var handler =
                 code: request.code,
                 msg: request.errMsg
             });
-        },
+        }
+        ,
 
         /**
          * 错误处理 - 带回滚
@@ -326,7 +378,8 @@ var handler =
                 code: request.code,
                 msg: request.errMsg
             });
-        },
+        }
+        ,
 
         /**
          * 转化时间格式
@@ -345,7 +398,8 @@ var handler =
             deferred.resolve(request);
 
             return deferred.promise;
-        },
+        }
+        ,
 
         transformResponse: function (request) {
             var i,
@@ -369,6 +423,7 @@ var handler =
 
             return deferred.promise;
         }
-    };
+    }
+;
 
 module.exports = handler;

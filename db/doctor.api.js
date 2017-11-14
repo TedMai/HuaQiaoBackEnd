@@ -39,15 +39,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editDoctor,
-                information: [{
-                    name: "陈俊",
-                    title: "主任医师",
-                    position: "中心主任",
-                    resume: "本科，毕业于福建中医学院，曾于福建医科大学附一医院深造心血管内科，于省立医院进修胃镜操作及诊疗",
-                    field: "擅长高血压病、冠心病、心律失常等心血管病及胃镜、胃肠道疾病",
-                    department: 22
-                },
-                    3]
+                information: [request.body.information, request.query.id]
             })
             .then(HANDLER.updateBasicInfo)
             .then(HANDLER.cleanup)
@@ -64,7 +56,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlDeleteInfo: EXEC_SQL.deleteDoctor,
-                information: [3]
+                information: [request.params.id]
             })
             .then(HANDLER.deleteBasicInfo)
             .then(HANDLER.cleanup)

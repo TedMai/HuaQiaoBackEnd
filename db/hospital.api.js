@@ -66,10 +66,15 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                sqlDeleteInfo: EXEC_SQL.deleteHospital,
+                index: 0,
+                execSQLs: [
+                    EXEC_SQL.deleteRelativeDoctors,
+                    EXEC_SQL.deleteRelativeDepartments,
+                    EXEC_SQL.deleteHospital
+                ],
                 information: [request.params.id]
             })
-            .then(HANDLER.deleteBasicInfo)
+            .then(HANDLER.deleteDataSet)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

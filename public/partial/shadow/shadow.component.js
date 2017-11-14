@@ -68,6 +68,12 @@ angular
                             break;
                         case 'department':
                         case 'doctor':
+                            if(data.hasOwnProperty("hospitalName")){
+                                delete data.hospitalName;
+                            }
+                            if(data.hasOwnProperty("departmentName")){
+                                delete data.departmentName;
+                            }
                             SelectHelper.get(
                                 {
                                     name: target
@@ -93,39 +99,42 @@ angular
                 };
 
                 this.delete = function (target, id) {
-                    console.info("==>   Delete");
+                    var hint = "请再次确认是否删除？";
 
-                    Cleaner.save(
-                        {
-                            name: target,
-                            id: id
-                        },
-                        {},
-                        function (response) {
-                            console.info(response);
-                            if (response.code === 0) {
-                                switch (target) {
-                                    case 'hospital':
-                                        that.hospitals.remove("hid", id);
-                                        break;
-                                    case 'department':
-                                        that.departments.remove("did", id);
-                                        break;
-                                    case 'doctor':
-                                        that.doctors.remove("id", id);
-                                        break;
-                                    default:
-                                        break;
+                    if (confirm(hint) === true) {
+                        console.info("==>   Delete");
+                        Cleaner.save(
+                            {
+                                name: target,
+                                id: id
+                            },
+                            {},
+                            function (response) {
+                                console.info(response);
+                                if (response.code === 0) {
+                                    switch (target) {
+                                        case 'hospital':
+                                            that.hospitals.remove("hid", id);
+                                            break;
+                                        case 'department':
+                                            that.departments.remove("did", id);
+                                            break;
+                                        case 'doctor':
+                                            that.doctors.remove("id", id);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                } else {
+                                    $window.alert(response.msg.code);
                                 }
-
-                            } else {
-                                $window.alert(response.msg);
-                            }
-                        },
-                        function (error) {
-                            console.error(error);
-                            $window.alert(error);
-                        });
+                            },
+                            function (error) {
+                                console.error(error);
+                                $window.alert(error);
+                            });
+                    }
                 }
             }
         ]

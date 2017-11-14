@@ -33,6 +33,17 @@ router.get("/select/:name", function (req, res, next) {
 
 });
 
+router.get("/test", function (req, res, next) {
+    console.log("backbone.js ==> test");
+    console.log(req.params);
+
+    api.test(req, function (request) {
+        console.log("backbone.js ==> deleteHospital ==> callback");
+        console.info(request);
+        res.json(request);
+    });
+});
+
 router.post("/table/:name", function (req, res, next) {
     console.log("backbone.js ==> insert | edit");
     console.log(req.params);
