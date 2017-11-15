@@ -29,10 +29,6 @@ angular
             .when('/Edit/doctor', {
                 template: '<create.doctor></create.doctor>'
             })
-            //  当URL 映射段为/Edit/XXX 时，进入 新建/编辑 页面
-            // .when('/Edit/:target', {
-            //     template: '<create></create>'
-            // })
             //  当浏览器地址不能匹配我们任何一个路由规则时，触发重定向到/Shadow
             .otherwise({
                 redirectTo: '/Shadow'
