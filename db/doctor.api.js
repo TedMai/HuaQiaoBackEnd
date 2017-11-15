@@ -55,10 +55,13 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                sqlDeleteInfo: EXEC_SQL.deleteDoctor,
+                index: 0,
+                execSQLs: [
+                    EXEC_SQL.deleteDoctor
+                ],
                 information: [request.params.id]
             })
-            .then(HANDLER.deleteBasicInfo)
+            .then(HANDLER.deleteDataSet)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

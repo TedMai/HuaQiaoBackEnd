@@ -5,8 +5,8 @@ angular
     .component('shadow', {
         templateUrl: "partial/shadow/shadow.template.html",
         controller: [
-            'Pathfinder', 'SelectHelper', 'Container', 'Cleaner', 'ArrayHelper', '$window',
-            function ShadowController(Pathfinder, SelectHelper, Container, Cleaner, ArrayHelper, $window) {
+            'Pathfinder', 'SelectHelper', 'Container', 'Cleaner', 'ArrayHelper', '$location', '$window',
+            function ShadowController(Pathfinder, SelectHelper, Container, Cleaner, ArrayHelper, $location, $window) {
                 var that = this;
 
                 Pathfinder.get(
@@ -68,10 +68,10 @@ angular
                             break;
                         case 'department':
                         case 'doctor':
-                            if(data.hasOwnProperty("hospitalName")){
+                            if (data.hasOwnProperty("hospitalName")) {
                                 delete data.hospitalName;
                             }
-                            if(data.hasOwnProperty("departmentName")){
+                            if (data.hasOwnProperty("departmentName")) {
                                 delete data.departmentName;
                             }
                             SelectHelper.get(
@@ -112,20 +112,20 @@ angular
                             function (response) {
                                 console.info(response);
                                 if (response.code === 0) {
-                                    switch (target) {
-                                        case 'hospital':
-                                            that.hospitals.remove("hid", id);
-                                            break;
-                                        case 'department':
-                                            that.departments.remove("did", id);
-                                            break;
-                                        case 'doctor':
-                                            that.doctors.remove("id", id);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-
+                                    // switch (target) {
+                                    //     case 'hospital':
+                                    //         that.hospitals.remove("hid", id);
+                                    //         break;
+                                    //     case 'department':
+                                    //         that.departments.remove("did", id);
+                                    //         break;
+                                    //     case 'doctor':
+                                    //         that.doctors.remove("id", id);
+                                    //         break;
+                                    //     default:
+                                    //         break;
+                                    // }
+                                    $location.path("/");
                                 } else {
                                     $window.alert(response.msg.code);
                                 }
