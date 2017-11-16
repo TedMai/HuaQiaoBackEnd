@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 angular
     .module('create.hospital')
@@ -15,6 +15,11 @@ angular
                  * 赋值
                  */
                 this.hospital = data;
+                this.hospitalGallery = [
+                    "file/" + encodeURIComponent("20171116\\20171116115625799584_56ceb1103bda6.jpg"),
+                    "file/" + encodeURIComponent("20171116\\20171116115625800561_56ceb1389bfef.jpg"),
+                    "file/" + encodeURIComponent("20171116\\20171116115625801649_56ceb1512abaf.jpg")
+                ];
 
                 /**
                  * 时间转化为Date对象
@@ -28,7 +33,7 @@ angular
                  */
                 this.uploadFile = function () {
                     console.info("==>   Upload file");
-                    FileUpload($scope.myFile, "/image")
+                    FileUpload($scope.myFile, "/upload")
                         .then(
                             function (result) {
                                 console.info(result.paths);
@@ -51,11 +56,6 @@ angular
 
                     console.info("==>   Save");
                     for (i = 0, length = this.album.length; i < length; i++) {
-                        // gallery.push([
-                        //     this.album[i],
-                        //     0,
-                        //     typeof(this.hospital.hid) === "undefined" ? 0 : this.hospital.hid
-                        // ])
                         gallery.push({
                             imageurl: this.album[i],
                             type: 0,
