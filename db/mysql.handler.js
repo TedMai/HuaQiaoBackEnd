@@ -175,7 +175,7 @@ var handler =
                 }
 
                 request.params.index = request.params.index + 1;
-                request.result =  result;
+                request.result = result;
                 deferred.resolve(request);
             });
 
@@ -213,20 +213,33 @@ var handler =
          * @returns {*|Promise|promise}
          */
         insertGallery: function (request) {
-            var deferred = Q.defer();
+            var i,
+                length,
+                values = [],
+                deferred = Q.defer();
 
+            console.info("==>   insertGallery");
             /**
              * 未找到上传图集 直接跳过
              */
-            if (!request.params.gallery.hasOwnProperty("imageurl") ||
-                request.params.gallery.imageurl === "") {
+            if (!request.params.gallery instanceof Array ||
+                request.params.gallery.length === 0) {
                 deferred.resolve({
                     connection: request.connection,
                     result: "DONE"
                 });
             } else {
-                request.params.gallery.relative = request.result.insertId;
-                request.connection.query(request.params.sqlInsertGallery, request.params.gallery, function (err, result) {
+                for (i = 0, length = request.params.gallery.length; i < length; i++) {
+                    values[i] = [
+                        request.params.gallery[i].imageurl,
+                        request.params.gallery[i].type,
+                        request.result.insertId
+                    ]
+                    // request.params.gallery[i].relative = request.result.insertId;
+                }
+                console.info(values);
+
+                request.connection.query(request.params.sqlInsertGallery, [values], function (err, result) {
                     console.info("==> insertGallery ==> callback |  " + err);
                     if (err) {
                         deferred.reject({

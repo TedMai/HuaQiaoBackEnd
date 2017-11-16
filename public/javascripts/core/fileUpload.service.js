@@ -6,11 +6,19 @@
  */
 
 function FileUploadService($http, $q) {
-    return function (file, targetUrl) {
-        var formData = new FormData(),
+    return function (files, targetUrl) {
+        var i,
+            length,
+            formData = new FormData(),
             deferred = $q.defer();
+        console.info(files);
 
-        formData.append("file", file);
+        for (i = 0, length = files.length; i < length; i++) {
+            console.info("append file into form data");
+            console.info(files[i]);
+            formData.append("file", files[i]);
+        }
+
         $http.post(
             targetUrl,
             formData,
@@ -21,7 +29,7 @@ function FileUploadService($http, $q) {
             .success(function (response) {
                 console.info(response);
                 if (response.code === 0) {
-                    deferred.resolve(response.path);
+                    deferred.resolve(response);
                 } else {
                     deferred.reject(response.msg);
                 }

@@ -12,9 +12,11 @@ angular
 
                 element.bind('change', function (event) {
                     console.info("fileReader.directive.js ==> !!! directive changed !!!");
+                    console.info(element);
+                    console.info(element[0].files);
 
                     scope.$apply(function () {
-                        modelSetter(scope, element[0].files[0]);
+                        modelSetter(scope, element[0].files);
                     });
                 });
             }

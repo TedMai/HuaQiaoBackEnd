@@ -31,8 +31,9 @@ angular
                     FileUpload($scope.myFile, "/image")
                         .then(
                             function (result) {
-                                console.info(result);
-                                that.relativeImageUrl = result;
+                                console.info(result.paths);
+                                that.album = result.paths;
+                                $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
                                 $window.alert(error);
@@ -44,19 +45,42 @@ angular
                  * 保存事件响应
                  */
                 this.save = function (name) {
+                    var i,
+                        length,
+                        gallery = [];
+
                     console.info("==>   Save");
+                    for (i = 0, length = this.album.length; i < length; i++) {
+                        // gallery.push([
+                        //     this.album[i],
+                        //     0,
+                        //     typeof(this.hospital.hid) === "undefined" ? 0 : this.hospital.hid
+                        // ])
+                        gallery.push({
+                            imageurl: this.album[i],
+                            type: 0,
+                            relative: typeof(this.hospital.hid) === "undefined" ? 0 : this.hospital.hid
+                        });
+                    }
+                    console.info(gallery);
+
                     Table.save(
                         {
                             name: name,
                             id: this.hospital.hid
                         },
                         {
-                            information: this.hospital,
-                            gallery: {
-                                imageurl: this.relativeImageUrl,
-                                type: 0,
-                                relative: 0
-                            }
+                            information: {
+                                hid: this.hospital.hid,
+                                name: this.hospital.name,
+                                description: this.hospital.description,
+                                founding: this.hospital.founding,
+                                address: this.hospital.address,
+                                contact: this.hospital.contact,
+                                axisX: this.hospital.axisX,
+                                axisY: this.hospital.axisY
+                            },
+                            gallery: gallery
                         },
                         function (response) {
                             console.log(response);
