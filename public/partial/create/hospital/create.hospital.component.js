@@ -20,6 +20,7 @@ angular
                     "file/" + encodeURIComponent("20171116\\20171116115625800561_56ceb1389bfef.jpg"),
                     "file/" + encodeURIComponent("20171116\\20171116115625801649_56ceb1512abaf.jpg")
                 ];
+                this.testData = "ok";
 
                 /**
                  * 时间转化为Date对象
