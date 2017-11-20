@@ -1,44 +1,42 @@
-// 'use strict';
+'use strict';
 
 angular
     .module('create.hospital')
-    .component('create.hospital', {
-        templateUrl: "partial/create/hospital/create.hospital.template.html",
-        controller: [
+    .controller('CreateHospitalController', [
             'Container', 'Table', 'FileUpload', '$scope', '$location', '$window',
             function (Container, Table, FileUpload, $scope, $location, $window) {
                 var
                     that = this,
                     data = Container.get();
-
                 /**
                  * 赋值
                  */
-                this.hospital = data;
-                this.hospitalGallery = [
+                // console.info(data);
+
+                $scope.hospital = angular.copy(data);
+                $scope.hospitalGallery = [
                     "file/" + encodeURIComponent("20171116\\20171116115625799584_56ceb1103bda6.jpg"),
                     "file/" + encodeURIComponent("20171116\\20171116115625800561_56ceb1389bfef.jpg"),
                     "file/" + encodeURIComponent("20171116\\20171116115625801649_56ceb1512abaf.jpg")
                 ];
-                this.testData = "ok";
 
                 /**
                  * 时间转化为Date对象
                  */
                 if (data.hasOwnProperty("founding")) {
-                    this.hospital.founding = new Date(data.founding);
+                    $scope.hospital.founding = new Date(data.founding);
                 }
 
                 /**
                  * 添加图片上传服务
                  */
-                this.uploadFile = function () {
+                $scope.uploadFile = function () {
                     console.info("==>   Upload file");
                     FileUpload($scope.myFile, "/upload")
                         .then(
                             function (result) {
                                 console.info(result.paths);
-                                that.album = result.paths;
+                                $scope.album = result.paths;
                                 $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
@@ -50,17 +48,17 @@ angular
                 /**
                  * 保存事件响应
                  */
-                this.save = function (name) {
+                $scope.save = function (name) {
                     var i,
                         length,
                         gallery = [];
 
                     console.info("==>   Save");
-                    for (i = 0, length = this.album.length; i < length; i++) {
+                    for (i = 0, length = $scope.album.length; i < length; i++) {
                         gallery.push({
-                            imageurl: this.album[i],
+                            imageurl: $scope.album[i],
                             type: 0,
-                            relative: typeof(this.hospital.hid) === "undefined" ? 0 : this.hospital.hid
+                            relative: typeof($scope.hospital.hid) === "undefined" ? 0 : $scope.hospital.hid
                         });
                     }
                     console.info(gallery);
@@ -68,18 +66,18 @@ angular
                     Table.save(
                         {
                             name: name,
-                            id: this.hospital.hid
+                            id: $scope.hospital.hid
                         },
                         {
                             information: {
-                                hid: this.hospital.hid,
-                                name: this.hospital.name,
-                                description: this.hospital.description,
-                                founding: this.hospital.founding,
-                                address: this.hospital.address,
-                                contact: this.hospital.contact,
-                                axisX: this.hospital.axisX,
-                                axisY: this.hospital.axisY
+                                hid: $scope.hospital.hid,
+                                name: $scope.hospital.name,
+                                description: $scope.hospital.description,
+                                founding: $scope.hospital.founding,
+                                address: $scope.hospital.address,
+                                contact: $scope.hospital.contact,
+                                axisX: $scope.hospital.axisX,
+                                axisY: $scope.hospital.axisY
                             },
                             gallery: gallery
                         },
@@ -102,4 +100,4 @@ angular
 
             }   /** end of controller **/
         ]
-    });
+    );

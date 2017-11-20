@@ -1,16 +1,13 @@
 <form name="departmentForm" ng-submit=$ctrl.save("department") novalidate>
     <h1>添加科室</h1>
     <h3>名称：</h3>
-    <input type="text" name="departmentName" placeholder="请输入科室名称" ng-model=$ctrl.department.name ng-maxlength="20"
-           required/>
+    <input type="text" name="departmentName" placeholder="请输入科室名称" ng-model=$ctrl.department.name required/>
     <span ng-show=departmentForm.departmentName.$error.required>* 必填项</span>
-    <span ng-show=departmentForm.departmentName.$error.maxlength>超出最大输入长度</span>
 
     <h3>简介：</h3>
-    <textarea name="departmentDescription" placeholder="请输入科室简介" ng-model=$ctrl.department.description
-              ng-minlength="14" required></textarea>
+    <textarea name="departmentDescription" placeholder="请输入科室简介" ng-model=$ctrl.department.description required>
+    </textarea>
     <span ng-show=departmentForm.departmentDescription.$error.required>* 必填项</span>
-    <span ng-show=departmentForm.departmentDescription.$error.minlength>最少输入14个字</span>
 
     <h3>隶属医院</h3>
     <select name="hospitalList" title="隶属医院" ng-model=$ctrl.department.hospital

@@ -17,6 +17,7 @@ angular
                             length,
                             count;
 
+                        console.info(response);
                         /**
                          * 数据
                          */

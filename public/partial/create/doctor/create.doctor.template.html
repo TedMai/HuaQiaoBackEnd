@@ -1,22 +1,19 @@
 <form name="doctorForm" ng-submit=$ctrl.save("doctor") novalidate>
     <h1>添加医生</h1>
     <h3>名称：</h3>
-    <input type="text" name="doctorName" placeholder="请输入医生名字" ng-model=$ctrl.doctor.name ng-maxlength="20"
+    <input type="text" name="doctorName" placeholder="请输入医生名字" ng-model=$ctrl.doctor.name
            required/>
     <span ng-show=doctorForm.doctorName.$error.required>* 必填项</span>
-    <span ng-show=doctorForm.doctorName.$error.maxlength>超出最大输入长度</span>
 
     <h3>职位：</h3>
-    <input type="text" name="doctorPosition" placeholder="请输入医生职位" ng-model=$ctrl.doctor.position ng-maxlength="20"
+    <input type="text" name="doctorPosition" placeholder="请输入医生职位" ng-model=$ctrl.doctor.position
            required/>
     <span ng-show=doctorForm.doctorPosition.$error.required>* 必填项</span>
-    <span ng-show=doctorForm.doctorPosition.$error.maxlength>超出最大输入长度</span>
 
     <h3>职称：</h3>
-    <input type="text" name="doctorTitle" placeholder="请输入医生职称" ng-model=$ctrl.doctor.title ng-maxlength="20"
+    <input type="text" name="doctorTitle" placeholder="请输入医生职称" ng-model=$ctrl.doctor.title
            required/>
     <span ng-show=doctorForm.doctorTitle.$error.required>* 必填项</span>
-    <span ng-show=doctorForm.doctorTitle.$error.maxlength>超出最大输入长度</span>
 
     <h3>简历：</h3>
     <textarea name="doctorResume" placeholder="请输入医生简历" ng-model=$ctrl.doctor.resume></textarea>

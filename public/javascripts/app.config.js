@@ -4,7 +4,7 @@ angular
     .module('ptHuaQiao')
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-            //  当URL 映射段为/Shadow 时，进入后台首页
+        //  当URL 映射段为/Shadow 时，进入后台首页
             .when('/Shadow', {
                 template: '<shadow></shadow>'
             })
@@ -21,7 +21,9 @@ angular
                 template: '<doctor></doctor>'
             })
             .when('/Edit/hospital', {
-                template: '<create.hospital></create.hospital>'
+                templateUrl: "partial/create/hospital/create.hospital.template.html",
+                controller: "CreateHospitalController"
+                // template: '<create.hospital></create.hospital>'
             })
             .when('/Edit/department', {
                 template: '<create.department></create.department>'
