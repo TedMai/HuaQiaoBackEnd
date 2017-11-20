@@ -8,12 +8,12 @@ angular
                 var
                     that = this,
                     data = Container.get();
+
                 /**
                  * 赋值
                  */
-                // console.info(data);
-
                 $scope.hospital = angular.copy(data);
+                $scope.album = [];
                 $scope.hospitalGallery = [
                     "file/" + encodeURIComponent("20171116\\20171116115625799584_56ceb1103bda6.jpg"),
                     "file/" + encodeURIComponent("20171116\\20171116115625800561_56ceb1389bfef.jpg"),

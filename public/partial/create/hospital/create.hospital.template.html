@@ -12,19 +12,19 @@
     <span ng-show=hospitalForm.hospitalDescription.$error.required>* 必填项</span>
 
     <h3>成立时间：</h3>
-    <input type="date" name="hospitalFounding" title="成立时间" ng-model=hospital.founding required>
+    <input type="date" name="hospitalFounding" title="成立时间" ng-model="hospital.founding" required>
     <span ng-show=hospitalForm.hospitalFounding.$error.required>* 必选项</span>
 
     <h3>地址：</h3>
-    <input type="text" name="hospitalAddress" placeholder="请输入医院地址" ng-model=hospital.address required>
+    <input type="text" name="hospitalAddress" placeholder="请输入医院地址" ng-model="hospital.address" required>
     <span ng-show=hospitalForm.hospitalAddress.$error.required>* 必填项</span>
 
     <h3>电话：</h3>
-    <input type="text" name="hospitalPhone" placeholder="请输入医院电话" ng-model=hospital.contact>
+    <input type="text" name="hospitalPhone" placeholder="请输入医院电话" ng-model="hospital.contact">
 
     <h3>坐标：</h3>
-    <input type="number" name="hospitalAxisX" placeholder="经度" ng-model=hospital.axisX required> -
-    <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model=hospital.axisY required>
+    <input type="number" name="hospitalAxisX" placeholder="经度" ng-model="hospital.axisX" required> -
+    <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model="hospital.axisY" required>
     <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required">* 必填项</span>
 
     <br/><br/>

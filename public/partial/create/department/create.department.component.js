@@ -7,8 +7,6 @@ angular
         controller: [
             'Container', 'Table', 'SelectHelper', 'FileUpload', '$scope', '$location', '$window',
             function (Container, Table, SelectHelper, FileUpload, $scope, $location, $window) {
-                console.log("==>    create.department.component.js");
-
                 var
                     that = this,
                     data = Container.get();
@@ -18,6 +16,7 @@ angular
                  */
                 this.department = data.data;
                 this.hospitalSelect = data.select;
+                this.album = [];
 
                 /**
                  * 添加图片上传服务
@@ -27,8 +26,9 @@ angular
                     FileUpload($scope.myFile, "/upload")
                         .then(
                             function (result) {
-                                console.info(result);
-                                that.relativeImageUrl = result;
+                                console.info(result.paths);
+                                $scope.album = result.paths;
+                                $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
                                 $window.alert(error);
@@ -40,7 +40,20 @@ angular
                  * 保存
                  */
                 this.save = function (name) {
+                    var i,
+                        length,
+                        gallery = [];
+
                     console.info("==>   Save");
+                    for (i = 0, length = this.album.length; i < length; i++) {
+                        gallery.push({
+                            imageurl: this.album[i],
+                            type: 0,
+                            relative: typeof($scope.hospital.hid) === "undefined" ? 0 : $scope.hospital.hid
+                        });
+                    }
+                    console.info(gallery);
+                    console.info(this.doctor);
 
                     Table.save(
                         {
@@ -49,11 +62,7 @@ angular
                         },
                         {
                             information: this.department,
-                            gallery: {
-                                imageurl: this.relativeImageUrl,
-                                type: 1,
-                                relative: 0
-                            }
+                            gallery: gallery
                         },
                         function (response) {
                             console.log(response);

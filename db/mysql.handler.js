@@ -222,13 +222,18 @@ var handler =
             /**
              * 未找到上传图集 直接跳过
              */
-            if (!request.params.gallery instanceof Array ||
-                request.params.gallery.length === 0) {
+            if (!request.params.gallery instanceof Array) {
                 deferred.resolve({
                     connection: request.connection,
                     result: "DONE"
                 });
-            } else {
+            } else if (request.params.gallery.length === 0) {
+                deferred.resolve({
+                    connection: request.connection,
+                    result: "DONE"
+                });
+            }
+            else {
                 for (i = 0, length = request.params.gallery.length; i < length; i++) {
                     values[i] = [
                         request.params.gallery[i].imageurl,
