@@ -23,7 +23,7 @@ angular
                  */
                 this.uploadFile = function () {
                     console.info("==>   Upload file");
-                    FileUpload($scope.myFile, "/upload")
+                    FileUpload($scope.myFile, "/file")
                         .then(
                             function (result) {
                                 console.info(result.paths);

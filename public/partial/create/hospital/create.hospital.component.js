@@ -3,8 +3,8 @@
 angular
     .module('create.hospital')
     .controller('CreateHospitalController', [
-            'Container', 'Table', 'FileUpload', 'Gallery', '$scope', '$location', '$window',
-            function (Container, Table, FileUpload, Gallery, $scope, $location, $window) {
+            'Container', 'Table', 'FileUpload', 'Gallery', 'ArrayHelper', '$scope', '$location', '$window',
+            function (Container, Table, FileUpload, Gallery, ArrayHelper, $scope, $location, $window) {
                 var
                     that = this,
                     data = Container.get();
@@ -34,11 +34,12 @@ angular
                     Gallery.temp().get(
                         {
                             type: 0,
-                            id: 19
+                            id: $scope.hospital.hid
                         },
                         {},
                         function (response) {
-                            console.info(response);
+                            console.info(response.paths);
+                            $scope.album = angular.copy(response.paths);
                         },
                         function (error) {
                             console.error(error);
@@ -52,17 +53,23 @@ angular
                  */
                 $scope.uploadFile = function () {
                     console.info("==>   Upload file");
-                    FileUpload($scope.myFile, "/upload")
+                    FileUpload($scope.myFile, "/file")
                         .then(
                             function (result) {
                                 console.info(result.paths);
-                                $scope.album = result.paths;
+                                $scope.album = $scope.album.concat(result.paths);
                                 $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
                                 $window.alert(error);
                             }
                         );
+                };
+                /**
+                 * 删除图片
+                 */
+                $scope.deleteFile = function (file) {
+                    $scope.album.remove(file);
                 };
                 /**
                  * 保存事件响应
