@@ -11,16 +11,6 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/table/:name/id/:id', function (req, res, next) {
-    console.log("backbone.js ==> Fetch specific item.");
-    console.log(req.params);
-    console.log(req.body);
-
-    api.query(req, function (request) {
-
-    });
-});
-
 router.get("/select/:name", function (req, res, next) {
     console.log("backbone.js ==> Initialize select ..");
     console.log(req.params);

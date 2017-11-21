@@ -22,11 +22,6 @@ angular
             return $resource('/backbone/select/:name', {name: '@name'}, {});
         }
     ])
-    // .factory("Gallery", ['$resource',
-    //     function ($resource) {
-    //         return $resource('/file/temp/:type/:id', {}, {});
-    //     }
-    // ])
     .factory("Gallery", ['$resource', function ($resource) {
         /**
          * temp文件夹下的图像文件列表
