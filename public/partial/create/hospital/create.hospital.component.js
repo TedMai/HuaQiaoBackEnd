@@ -3,8 +3,8 @@
 angular
     .module('create.hospital')
     .controller('CreateHospitalController', [
-            'Container', 'Table', 'FileUpload', '$scope', '$location', '$window',
-            function (Container, Table, FileUpload, $scope, $location, $window) {
+            'Container', 'Table', 'FileUpload', 'Gallery', '$scope', '$location', '$window',
+            function (Container, Table, FileUpload, Gallery, $scope, $location, $window) {
                 var
                     that = this,
                     data = Container.get();
@@ -13,12 +13,6 @@ angular
                  * 赋值
                  */
                 $scope.hospital = angular.copy(data);
-                $scope.album = [];
-                $scope.hospitalGallery = [
-                    "file/" + encodeURIComponent("20171116\\20171116115625799584_56ceb1103bda6.jpg"),
-                    "file/" + encodeURIComponent("20171116\\20171116115625800561_56ceb1389bfef.jpg"),
-                    "file/" + encodeURIComponent("20171116\\20171116115625801649_56ceb1512abaf.jpg")
-                ];
 
                 /**
                  * 时间转化为Date对象
@@ -26,7 +20,33 @@ angular
                 if (data.hasOwnProperty("founding")) {
                     $scope.hospital.founding = new Date(data.founding);
                 }
+                /**
+                 * 图片预览
+                 */
+                if (typeof($scope.hospital.hid) === "undefined") {
+                    // 新增
+                    $scope.album = [];
+                } else {
+                    // 编辑
+                    // 取数
+                    // - 根据hid在数据库找到对应的图片链接地址
+                    // - 将医院图片复制至temp文件夹
+                    Gallery.temp().get(
+                        {
+                            type: 0,
+                            id: 19
+                        },
+                        {},
+                        function (response) {
+                            console.info(response);
+                        },
+                        function (error) {
+                            console.error(error);
+                        }
+                    );
 
+                    // 返回图集（含图片链接） - 赋值
+                }
                 /**
                  * 添加图片上传服务
                  */
@@ -44,7 +64,6 @@ angular
                             }
                         );
                 };
-
                 /**
                  * 保存事件响应
                  */

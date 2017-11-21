@@ -219,6 +219,7 @@ var handler =
                 deferred = Q.defer();
 
             console.info("==>   insertGallery");
+            console.info(request.params.gallery);
             /**
              * 未找到上传图集 直接跳过
              */

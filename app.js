@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 // const doctor = require('./routes/doctor.js');
 const backbone = require('./routes/backbone.js');
 const processor = require('./routes/processor.js');
-const reader = require('./routes/reader.js');
+// const reader = require('./routes/reader.js');
 
 var app = express();
 
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/doctor', doctor);
 app.use("/backbone", backbone);
 app.use("/upload", processor);
-app.use("/file", reader);
+app.use("/file", processor);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

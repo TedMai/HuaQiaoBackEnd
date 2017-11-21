@@ -27,7 +27,7 @@ angular
                         .then(
                             function (result) {
                                 console.info(result.paths);
-                                $scope.album = result.paths;
+                                that.album = result.paths;
                                 $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
@@ -48,8 +48,8 @@ angular
                     for (i = 0, length = this.album.length; i < length; i++) {
                         gallery.push({
                             imageurl: this.album[i],
-                            type: 0,
-                            relative: typeof($scope.hospital.hid) === "undefined" ? 0 : $scope.hospital.hid
+                            type: 2,
+                            relative: typeof(this.doctor.id) === "undefined" ? 0 : this.doctor.id
                         });
                     }
                     console.info(gallery);

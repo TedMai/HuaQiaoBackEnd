@@ -1,116 +1,9 @@
 const Q = require('q');
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
 const router = express.Router();
 const multipart = require('connect-multiparty');
-const formatter = require('../db/utility.date');
-const __MAX_UPLOAD_FILE_SIZE__ = 3 * 1024 * 1024;
+const fileSystem = require("./fileSystem");
 const __MAX_UPLOAD_FILE_NUM__ = 9;
-
-function uploadOneFile(upload) {
-    var tmpFilePath,
-        fileName,
-        rootPath,
-        folderName,
-        folderPath,
-        source,
-        destination,
-        deferred = Q.defer();
-
-    /**
-     * 检查上传文件的格式
-     */
-    if (upload['type'] !== 'image/jpeg' &&
-        upload['type'] !== 'image/jpg' &&
-        upload['type'] !== 'image/png') {
-        deferred.reject(
-            {
-                code: 400,
-                msg: "Incorrect file format."
-            }
-        );
-        return deferred.promise;
-    }
-
-    /**
-     * 检查上传文件的大上
-     * 不能超过5MB
-     */
-    if (upload['size'] > __MAX_UPLOAD_FILE_SIZE__) {
-        deferred.reject(
-            {
-                code: 400,
-                msg: "File is too large to upload."
-            }
-        );
-        return deferred.promise;
-    }
-
-    try {
-        /**
-         * 文件上传的保存目录
-         * 以当前程序的执行目录为起点，向上一级目录，找到screenshot
-         * 按照当前日期生成子目录
-         * @type {string}
-         */
-        Date.prototype.format = formatter.format;
-        folderName = new Date().format('yyyyMMdd');
-        rootPath = path.resolve(process.cwd(), "..") + path.sep + "screenshot";
-        // 如果根目录不存在，则创建
-        if (!fs.existsSync(rootPath)) {
-            fs.mkdirSync(rootPath);
-        }
-        folderPath = rootPath + path.sep + folderName;
-        // 如果子目录不存在，则创建
-        if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath);
-        }
-
-        /**
-         * 将文件从临时文件夹复制至目标文件夹
-         */
-        tmpFilePath = upload['path'];
-        fileName = new Date().format('yyyyMMddhhmmssS') + Math.round(Math.random() * 1000) + "_" + upload['name'];
-        source = fs.createReadStream(tmpFilePath);
-        destination = fs.createWriteStream(folderPath + path.sep + fileName);
-        source.pipe(destination);
-
-        /**
-         * 完成后删除临时文件
-         */
-        source.on('end', function () {
-            console.info("-- END -- | delete temp file");
-            fs.unlinkSync(tmpFilePath);
-            deferred.resolve(
-                {
-                    code: 0,
-                    msg: "Success",
-                    path: folderName + path.sep + fileName
-                }
-            );
-        });   //delete
-
-        source.on('error', function (err) {
-            console.info(err);
-            deferred.reject(
-                {
-                    code: 400,
-                    msg: err
-                }
-            );
-        });
-    } catch (exception) {
-        deferred.reject(
-            {
-                code: 400,
-                msg: exception
-            }
-        );
-    }
-
-    return deferred.promise;
-}
 
 router.post('/', multipart(), function (req, res, next) {
     var i,
@@ -139,7 +32,7 @@ router.post('/', multipart(), function (req, res, next) {
             }
 
             for (i = 0, length = req.files['file'].length; i < length; i++) {
-                promises.push(uploadOneFile(req.files['file'][i]));
+                promises.push(fileSystem.uploadOneFile(req.files['file'][i]));
             }
 
             Q.all(promises)
@@ -165,7 +58,7 @@ router.post('/', multipart(), function (req, res, next) {
                     }
                 )
         } else {
-            uploadOneFile(req.files['file'], res)
+            fileSystem.uploadOneFile(req.files['file'], res)
                 .then(
                     function (result) {
                         console.info("uploadOneFile  ==>  callback ==> success");
@@ -182,6 +75,47 @@ router.post('/', multipart(), function (req, res, next) {
                 );
         }
     }
+});
+
+router.get('/:root/:path/:file', function (req, res, next) {
+    var filePath,
+        content,
+        fileInfo;
+    console.log(" ==>   reader.js");
+    console.log(req.params);
+
+    try {
+        filePath = path.join(path.resolve(process.cwd(), ".."), req.params.root, req.params.path, req.params.file);
+        console.info(filePath);
+        // 判断文件是否存在
+        if (fs.existsSync(filePath)) {
+            // 读取文件 --  同步
+            content = fs.readFileSync(filePath);
+            // 获取文件类型
+            fileInfo = imageinfo(content);
+            console.info(fileInfo);
+            // setHeader(name, value) -  指定一个 HTTP 请求的头部
+            // name 参数是要设置的头部的名称。这个参数不应该包括空白、冒号或换行。
+            // value 参数是头部的值。这个参数不应该包括换行。
+            res.setHeader("Content-Type", fileInfo.mimeType);
+            res.writeHead(200, "Ok");
+            res.write(content, "binary");            //格式必须为 binary，否则会出错
+            res.end();
+        } else {
+            next(new Error("File not found"));
+        }
+    } catch (err) {
+        next(new Error(err));
+    }
+});
+
+router.get("/temp/:type/:id", function (req, res, next) {
+
+    console.info(req.params);
+
+    gallery.fetchGallery(req, function (request) {
+        res.json(request);
+    });
 });
 
 module.exports = router;

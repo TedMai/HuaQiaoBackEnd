@@ -3,8 +3,9 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const imageinfo = require('imageinfo');
+const gallery = require('../db/gallery.api');
 
-router.get('/:path', function (req, res, next) {
+router.get('/:root/:path/:file', function (req, res, next) {
     var filePath,
         content,
         fileInfo;
@@ -12,7 +13,7 @@ router.get('/:path', function (req, res, next) {
     console.log(req.params);
 
     try {
-        filePath = path.join(path.resolve(process.cwd(), ".."), "screenshot", decodeURIComponent(req.params.path));
+        filePath = path.join(path.resolve(process.cwd(), ".."), req.params.root, req.params.path, req.params.file);
         console.info(filePath);
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {
@@ -34,6 +35,15 @@ router.get('/:path', function (req, res, next) {
     } catch (err) {
         next(new Error(err));
     }
+});
+
+router.get("/temp/:type/:id", function (req, res, next) {
+
+    console.info(req.params);
+
+    gallery.fetchGallery(req, function (request) {
+        res.json(request);
+    });
 });
 
 module.exports = router;

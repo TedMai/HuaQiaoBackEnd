@@ -27,7 +27,7 @@ angular
                         .then(
                             function (result) {
                                 console.info(result.paths);
-                                $scope.album = result.paths;
+                                that.album = result.paths;
                                 $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
@@ -48,12 +48,12 @@ angular
                     for (i = 0, length = this.album.length; i < length; i++) {
                         gallery.push({
                             imageurl: this.album[i],
-                            type: 0,
-                            relative: typeof($scope.hospital.hid) === "undefined" ? 0 : $scope.hospital.hid
+                            type: 1,
+                            relative: typeof(this.department.did) === "undefined" ? 0 : this.department.did
                         });
                     }
                     console.info(gallery);
-                    console.info(this.doctor);
+                    console.info(this.department);
 
                     Table.save(
                         {
@@ -80,8 +80,6 @@ angular
                     );
                 };
                 /** end of save **/
-
-
             }   /** end of controller **/
         ]
     });
