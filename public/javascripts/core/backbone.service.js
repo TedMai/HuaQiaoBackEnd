@@ -9,7 +9,23 @@ angular
     ])
     .factory('Table', ['$resource',
         function ($resource) {
-            return $resource("/backbone/table/:name", {name: '@name'}, {});
+            /**
+             * 新增 | 编辑
+             * @returns {*}
+             * @private
+             */
+            var _repertory = function () {
+                return $resource("/backbone/table/:name", {name: '@name'}, {});
+            };
+
+            var _fetch = function () {
+                return $resource("/backbone/table/:name", {name: '@name'}, {});
+            };
+
+            return {
+                repertory: _repertory,
+                librarian: _fetch
+            }
         }
     ])
     .factory('Cleaner', ['$resource',

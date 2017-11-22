@@ -5,14 +5,13 @@ angular
     .component('hospital', {
         templateUrl: "partial/hospital/hospital.template.html",
         controller: [
-            'Container',
-            function (Container) {
-                console.info("hospital.component.js");
+            'Table',
+            function (Table) {
+                console.info("==>   hospital.component.js");
 
-                var data = Container.get();
-                console.info(data);
-
-                this.hospital = data;
+                Table.librarian().get(
+                    // To do
+                )
             }
         ]
     });

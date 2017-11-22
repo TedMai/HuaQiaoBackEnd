@@ -102,7 +102,7 @@ angular
                     }
                     console.info(gallery);
 
-                    Table.save(
+                    Table.repertory().save(
                         {
                             name: name,
                             id: $scope.hospital.hid

@@ -100,7 +100,7 @@ angular
                     console.info(gallery);
                     console.info(this.doctor);
 
-                    Table.save(
+                    Table.repertory().save(
                         {
                             name: name,
                             id: this.doctor.id

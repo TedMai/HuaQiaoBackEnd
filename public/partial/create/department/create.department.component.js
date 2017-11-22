@@ -99,7 +99,7 @@ angular
                     console.info(gallery);
                     console.info(this.department);
 
-                    Table.save(
+                    Table.repertory().save(
                         {
                             name: name,
                             id: this.department.did
