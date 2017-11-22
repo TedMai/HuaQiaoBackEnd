@@ -19,9 +19,10 @@ var api = {
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.setBasicInfo)
+            .then(HANDLER.batchCopyWrapper)
             .then(HANDLER.insertGallery)
             .then(HANDLER.commitTransaction)
-            .then(HANDLER.cleanup)
+            .then(HANDLER.deepClean)
             .then(function (result) {
                 response(result);
             })
@@ -40,10 +41,22 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editDepartment,
-                information: [request.body.information, request.query.id]
+                sqlFetchGallery: EXEC_SQL.fetchDepartmentGallery,
+                sqlInsertGallery: EXEC_SQL.insertDepartmentGallery,
+                sqlDeleteGallery: EXEC_SQL.deleteDepartmentGallery,
+                information: [request.body.information, request.query.id],
+                gallery: request.body.gallery,
+                id: request.query.id
             })
+            .then(HANDLER.beginTransaction)
             .then(HANDLER.updateBasicInfo)
-            .then(HANDLER.cleanup)
+            .then(HANDLER.fetchGallery)
+            .then(HANDLER.batchRemoveWrapper)
+            .then(HANDLER.removeGallery)
+            .then(HANDLER.batchCopyWrapper)
+            .then(HANDLER.insertGallery)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.deepClean)
             .then(function (result) {
                 response(result);
             })

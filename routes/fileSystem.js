@@ -8,10 +8,10 @@ const __MAX_UPLOAD_FILE_SIZE__ = 3 * 1024 * 1024;
 function check(filePath) {
     var subFilePath;
 
-    if (filePath.lastIndexOf("\\") === -1) {
+    if (filePath.lastIndexOf(path.sep) === -1) {
 
     } else {
-        subFilePath = filePath.substr(0, filePath.lastIndexOf("\\"));
+        subFilePath = filePath.substr(0, filePath.lastIndexOf(path.sep));
         console.info(subFilePath);
         if (!fs.existsSync(subFilePath)) {
             check(subFilePath);

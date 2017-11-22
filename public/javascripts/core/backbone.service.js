@@ -38,7 +38,7 @@ angular
          * @private
          */
         var _remove = function () {
-            return $resource('/file/remove/:path', {}, {});
+            return $resource('/file/remove/:root/:path', {}, {});
         };
 
         return {

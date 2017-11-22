@@ -1,6 +1,7 @@
 const Q = require('q');
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const multipart = require('connect-multiparty');
 const fileSystem = require("./fileSystem");
 const gallery = require('../db/gallery.api');
@@ -145,13 +146,13 @@ router.get('/image/:root/:path/:file', function (req, res, next) {
 /**
  * 删除图片
  */
-router.post("/remove/:path", function (req, res, next) {
+router.post("/remove/:root/:path", function (req, res, next) {
 
     console.info(" ==>   process.js ==>     remove image.");
     console.info(req.params);
 
     fileSystem
-        .remove(req.params.path)
+        .remove(path.join(req.params.root, req.params.path))
         .then(
             function (response) {
                 res.json(response);

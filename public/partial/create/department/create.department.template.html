@@ -21,3 +21,8 @@
 <h3>科室图片</h3>
 <input type="file" file-model="myFile">
 <button ng-click=$ctrl.uploadFile()>上传</button>
+
+<div ng-repeat="item in $ctrl.album">
+    <img ng-src="{{'file/image/temp/' + item}}">
+    <button ng-click=deleteFile(item)>删除</button>
+</div>

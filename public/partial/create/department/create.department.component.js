@@ -5,8 +5,8 @@ angular
     .component('create.department', {
         templateUrl: "partial/create/department/create.department.template.html",
         controller: [
-            'Container', 'Table', 'SelectHelper', 'FileUpload', '$scope', '$location', '$window',
-            function (Container, Table, SelectHelper, FileUpload, $scope, $location, $window) {
+            'Container', 'Table', 'SelectHelper', 'FileUpload', 'Gallery', 'ArrayHelper', '$scope', '$location', '$window',
+            function (Container, Table, SelectHelper, FileUpload, Gallery, ArrayHelper, $scope, $location, $window) {
                 var
                     that = this,
                     data = Container.get();
@@ -16,7 +16,6 @@ angular
                  */
                 this.department = data.data;
                 this.hospitalSelect = data.select;
-                this.album = [];
 
                 /**
                  * 添加图片上传服务
@@ -35,7 +34,53 @@ angular
                             }
                         );
                 };
+                /**
+                 * 图片预览
+                 */
+                if (typeof(this.department.did) === "undefined") {
+                    // 新增
+                    this.album = [];
+                } else {
+                    // 编辑
+                    // 取数
+                    // - 根据hid在数据库找到对应的图片链接地址
+                    // - 将医院图片复制至temp文件夹
+                    Gallery.temp().get(
+                        {
+                            type: 1,
+                            id: this.department.did
+                        },
+                        {},
+                        function (response) {
+                            console.info(response.paths);
+                            that.album = angular.copy(response.paths);
+                        },
+                        function (error) {
+                            console.error(error);
+                        }
+                    );
 
+                    // 返回图集（含图片链接） - 赋值
+                }
+                /**
+                 * 删除图片
+                 */
+                this.deleteFile = function (file) {
+                    this.album.remove(file);
+                    Gallery.remove().save(
+                        {
+                            root: "temp",
+                            path: file
+                        },
+                        {},
+                        function (response) {
+                            console.info(response);
+                        },
+                        function (err) {
+                            console.error(err);
+                        }
+                    )
+                };
                 /**
                  * 保存
                  */

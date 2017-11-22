@@ -72,7 +72,8 @@ angular
                     $scope.album.remove(file);
                     Gallery.remove().save(
                         {
-                            path: 'temp\\' + file
+                            root: "temp",
+                            path: file
                         },
                         {},
                         function (response) {
