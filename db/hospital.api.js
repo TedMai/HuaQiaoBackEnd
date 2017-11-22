@@ -21,9 +21,10 @@ var api = {
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.setBasicInfo)
+            .then(HANDLER.batchCopyWrapper)
             .then(HANDLER.insertGallery)
             .then(HANDLER.commitTransaction)
-            .then(HANDLER.cleanup)
+            .then(HANDLER.deepClean)
             .then(function (result) {
                 response(result);
             })
@@ -44,10 +45,22 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editHospital,
-                information: [request.body.information, request.query.id]
+                sqlFetchGallery: EXEC_SQL.fetchHospitalGallery,
+                sqlInsertGallery: EXEC_SQL.insertHospitalGallery,
+                sqlDeleteGallery: EXEC_SQL.deleteHospitalGallery,
+                information: [request.body.information, request.query.id],
+                gallery: request.body.gallery,
+                id: request.query.id
             })
+            .then(HANDLER.beginTransaction)
             .then(HANDLER.updateBasicInfo)
-            .then(HANDLER.cleanup)
+            .then(HANDLER.fetchGallery)
+            .then(HANDLER.batchRemoveWrapper)
+            .then(HANDLER.removeGallery)
+            .then(HANDLER.batchCopyWrapper)
+            .then(HANDLER.insertGallery)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.deepClean)
             .then(function (result) {
                 response(result);
             })
@@ -66,15 +79,22 @@ var api = {
 
         HANDLER
             .setUpConnection({
+                id: request.params.id,
                 index: 0,
+                sqlFetchGallery: EXEC_SQL.fetchHospitalGallery,
                 execSQLs: [
                     EXEC_SQL.deleteRelativeDoctors,
                     EXEC_SQL.deleteRelativeDepartments,
+                    EXEC_SQL.deleteHospitalGallery,
                     EXEC_SQL.deleteHospital
                 ],
                 information: [request.params.id]
             })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.fetchGallery)
+            .then(HANDLER.batchRemoveWrapper)
             .then(HANDLER.deleteDataSet)
+            .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

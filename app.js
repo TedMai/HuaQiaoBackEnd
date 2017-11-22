@@ -11,7 +11,6 @@ var bodyParser = require('body-parser');
 // const doctor = require('./routes/doctor.js');
 const backbone = require('./routes/backbone.js');
 const processor = require('./routes/processor.js');
-// const reader = require('./routes/reader.js');
 
 var app = express();
 

@@ -3,6 +3,7 @@ const MYSQL = require('mysql');
 const CODE = require('./mysql.code');
 const CONFIG = require('./mysql.config');
 const FORMAT = require('./utility.date');
+const FILESYSTEM = require('../routes/fileSystem');
 
 var handler =
     {
@@ -208,7 +209,95 @@ var handler =
         },
 
         /**
-         * 插入图片
+         * 批量删除图片文件
+         *  --  封装
+         * @param request
+         * @returns {*|promise|Promise}
+         */
+        batchCopyWrapper: function (request) {
+            var
+                deferred = Q.defer();
+
+            console.info("==>   batchCopyWrapper");
+            console.info(request.params.gallery);
+            /**
+             * 未找到上传图集 直接跳过
+             */
+            if (!request.params.gallery instanceof Array) {
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    insertId: request.result.insertId
+                });
+            } else if (request.params.gallery.length === 0) {
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    insertId: request.result.insertId
+                });
+            } else {
+
+                FILESYSTEM
+                    .batchCopy(request.params.gallery, "temp", "screenshot")
+                    .then(
+                        function (result) {
+                            deferred.resolve({
+                                connection: request.connection,
+                                params: request.params,
+                                insertId: request.result.insertId
+                            });
+                        },
+                        function (err) {
+                            deferred.reject({
+                                connection: request.connection,
+                                code: CODE.failedCode,
+                                errMsg: err.msg
+                            });
+                        }
+                    );
+            }
+
+            return deferred.promise;
+        },
+
+        batchRemoveWrapper: function (request) {
+            var
+                deferred = Q.defer();
+
+            console.info("==>   batchRemoveWrapper");
+            console.info(request.result);
+
+            if (request.result.length === 0) {
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params
+                });
+            } else {
+
+                FILESYSTEM
+                    .batchRemove(request.result, "screenshot")
+                    .then(
+                        function (result) {
+                            deferred.resolve({
+                                connection: request.connection,
+                                params: request.params
+                            });
+                        },
+                        function (err) {
+                            deferred.reject({
+                                connection: request.connection,
+                                code: CODE.failedCode,
+                                errMsg: err.msg
+                            });
+                        }
+                    );
+            }
+
+            return deferred.promise;
+        },
+
+        /**
+         * 数据库操作 - 插入图集
          * @param request
          * @returns {*|Promise|promise}
          */
@@ -226,11 +315,13 @@ var handler =
             if (!request.params.gallery instanceof Array) {
                 deferred.resolve({
                     connection: request.connection,
+                    params: request.params,
                     result: "DONE"
                 });
             } else if (request.params.gallery.length === 0) {
                 deferred.resolve({
                     connection: request.connection,
+                    params: request.params,
                     result: "DONE"
                 });
             }
@@ -239,7 +330,7 @@ var handler =
                     values[i] = [
                         request.params.gallery[i].imageurl,
                         request.params.gallery[i].type,
-                        request.result.insertId
+                        request.insertId
                     ]
                     // request.params.gallery[i].relative = request.result.insertId;
                 }
@@ -256,14 +347,71 @@ var handler =
                     }
                     deferred.resolve({
                         connection: request.connection,
+                        params: request.params,
                         result: result
                     });
                 });
             }
 
             return deferred.promise;
-        }
-        ,
+        },
+
+        /**
+         * 数据库操作 - 删除图集
+         * @param request
+         * @returns {*|promise|Promise}
+         */
+        removeGallery: function (request) {
+            var
+                values = [request.params.id],
+                deferred = Q.defer();
+
+            console.info("==>   removeGallery");
+            request.connection.query(request.params.sqlDeleteGallery, [values], function (err, result) {
+                console.info("==> removeGallery ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    result: {
+                        insertId: request.params.id
+                    }
+                });
+            });
+
+            return deferred.promise;
+        },
+
+        fetchGallery: function (request) {
+            var
+                values = [request.params.id],
+                deferred = Q.defer();
+
+            console.info("==>   fetchGallery");
+            request.connection.query(request.params.sqlFetchGallery, [values], function (err, result) {
+                console.info("==> fetchGallery ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    result: result
+                });
+            });
+
+            return deferred.promise;
+        },
 
         /**
          * 获取列表
@@ -360,8 +508,39 @@ var handler =
             });
 
             return deferred.promise;
-        }
-        ,
+        },
+
+        deepClean: function (request) {
+            var deferred = Q.defer();
+
+            console.info("==>   deepClean");
+            request.connection.release();
+            if (request.params.hasOwnProperty("gallery") && request.params.gallery.length > 0) {
+                FILESYSTEM
+                    .batchRemove(request.params.gallery, "temp")
+                    .then(
+                        function (result) {
+                            deferred.resolve({
+                                code: CODE.successCode,
+                                msg: result.msg
+                            });
+                        },
+                        function (err) {
+                            deferred.reject({
+                                code: CODE.failedCode,
+                                msg: err.msg
+                            });
+                        }
+                    );
+            } else {
+                deferred.resolve({
+                    code: CODE.successCode,
+                    msg: request.result
+                });
+            }
+
+            return deferred.promise;
+        },
 
         /**
          * 错误处理

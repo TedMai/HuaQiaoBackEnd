@@ -70,6 +70,18 @@ angular
                  */
                 $scope.deleteFile = function (file) {
                     $scope.album.remove(file);
+                    Gallery.remove().save(
+                        {
+                            path: 'temp\\' + file
+                        },
+                        {},
+                        function (response) {
+                            console.info(response);
+                        },
+                        function (err) {
+                            console.error(err);
+                        }
+                    )
                 };
                 /**
                  * 保存事件响应

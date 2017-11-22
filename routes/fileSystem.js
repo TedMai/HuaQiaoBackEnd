@@ -205,6 +205,99 @@ var api = {
         }
 
         return deferred.promise;
+    },
+
+    batchCopy: function (gallery, sourceRootFolder, destinationRootFolder) {
+        var promises = [],
+            deferred = Q.defer();
+
+        gallery.forEach(function (path) {
+            console.info(path.imageurl);
+            promises.push(api.copy(path.imageurl, sourceRootFolder, destinationRootFolder));
+        });
+
+        Q.all(promises)
+            .then(
+                function (result) {
+                    var i = 0,
+                        paths = [];
+
+                    console.info("==>  Q.all  ==>  callback ==> success");
+                    result.forEach(function (element) {
+                        paths[i++] = element.path;
+                    });
+
+                    deferred.resolve({
+                        code: 0,
+                        msg: "Success",
+                        paths: paths
+                    });
+                },
+                function (error) {
+                    console.info("==>  Q.all  ==>  callback ==> fail");
+                    deferred.reject(error);
+                }
+            );
+
+        return deferred.promise;
+    },
+
+    remove: function (filePath) {
+        var
+            beginning = path.resolve(process.cwd(), ".."),
+            absolutePath = path.join(beginning, filePath),
+            deferred = Q.defer();
+
+        console.info(absolutePath);
+        if (fs.existsSync(absolutePath)) {
+            fs.unlink(absolutePath, function (err) {
+                if (err) {
+                    deferred.reject({
+                        code: -400,
+                        msg: err
+                    })
+                }
+                deferred.resolve({
+                    code: 0,
+                    msg: "Success - Remove file : " + absolutePath
+                })
+            })
+        } else {
+            deferred.resolve({
+                code: -100,
+                msg: "Not exist - File : " + absolutePath
+            })
+        }
+
+        return deferred.promise;
+    },
+
+    batchRemove: function (gallery, rootFolder) {
+        var promises = [],
+            deferred = Q.defer();
+
+        console.info("==>   batchRemove");
+        gallery.forEach(function (item) {
+            console.info(item.imageurl);
+            promises.push(api.remove(path.join(rootFolder, item.imageurl)));
+        });
+
+        Q.all(promises)
+            .then(
+                function (result) {
+                    console.info("==>  Q.all  ==>  callback ==> success");
+                    deferred.resolve({
+                        code: 0,
+                        msg: "Success"
+                    });
+                },
+                function (error) {
+                    console.info("==>  Q.all  ==>  callback ==> fail");
+                    deferred.reject(error);
+                }
+            );
+
+        return deferred.promise;
     }
 };
 

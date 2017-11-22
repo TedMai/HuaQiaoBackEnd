@@ -32,8 +32,18 @@ angular
             return $resource('/file/temp/:type/:id', {}, {});
         };
 
+        /**
+         * 删除目标文件夹下的指定文件
+         * @returns {*}
+         * @private
+         */
+        var _remove = function () {
+            return $resource('/file/remove/:path', {}, {});
+        };
+
         return {
-            temp: _temp
+            temp: _temp,
+            remove: _remove
         }
     }])
     .factory('Container', function () {

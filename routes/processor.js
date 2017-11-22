@@ -6,6 +6,10 @@ const fileSystem = require("./fileSystem");
 const gallery = require('../db/gallery.api');
 const __MAX_UPLOAD_FILE_NUM__ = 9;
 
+/**
+ *  上传文件（单个或多个）至temp文件夹
+ *
+ */
 router.post('/', multipart(), function (req, res, next) {
     var i,
         length,
@@ -22,8 +26,13 @@ router.post('/', multipart(), function (req, res, next) {
         return;
     }
 
+    /**
+     * 判断传入参数是否为数组类型
+     * -- instanceof Array
+     */
     if (typeof(req.files['file']) === "object") {
         if (req.files['file'] instanceof Array) {
+            // 一次性最多上传图片数
             if (req.files['file'].length > __MAX_UPLOAD_FILE_NUM__) {
                 res.json({
                     code: 400,
@@ -31,7 +40,7 @@ router.post('/', multipart(), function (req, res, next) {
                 });
                 return;
             }
-
+            // 异步同时上传文件
             for (i = 0, length = req.files['file'].length; i < length; i++) {
                 promises.push(fileSystem.uploadOneFile(req.files['file'][i]));
             }
@@ -82,47 +91,27 @@ router.post('/', multipart(), function (req, res, next) {
  * 拷贝至temp文件夹
  */
 router.get("/temp/:type/:id", function (req, res, next) {
-    var promises = [];
-
     /**
      * 请求参数
      *  -   对象类型
      *  -   对象ID
      */
     console.info(req.params);
-
     /**
      * 根据ID及类型获取对象图集
      */
     gallery.fetchGallery(req, function (request) {
         console.info(request);
-        request.msg.forEach(function (path) {
-            console.info(path.imageurl);
-            promises.push(fileSystem.copy(path.imageurl, "screenshot", "temp"));
-        });
-
-        Q.all(promises)
+        fileSystem
+            .batchCopy(request.msg, "screenshot", "temp")
             .then(
                 function (result) {
-                    var i = 0,
-                        paths = [];
-
-                    console.info("==>  Q.all  ==>  callback ==> success");
-                    result.forEach(function (element) {
-                        paths[i++] = element.path;
-                    });
-
-                    res.json({
-                        code: 0,
-                        msg: "Success",
-                        paths: paths
-                    });
+                    res.json(result);
                 },
-                function (error) {
-                    console.info("==>  Q.all  ==>  callback ==> fail");
-                    res.json(error);
+                function (err) {
+                    res.json(err);
                 }
-            )
+            );
     });
 });
 
@@ -151,6 +140,30 @@ router.get('/image/:root/:path/:file', function (req, res, next) {
     } catch (err) {
         next(new Error(err));
     }
+});
+
+/**
+ * 删除图片
+ */
+router.post("/remove/:path", function (req, res, next) {
+
+    console.info(" ==>   process.js ==>     remove image.");
+    console.info(req.params);
+
+    fileSystem
+        .remove(req.params.path)
+        .then(
+            function (response) {
+                res.json(response);
+            },
+            function (err) {
+                res.json(err);
+            }
+        )
+        .catch(function (ex) {
+            res.json(ex);
+        });
+
 });
 
 module.exports = router;
