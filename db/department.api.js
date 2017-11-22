@@ -74,14 +74,22 @@ var api = {
 
         HANDLER
             .setUpConnection({
+                id: request.params.id,
                 index: 0,
+                sqlFetchGallery: EXEC_SQL.fetchDepartmentGallery,
                 execSQLs: [
+                    EXEC_SQL.deleteRelativeDoctorsGallery,
                     EXEC_SQL.deleteRelativeDoctors,
+                    EXEC_SQL.deleteDepartmentGallery,
                     EXEC_SQL.deleteDepartment
                 ],
                 information: [request.params.id]
             })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.fetchGallery)
+            .then(HANDLER.batchRemoveWrapper)
             .then(HANDLER.deleteDataSet)
+            .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

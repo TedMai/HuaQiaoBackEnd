@@ -83,7 +83,9 @@ var api = {
                 index: 0,
                 sqlFetchGallery: EXEC_SQL.fetchHospitalGallery,
                 execSQLs: [
+                    EXEC_SQL.deleteRelativeDoctorsGallery,
                     EXEC_SQL.deleteRelativeDoctors,
+                    EXEC_SQL.deleteRelativeDepartmentsGallery,
                     EXEC_SQL.deleteRelativeDepartments,
                     EXEC_SQL.deleteHospitalGallery,
                     EXEC_SQL.deleteHospital

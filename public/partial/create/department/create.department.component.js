@@ -26,7 +26,7 @@ angular
                         .then(
                             function (result) {
                                 console.info(result.paths);
-                                that.album = result.paths;
+                                that.album = that.album.concat(result.paths);
                                 $window.alert(result.msg);
                             }, function (error) {
                                 console.error(error);
@@ -43,8 +43,6 @@ angular
                 } else {
                     // 编辑
                     // 取数
-                    // - 根据hid在数据库找到对应的图片链接地址
-                    // - 将医院图片复制至temp文件夹
                     Gallery.temp().get(
                         {
                             type: 1,
@@ -57,6 +55,7 @@ angular
                         },
                         function (error) {
                             console.error(error);
+                            that.album = [];
                         }
                     );
 
