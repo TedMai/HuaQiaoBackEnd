@@ -103,15 +103,24 @@ var api = {
      * 获取列表 - 科室
      * @param response
      */
-    fetchDepartmentList: function (response) {
+    fetchDepartmentList: function (request, response) {
 
         HANDLER
             .setUpConnection({
-                tableName: 'department',
-                execSQL: EXEC_SQL.fetchDepartmentList,
-                values: null
+                department: {
+                    execSQL: EXEC_SQL.fetchDepartmentList,
+                    values: request.params.id
+                },
+                gallery: {
+                    sql: EXEC_SQL.fetchDepartmentGallery,
+                    values: request.params.id
+                },
+                doctors: {
+                    sql: EXEC_SQL.fetchRelativeDoctors,
+                    values: request.params.id
+                }
             })
-            .then(HANDLER.fetchList)
+            .then(HANDLER.fetchDataSet)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

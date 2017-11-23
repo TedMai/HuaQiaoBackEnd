@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const render = require('./response');
-const api = require('../db/shadow.api');
+const BACKBONE = require('../db/shadow.api');
+const HOSPITAL = require('../db/hospital.api');
 
 router.get('/', function (req, res, next) {
     console.log("backbone.js ==> Fetch data set.");
-    api.initialization(req, function (request) {
+    BACKBONE.initialization(req, function (request) {
         console.info("backbone.js ==> Render page.");
         render.renderPage(request, res, next);
     });
@@ -15,12 +16,25 @@ router.get("/select/:name", function (req, res, next) {
     console.log("backbone.js ==> Initialize select ..");
     console.log(req.params);
 
-    api.selectOptions(req, function (request) {
+    BACKBONE.selectOptions(req, function (request) {
         console.log("backbone.js ==> selectOptions ==> callback");
         console.info(request);
         res.json(request);
     });
 
+});
+
+router.get("/table/:id", function (req, res, next) {
+    console.log("backbone.js ==> fetch");
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.query);
+
+    HOSPITAL.fetchHospitalList(req, function (request) {
+        console.log("backbone.js ==> fetchHospitalList ==> callback");
+        console.info(request);
+        res.json(request);
+    });
 });
 
 router.post("/table/:name", function (req, res, next) {
@@ -30,11 +44,11 @@ router.post("/table/:name", function (req, res, next) {
     console.log(req.query);
 
     if (req.query && req.query.hasOwnProperty("id")) {
-        api.update(req, function (request) {
+        BACKBONE.update(req, function (request) {
             res.json(request);
         });
     } else {
-        api.insert(req, function (request) {
+        BACKBONE.insert(req, function (request) {
             res.json(request);
         });
     }
@@ -46,7 +60,7 @@ router.post("/table/:name/id/:id", function (req, res, next) {
     console.log(req.body);
     console.log(req.query);
 
-    api.delete(req, function (request) {
+    BACKBONE.delete(req, function (request) {
         res.json(request);
     });
 });

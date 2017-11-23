@@ -5,10 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// const index = require('./routes/index.js');
-// const hospital = require('./routes/hospital.js');
-// const department = require('./routes/department.js');
-// const doctor = require('./routes/doctor.js');
 const backbone = require('./routes/backbone.js');
 const processor = require('./routes/processor.js');
 
@@ -27,10 +23,6 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', index);
-// app.use('/hospital', hospital);
-// app.use('/department', department);
-// app.use('/doctor', doctor);
 app.use("/backbone", backbone);
 app.use("/upload", processor);
 app.use("/file", processor);

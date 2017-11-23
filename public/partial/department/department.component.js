@@ -5,8 +5,8 @@ angular
     .component('department', {
         templateUrl: "partial/department/department.template.html",
         controller: [
-            'Table',
-            function (Table) {
+            'Table', 'Container',
+            function (Table, Container) {
                 console.info("==>   department.component.js");
 
                 Table.librarian().get(

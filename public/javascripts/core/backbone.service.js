@@ -19,7 +19,7 @@ angular
             };
 
             var _fetch = function () {
-                return $resource("/backbone/table/:name", {name: '@name'}, {});
+                return $resource("/backbone/table/:id", {id: '@id'}, {});
             };
 
             return {

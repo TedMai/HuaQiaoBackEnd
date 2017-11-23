@@ -1,16 +1,26 @@
-<h1>名称：</h1>
-<input type="text" required value="{{$ctrl.hospital.name}}" ng-maxlength="16"/>
-
-<h3>简介：</h3>
-<textarea>{{$ctrl.hospital.description}}</textarea>
-
-<h2>成立时间：</h2>
-<input type="date" value="{{$ctrl.hospital.founding}}">
-
-<h2>地址：{{$ctrl.hospital.address}}</h2>
-<input type="text" value="{{$ctrl.hospital.address}}">
-
-<h2>电话：{{$ctrl.hospital.contact}}</h2>
-<input type="text" value="{{$ctrl.hospital.contact}}">
-
-<h2>坐标：[{{$ctrl.hospital.axisX}} , {{$ctrl.hospital.axisY}}]</h2>
+<div>
+    <div>
+        <img ng-src="{{$ctrl.focusImage}}">
+    </div>
+    <div>
+        <div>
+            <h1>{{$ctrl.hospital.name}}</h1>
+        </div>
+        <div>
+            <h5>成立时间：</h5>
+            <h4>{{$ctrl.hospital.founding}}</h4>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <p>{{$ctrl.hospital.description}}</p>
+    </div>
+    <hr>
+    <div>
+        <h3>{{$ctrl.hospital.contact}}</h3>
+    </div>
+    <hr>
+    <div>
+        <h3>{{$ctrl.hospital.address}}</h3>
+    </div>
+</div>

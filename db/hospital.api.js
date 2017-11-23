@@ -108,17 +108,23 @@ var api = {
 
     /**
      * 获取列表 - 医院
+     * @param request
      * @param response
      */
-    fetchHospitalList: function (response) {
+    fetchHospitalList: function (request, response) {
 
         HANDLER
             .setUpConnection({
-                tableName: 'hospital',
-                execSQL: EXEC_SQL.fetchHospitalList,
-                values: null
+                hospital: {
+                    sql: EXEC_SQL.fetchSpecificHospital,
+                    values: request.params.id
+                },
+                gallery: {
+                    sql: EXEC_SQL.fetchHospitalGallery,
+                    values: request.params.id
+                }
             })
-            .then(HANDLER.fetchList)
+            .then(HANDLER.fetchDataSet)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

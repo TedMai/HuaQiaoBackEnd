@@ -460,8 +460,8 @@ var handler =
                     connection: request.connection,
                     params: {
                         tableName: item,
-                        execSQL: request.params[item],
-                        values: null
+                        execSQL: request.params[item].sql,
+                        values: request.params[item].values
                     }
                 };
 

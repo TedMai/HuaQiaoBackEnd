@@ -54,8 +54,8 @@ angular
                     }
                 );
 
-                this.toDetail = function (targetUrl, data) {
-                    Container.set(data);
+                this.toDetail = function (targetUrl, id) {
+                    Container.set(id);
                     $window.location = targetUrl;
                 };
 

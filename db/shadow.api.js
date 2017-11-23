@@ -10,9 +10,18 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                hospital: EXEC_SQL.fetchHospitalList,
-                department: EXEC_SQL.fetchDepartmentList,
-                doctor: EXEC_SQL.fetchDoctorList
+                hospital: {
+                    sql: EXEC_SQL.fetchHospitalList,
+                    values: null
+                },
+                department: {
+                    sql: EXEC_SQL.fetchDepartmentList,
+                    values: null
+                },
+                doctor: {
+                    sql: EXEC_SQL.fetchDoctorList,
+                    values: null
+                }
             })
             .then(HANDLER.fetchDataSet)
             .then(HANDLER.cleanup)
@@ -104,7 +113,7 @@ var api = {
         }
     },
 
-    selectOptions: function(request, response){
+    selectOptions: function (request, response) {
 
         switch (request.params.name) {
             case 'department':
