@@ -91,15 +91,25 @@ var api = {
             });
     },
 
-    fetchDoctorList: function (response) {
+    /**
+     * 获取医生信息
+     * @param request
+     * @param response
+     */
+    fetchDoctorList: function (request, response) {
 
         HANDLER
             .setUpConnection({
-                tableName: 'doctor',
-                execSQL: EXEC_SQL.fetchDoctorList,
-                values: null
+                doctor: {
+                    sql: EXEC_SQL.fetchSpecificDoctor,
+                    values: request.params.id
+                },
+                gallery: {
+                    sql: EXEC_SQL.fetchDoctorGallery,
+                    values: request.params.id
+                }
             })
-            .then(HANDLER.fetchList)
+            .then(HANDLER.fetchDataSet)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);

@@ -1,5 +1,25 @@
-<h1>名称：{{$ctrl.doctor.name}}</h1>
-<h2>职位：{{$ctrl.doctor.position}}</h2>
-<h2>职称：{{$ctrl.doctor.title}}</h2>
-<p>简历：{{$ctrl.doctor.resume}}</p>
-<p>擅长领域：{{$ctrl.doctor.field}}</p>
+<div>
+    <div>
+        <img ng-src="{{$ctrl.focusImage}}">
+    </div>
+    <div>
+        <div>
+            <h1>{{$ctrl.doctor.name}}</h1>
+        </div>
+        <div>
+            <h5>职称：</h5>
+            <h4>{{$ctrl.doctor.title}}</h4>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <h5>简历：</h5>
+        <p>{{$ctrl.doctor.resume}}</p>
+    </div>
+    <hr>
+    <div>
+        <h5>擅长领域：</h5>
+        <h3>{{$ctrl.doctor.field}}</h3>
+    </div>
+    <hr>
+</div>

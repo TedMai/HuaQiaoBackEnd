@@ -8,15 +8,13 @@ angular
             'Table', 'Container',
             function (Table, Container) {
                 var that = this,
-                    hospital = {},
-                    gallery = {},
-                    focusImage,
                     data = Container.get();
 
                 console.info("==>   hospital.component.js");
                 Table.librarian().get(
                     {
-                        id: data
+                        id: data.hid,
+                        name: 'hospital'
                     },
                     {},
                     function (response) {

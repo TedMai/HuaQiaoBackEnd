@@ -14,7 +14,7 @@
     <tbody>
     <tr ng-repeat="hospital in $ctrl.hospitals">
         <td>
-            <a ng-click="$ctrl.toDetail('#/Hospital', hospital.hid)">{{hospital.name}}</a>
+            <a ng-click="$ctrl.toDetail('#/Hospital', hospital)">{{hospital.name}}</a>
         </td>
         <td>{{hospital.address}}</td>
         <td>{{hospital.contact}}</td>

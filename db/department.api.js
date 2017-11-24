@@ -101,6 +101,7 @@ var api = {
 
     /**
      * 获取列表 - 科室
+     * @param request
      * @param response
      */
     fetchDepartmentList: function (request, response) {
@@ -108,7 +109,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 department: {
-                    execSQL: EXEC_SQL.fetchDepartmentList,
+                    sql: EXEC_SQL.fetchSpecificDepartment,
                     values: request.params.id
                 },
                 gallery: {

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const render = require('./response');
 const BACKBONE = require('../db/shadow.api');
-const HOSPITAL = require('../db/hospital.api');
+// const HOSPITAL = require('../db/hospital.api');
 
 router.get('/', function (req, res, next) {
     console.log("backbone.js ==> Fetch data set.");
@@ -24,14 +24,14 @@ router.get("/select/:name", function (req, res, next) {
 
 });
 
-router.get("/table/:id", function (req, res, next) {
-    console.log("backbone.js ==> fetch");
+router.get("/table/:name/id/:id", function (req, res, next) {
+    console.log("backbone.js ==> query");
     console.log(req.params);
     console.log(req.body);
     console.log(req.query);
 
-    HOSPITAL.fetchHospitalList(req, function (request) {
-        console.log("backbone.js ==> fetchHospitalList ==> callback");
+    BACKBONE.query(req, function (request) {
+        console.log("backbone.js ==> query ==> callback");
         console.info(request);
         res.json(request);
     });

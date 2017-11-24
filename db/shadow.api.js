@@ -100,15 +100,19 @@ var api = {
 
         switch (request.params.name) {
             case 'hospital':
-                // HOSPITAL.deleteHospital(request, response);
+                HOSPITAL.fetchHospitalList(request, response);
                 break;
             case 'department':
-                // DEPARTMENT.deleteDepartment(request,response);
+                DEPARTMENT.fetchDepartmentList(request,response);
                 break;
             case 'doctor':
-                // DOCTOR.deleteDoctor(request,response);
+                DOCTOR.fetchDoctorList(request,response);
                 break;
             default:
+                response({
+                    code: CODE.failedCode,
+                    msg: "Parameter - " + request.params.name + " not found."
+                });
                 break;
         }
     },

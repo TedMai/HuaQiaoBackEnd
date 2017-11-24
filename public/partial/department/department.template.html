@@ -1,2 +1,13 @@
-<h1>名称：{{$ctrl.department.name}}</h1>
-<p>简介：{{$ctrl.department.description}}</p>
+<div>
+    <h1>名称：{{$ctrl.department.name}}</h1>
+</div>
+<div>
+    <p>简介：{{$ctrl.department.description}}</p>
+</div>
+<hr>
+<div>
+    <div ng-repeat="item in $ctrl.doctors">
+        <img ng-if="item.imageurl !== null" ng-src="{{item.imageurl}}">
+        <h3>{{item.name}}</h3>
+    </div>
+</div>
