@@ -7,7 +7,8 @@
 <hr>
 <div>
     <div ng-repeat="item in $ctrl.doctors">
-        <img ng-if="item.imageurl !== null" ng-src="{{item.imageurl}}">
+        <img ng-if="item.imageurl !== ''" ng-src="{{item.imageurl}}">
+        <img ng-if="item.imageurl === ''" src="../../icon/doctor.png">
         <h3>{{item.name}}</h3>
     </div>
 </div>
