@@ -37,6 +37,34 @@ router.get("/table/:name/id/:id", function (req, res, next) {
     });
 });
 
+router.get("/test/:name", function (req, res, next) {
+    console.log("backbone.js ==> test");
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.query);
+
+    if (req.query && req.query.hasOwnProperty("id")) {
+        BACKBONE.update(req, function (request) {
+            res.json(request);
+        });
+    } else {
+        BACKBONE.insert(req, function (request) {
+            res.json(request);
+        });
+    }
+});
+
+router.get("/test/:name/id/:id", function (req, res, next) {
+    console.log("backbone.js ==> delete");
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.query);
+
+    BACKBONE.delete(req, function (request) {
+        res.json(request);
+    });
+});
+
 router.post("/table/:name", function (req, res, next) {
     console.log("backbone.js ==> insert | edit");
     console.log(req.params);
