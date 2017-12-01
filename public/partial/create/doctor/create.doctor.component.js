@@ -51,8 +51,12 @@ angular
                         },
                         {},
                         function (response) {
-                            console.info(response.paths);
-                            that.album = angular.copy(response.paths);
+                            console.info(response);
+                            if(response.code === 0) {
+                                that.album = angular.copy(response.paths);
+                            }else{
+                                that.album = [];
+                            }
                         },
                         function (error) {
                             console.error(error);

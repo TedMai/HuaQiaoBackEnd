@@ -15,12 +15,15 @@ var api = {
                 sqlBasicInfo: EXEC_SQL.addUser,
                 // information: request.body.information,
                 information: {
-                    doctor: 25,
-                    visiting: new Date(),
-                    section: 0,
-                    registerFee: 1.11,
-                    medicalFee: 128.56,
-                    openNumber: 1
+                    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4',
+                    nickname: '晕砰',
+                    sex: 0,
+                    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
+                    country: '',
+                    province: '',
+                    city: '',
+                    phone: '18159393355',
+                    email: 'flowerinhouse@163.com'
                 }
             })
             .then(HANDLER.beginTransaction)
@@ -48,12 +51,14 @@ var api = {
                 // information: [request.body.information, request.query.id]
                 information: [
                     {
-                        doctor: 25,
-                        visiting: new Date(),
-                        section: 1,
-                        registerFee: 0.11,
-                        medicalFee: 12.56,
-                        openNumber: 1000
+                        nickname: '深瓜',
+                        sex: 1,
+                        headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
+                        country: '美国',
+                        province: '德州',
+                        city: '电气城',
+                        phone: '18760598086',
+                        email: '18760598086@139.com'
                     },
                     request.query.id
                 ]
@@ -81,6 +86,7 @@ var api = {
             .setUpConnection({
                 index: 0,
                 execSQLs: [
+                    EXEC_SQL.deleteRelativePatient,
                     EXEC_SQL.deleteUser
                 ],
                 information: [request.params.id]

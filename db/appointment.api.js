@@ -1,5 +1,6 @@
 const HANDLER = require('./mysql.handler');
 const EXEC_SQL = require('./appointment.interface');
+const RANDOM = require('./utility.signature');
 
 var api = {
 
@@ -15,12 +16,10 @@ var api = {
                 sqlBasicInfo: EXEC_SQL.addAppointment,
                 // information: request.body.information,
                 information: {
-                    doctor: 25,
-                    visiting: new Date(),
-                    section: 0,
-                    registerFee: 1.11,
-                    medicalFee: 128.56,
-                    openNumber: 1
+                    rid: RANDOM.getNonceStr(32),
+                    schedule: 3,
+                    patient: 4,
+                    appointment: new Date()
                 }
             })
             .then(HANDLER.beginTransaction)
@@ -48,12 +47,9 @@ var api = {
                 // information: [request.body.information, request.query.id]
                 information: [
                     {
-                        doctor: 25,
-                        visiting: new Date(),
-                        section: 1,
-                        registerFee: 0.11,
-                        medicalFee: 12.56,
-                        openNumber: 1000
+                        schedule: 3,
+                        patient: 4,
+                        appointment: new Date()
                     },
                     request.query.id
                 ]

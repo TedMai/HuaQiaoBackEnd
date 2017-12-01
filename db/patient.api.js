@@ -15,12 +15,13 @@ var api = {
                 sqlBasicInfo: EXEC_SQL.addPatient,
                 // information: request.body.information,
                 information: {
-                    doctor: 25,
-                    visiting: new Date(),
-                    section: 0,
-                    registerFee: 1.11,
-                    medicalFee: 128.56,
-                    openNumber: 1
+                    name: '李云鹏',
+                    sex: 0,
+                    birthday: new Date(),
+                    identity: '350303198512050039',
+                    phone: '18159393355',
+                    address: '福建莆田',
+                    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4'
                 }
             })
             .then(HANDLER.beginTransaction)
@@ -48,12 +49,13 @@ var api = {
                 // information: [request.body.information, request.query.id]
                 information: [
                     {
-                        doctor: 25,
-                        visiting: new Date(),
-                        section: 1,
-                        registerFee: 0.11,
-                        medicalFee: 12.56,
-                        openNumber: 1000
+                        name: '李鹏',
+                        sex: 1,
+                        birthday: new Date(),
+                        identity: '350303198512050048',
+                        phone: '18760598086',
+                        address: '福建莆田涵江',
+                        openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4'
                     },
                     request.query.id
                 ]

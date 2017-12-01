@@ -38,11 +38,16 @@ angular
                         },
                         {},
                         function (response) {
-                            console.info(response.paths);
-                            $scope.album = angular.copy(response.paths);
+                            console.info(response);
+                            if(response.code === 0) {
+                                $scope.album = angular.copy(response.paths);
+                            }else{
+                                $scope.album = [];
+                            }
                         },
                         function (error) {
                             console.error(error);
+                            $scope.album = [];
                         }
                     );
 
