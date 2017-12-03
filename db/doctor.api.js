@@ -100,34 +100,8 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                execSQL: EXEC_SQL.fetchDoctorList,
-                values: null
-            })
-            .then(HANDLER.fetchList)
-            .then(HANDLER.cleanup)
-            .then(function (result) {
-                if (result.code === 0) {
-                    response(result.msg);
-                } else {
-                    response([]);
-                }
-            })
-            .catch(function (request) {
-                HANDLER.onReject(request, response);
-            });
-    },
-
-    /**
-     * 获取医生信息
-     * @param request
-     * @param response
-     */
-    querySpecificDoctor: function (request, response) {
-
-        HANDLER
-            .setUpConnection({
                 doctor: {
-                    sql: EXEC_SQL.querySpecificDoctor,
+                    sql: EXEC_SQL.fetchSpecificDoctor,
                     values: request.params.id
                 },
                 gallery: {

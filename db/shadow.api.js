@@ -140,27 +140,6 @@ var api = {
 
         switch (request.params.name) {
             case 'hospital':
-                HOSPITAL.querySpecificHospital(request, response);
-                break;
-            case 'department':
-                DEPARTMENT.querySpecificDepartment(request, response);
-                break;
-            case 'doctor':
-                DOCTOR.querySpecificDoctor(request, response);
-                break;
-            default:
-                response({
-                    code: CODE.failedCode,
-                    msg: "Parameter - " + request.params.name + " not found."
-                });
-                break;
-        }
-    },
-
-    fetch: function (request, response) {
-
-        switch (request.params.name) {
-            case 'hospital':
                 HOSPITAL.fetchHospitalList(request, response);
                 break;
             case 'department':

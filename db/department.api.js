@@ -31,25 +31,6 @@ var api = {
             });
     },
 
-    batchInsertDepartment: function (request, response) {
-
-        HANDLER
-            .setUpConnection({
-                sqlBasicInfo: EXEC_SQL.batchAddDepartment,
-                information: request
-            })
-            .then(HANDLER.beginTransaction)
-            .then(HANDLER.setBasicInfo)
-            .then(HANDLER.commitTransaction)
-            .then(HANDLER.cleanup)
-            .then(function (result) {
-                response(result);
-            })
-            .catch(function (request) {
-                HANDLER.onRejectWithRollback(request, response);
-            });
-    },
-
     /**
      * 编辑 - 科室
      * @param request
@@ -127,34 +108,8 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                execSQL: EXEC_SQL.fetchDepartmentList,
-                values: null
-            })
-            .then(HANDLER.fetchList)
-            .then(HANDLER.cleanup)
-            .then(function (result) {
-                if (result.code === 0) {
-                    response(result.msg);
-                } else {
-                    response([]);
-                }
-            })
-            .catch(function (request) {
-                HANDLER.onReject(request, response);
-            });
-    },
-
-    /**
-     * 获取指定科室
-     * @param request
-     * @param response
-     */
-    querySpecificDepartment: function (request, response) {
-
-        HANDLER
-            .setUpConnection({
                 department: {
-                    sql: EXEC_SQL.querySpecificDepartment,
+                    sql: EXEC_SQL.fetchSpecificDepartment,
                     values: request.params.id
                 },
                 gallery: {

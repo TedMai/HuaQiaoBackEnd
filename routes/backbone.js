@@ -24,20 +24,6 @@ router.get("/select/:name", function (req, res, next) {
 
 });
 
-router.get("/table/:name", function (req, res, next) {
-    console.log("backbone.js ==> fetch");
-    console.log(req.params);
-    console.log(req.body);
-    console.log(req.query);
-
-    BACKBONE.fetch(req, function (request) {
-        console.log("backbone.js ==> fetch ==> callback");
-        console.info(request);
-        res.json(request);
-    })
-
-});
-
 router.get("/table/:name/id/:id", function (req, res, next) {
     console.log("backbone.js ==> query");
     console.log(req.params);
