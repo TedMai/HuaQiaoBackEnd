@@ -5,10 +5,13 @@ angular
     .component('shadow', {
         templateUrl: "partial/shadow/shadow.template.html",
         controller: [
-            'Pathfinder', 'SelectHelper', 'Container', 'Cleaner', '$location', '$window',
-            function ShadowController(Pathfinder, SelectHelper, Container, Cleaner, $location, $window) {
+            'Pathfinder', 'SelectHelper', 'Container', 'Cleaner', 'FileUpload', '$scope', '$location', '$window',
+            function ShadowController(Pathfinder, SelectHelper, Container, Cleaner, FileUpload, $scope, $location, $window) {
                 var that = this;
 
+                /**
+                 * 初始化
+                 */
                 Pathfinder.get(
                     {},
                     function (response) {
@@ -54,11 +57,21 @@ angular
                     }
                 );
 
+                /**
+                 * 预览 - 详情页
+                 * @param targetUrl
+                 * @param id
+                 */
                 this.toDetail = function (targetUrl, id) {
                     Container.set(id);
                     $window.location = targetUrl;
                 };
 
+                /**
+                 * 编辑
+                 * @param target
+                 * @param data
+                 */
                 this.edit = function (target, data) {
                     console.info("==>   Edit | " + target);
 
@@ -99,6 +112,11 @@ angular
                     }
                 };
 
+                /**
+                 * 删除
+                 * @param target
+                 * @param id
+                 */
                 this.delete = function (target, id) {
                     var hint = "请再次确认是否删除？";
 
@@ -123,7 +141,26 @@ angular
                                 $window.alert(error);
                             });
                     }
-                }
+                };
+                /*  end of delete */
+
+                /**
+                 * 添加批量插入功能
+                 */
+                this.batchInsert = function () {
+                    console.info("==>   batchInsert");
+                    FileUpload($scope.myFile, "/file/excel")
+                        .then(
+                            function (result) {
+                                console.info(result);
+                                //$location.path("/");
+                            }, function (error) {
+                                console.error(error);
+                                $window.alert(error);
+                            }
+                        );
+                };
+                /* end of batchInsert */
             }
         ]
     });

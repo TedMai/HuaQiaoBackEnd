@@ -89,7 +89,7 @@ var handler =
         setBasicInfo: function (request) {
             var deferred = Q.defer();
 
-            request.connection.query(request.params.sqlBasicInfo, request.params.information, function (err, result) {
+            request.connection.query(request.params.sqlBasicInfo, [request.params.information], function (err, result) {
                 console.info("==> setBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
@@ -107,6 +107,28 @@ var handler =
 
             return deferred.promise;
         },
+
+        //batchSetBasicInfo: function (request) {
+        //    var deferred = Q.defer();
+        //
+        //    request.connection.query(request.params.sqlBatchSetBasicInfo, request.params.information, function (err, result) {
+        //        console.info("==> setBasicInfo ==> callback |  " + err);
+        //        if (err) {
+        //            deferred.reject({
+        //                connection: request.connection,
+        //                code: CODE.failedCode,
+        //                errMsg: err
+        //            });
+        //        }
+        //        deferred.resolve({
+        //            connection: request.connection,
+        //            params: request.params,
+        //            result: result
+        //        });
+        //    });
+        //
+        //    return deferred.promise;
+        //},
 
         /**
          * 编辑 - 基本信息
@@ -162,6 +184,12 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 删除 - 基本信息
+         * 用于串联操作，实现批量删除
+         * @param request
+         * @returns {*|Promise|promise}
+         */
         oneStepDelete: function (request) {
             var deferred = Q.defer();
 
@@ -209,7 +237,7 @@ var handler =
         },
 
         /**
-         * 批量删除图片文件
+         * 批量拷贝图片文件
          *  --  封装
          * @param request
          * @returns {*|promise|Promise}
@@ -260,6 +288,12 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 批量删除图片文件
+         *  --  封装
+         * @param request
+         * @returns {*|promise|Promise}
+         */
         batchRemoveWrapper: function (request) {
             var
                 deferred = Q.defer();
@@ -388,6 +422,11 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 获取 - 图集
+         * @param request
+         * @returns {*|Promise|promise}
+         */
         fetchGallery: function (request) {
             var
                 values = [request.params.id],
@@ -510,6 +549,13 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 扫尾 - 深度清理
+         * 释放连接
+         * 删除临时文件
+         * @param request
+         * @returns {*|Promise|promise}
+         */
         deepClean: function (request) {
             var deferred = Q.defer();
 
