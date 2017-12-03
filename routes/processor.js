@@ -5,19 +5,18 @@ const path = require('path');
 const multipart = require('connect-multiparty');
 const fileSystem = require("./fileSystem");
 const gallery = require('../db/gallery.api');
-const __DEPARTMENT__ = require('../db/department.api');
 const __MAX_UPLOAD_FILE_NUM__ = 9;
 
 /**
- *  上传图片文件（单个或多个）至temp文件夹
+ *  上传文件（单个或多个）至temp文件夹
  *
  */
-router.post('/image', multipart(), function (req, res, next) {
+router.post('/', multipart(), function (req, res, next) {
     var i,
         length,
         promises = [];
 
-    console.info("==>   processor.js | POST /image");
+    console.info("==>   processor   | POST");
     console.info(req.files);
 
     if (typeof(req.files) === "undefined" || !req.files.hasOwnProperty('file')) {
@@ -70,7 +69,7 @@ router.post('/image', multipart(), function (req, res, next) {
                     }
                 )
         } else {
-            fileSystem.uploadOneFile(req.files['file'])
+            fileSystem.uploadOneFile(req.files['file'], res)
                 .then(
                     function (result) {
                         console.info("uploadOneFile  ==>  callback ==> success");
@@ -87,45 +86,6 @@ router.post('/image', multipart(), function (req, res, next) {
                 );
         }
     }
-});
-
-router.post('/excel', multipart(), function (req, res, next) {
-    console.info("==>   processor.js | POST /excel");
-    console.info(req.files);
-
-    if (typeof(req.files) === "undefined" || !req.files.hasOwnProperty('file')) {
-        res.json({
-            code: -400,
-            msg: "Empty. File not found."
-        });
-        return;
-    }
-
-    fileSystem
-        .excelReader(req.files['file'])
-        .then(
-            function (request) {
-                console.info("excelReader  ==>  callback ==> success");
-                console.info(request.data);
-                if (request.data instanceof Array && request.data.length > 1) {
-                    // 第一行为字段名 - 弹出
-                    request.data.shift();
-                    __DEPARTMENT__.batchInsertDepartment(request.data, function (request) {
-                        res.json(request);
-                    });
-                } else {
-                    res.json({
-                        code: -400,
-                        msg: "Bad format!!"
-                    });
-                }
-
-            },
-            function (error) {
-                console.info("excelReader  ==>  callback ==> fail");
-                res.json(error);
-            }
-        );
 });
 
 /**
@@ -162,7 +122,7 @@ router.get("/temp/:type/:id", function (req, res, next) {
 router.get('/image/:root/:path/:file', function (req, res, next) {
     var result;
 
-    console.info(" ==>   process.js ==> image preview");
+    console.info(" ==>   process.js");
     console.info(req.params);
 
     try {

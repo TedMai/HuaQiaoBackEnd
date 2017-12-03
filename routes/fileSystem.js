@@ -1,23 +1,18 @@
 const Q = require('q');
 const fs = require('fs');
-const PATH = require('path');
-const FORMATTER = require('../db/utility.date');
-const IMAGEINFO = require('imageinfo');
-const XLSX = require('node-xlsx');
+const path = require('path');
+const formatter = require('../db/utility.date');
+const imageinfo = require('imageinfo');
 const __MAX_UPLOAD_FILE_SIZE__ = 3 * 1024 * 1024;
 
-/**
- * 检查目标文件夹是否存在
- * 不存在，则递归创建文件夹
- * @param filePath
- */
 function check(filePath) {
     var subFilePath;
 
-    if (filePath.lastIndexOf(PATH.sep) === -1) {
+    if (filePath.lastIndexOf(path.sep) === -1) {
 
     } else {
-        subFilePath = filePath.substr(0, filePath.lastIndexOf(PATH.sep));
+        subFilePath = filePath.substr(0, filePath.lastIndexOf(path.sep));
+        console.info(subFilePath);
         if (!fs.existsSync(subFilePath)) {
             check(subFilePath);
             fs.mkdirSync(subFilePath);
@@ -27,12 +22,6 @@ function check(filePath) {
 
 var api = {
 
-    /**
-     * 上传文件 - 图像
-     * 一次一张
-     * @param upload
-     * @returns {*|Promise|promise}
-     */
     uploadOneFile: function (upload) {
         var tmpFilePath,
             fileName,
@@ -51,7 +40,7 @@ var api = {
             upload['type'] !== 'image/png') {
             deferred.reject(
                 {
-                    code: -400,
+                    code: 400,
                     msg: "Incorrect file format."
                 }
             );
@@ -65,7 +54,7 @@ var api = {
         if (upload['size'] > __MAX_UPLOAD_FILE_SIZE__) {
             deferred.reject(
                 {
-                    code: -400,
+                    code: 400,
                     msg: "File is too large to upload."
                 }
             );
@@ -79,14 +68,14 @@ var api = {
              * 按照当前日期生成子目录
              * @type {string}
              */
-            Date.prototype.format = FORMATTER.format;
+            Date.prototype.format = formatter.format;
             folderName = new Date().format('yyyyMMdd');
-            rootPath = PATH.resolve(process.cwd(), "..") + PATH.sep + "temp";
+            rootPath = path.resolve(process.cwd(), "..") + path.sep + "temp";
             // 如果根目录不存在，则创建
             if (!fs.existsSync(rootPath)) {
                 fs.mkdirSync(rootPath);
             }
-            folderPath = rootPath + PATH.sep + folderName;
+            folderPath = rootPath + path.sep + folderName;
             // 如果子目录不存在，则创建
             if (!fs.existsSync(folderPath)) {
                 fs.mkdirSync(folderPath);
@@ -98,7 +87,7 @@ var api = {
             tmpFilePath = upload['path'];
             fileName = new Date().format('yyyyMMddhhmmssS') + Math.round(Math.random() * 1000) + "_" + upload['name'];
             source = fs.createReadStream(tmpFilePath);
-            destination = fs.createWriteStream(folderPath + PATH.sep + fileName);
+            destination = fs.createWriteStream(folderPath + path.sep + fileName);
             source.pipe(destination);
 
             /**
@@ -111,7 +100,7 @@ var api = {
                     {
                         code: 0,
                         msg: "Success",
-                        path: folderName + PATH.sep + fileName
+                        path: folderName + path.sep + fileName
                     }
                 );
             });   //delete
@@ -137,63 +126,19 @@ var api = {
         return deferred.promise;
     },
 
-    excelReader: function (upload) {
-        var
-            list,
-            deferred = Q.defer();
-
-        if (typeof upload === "undefined" || !upload.hasOwnProperty('path')) {
-            deferred.reject(
-                {
-                    code: -400,
-                    msg: "No file upload."
-                }
-            );
-        } else {
-            try {
-                list = XLSX.parse(upload['path']);
-
-                deferred.resolve(
-                    {
-                        code: 0,
-                        msg: "Success",
-                        data: list[0].data
-                    }
-                );
-            } catch (exception) {
-                deferred.reject(
-                    {
-                        code: -400,
-                        msg: exception
-                    }
-                );
-            }
-        }
-
-        return deferred.promise;
-    },
-
-    /**
-     * 读取 - 图像文件
-     * 实现图片预览功能
-     * @param root
-     * @param subFolder
-     * @param file
-     * @returns {*}
-     */
     paint: function (root, subFolder, file) {
         var filePath,
             content,
             fileInfo;
 
-        filePath = PATH.join(PATH.resolve(process.cwd(), ".."), root, subFolder, file);
-        console.info("fileSystem.js ==> paint ==> path | " + filePath);
+        filePath = path.join(path.resolve(process.cwd(), ".."), root, subFolder, file);
+        console.info(filePath);
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {
             // 读取文件 --  同步
             content = fs.readFileSync(filePath);
             // 获取文件类型
-            fileInfo = IMAGEINFO(content);
+            fileInfo = imageinfo(content);
             return {
                 code: 0,
                 content: content,
@@ -208,33 +153,26 @@ var api = {
         /* end of if */
     },
 
-    /**
-     * 拷贝 -- 文件
-     * @param filePath
-     * @param sourceRootFolder
-     * @param destinationRootFolder
-     * @returns {*|Promise|promise}
-     */
     copy: function (filePath, sourceRootFolder, destinationRootFolder) {
         var
             reader,
             writer,
             deferred = Q.defer(),
-            beginning = PATH.resolve(process.cwd(), ".."),
-            source = PATH.join(beginning, sourceRootFolder, filePath),
-            destination = PATH.join(beginning, destinationRootFolder, filePath);
+            beginning = path.resolve(process.cwd(), ".."),
+            source = path.join(beginning, sourceRootFolder, filePath),
+            destination = path.join(beginning, destinationRootFolder, filePath);
 
         if (!fs.existsSync(source)) {
-            console.info("fileSystem.js ==> copy ==> Target not exist!! Source path: " + source);
+            console.info("Target not exist");
             deferred.reject(
                 {
                     code: -400,
-                    msg: "Target not exist!! Source path: " + source
+                    msg: "Target not exist"
                 }
             );
 
         } else {
-            // 检查目标路径是否存在
+
             check(destination);
 
             reader = fs.createReadStream(source);
@@ -245,7 +183,7 @@ var api = {
              * 完成后删除临时文件
              */
             reader.on('end', function () {
-                console.info("fileSystem.js ==> copy ==> Complete!");
+                console.info("Complete!");
                 deferred.resolve(
                     {
                         code: 0,
@@ -269,13 +207,6 @@ var api = {
         return deferred.promise;
     },
 
-    /**
-     * 批量拷贝
-     * @param gallery   -   文件相对路径数组
-     * @param sourceRootFolder      -   源文件夹名
-     * @param destinationRootFolder -   目标文件夹名
-     * @returns {*|Promise|promise}
-     */
     batchCopy: function (gallery, sourceRootFolder, destinationRootFolder) {
         var promises = [],
             deferred = Q.defer();
@@ -311,15 +242,10 @@ var api = {
         return deferred.promise;
     },
 
-    /**
-     * 删除 -- 文件对象
-     * @param filePath
-     * @returns {*|Promise|promise}
-     */
     remove: function (filePath) {
         var
-            beginning = PATH.resolve(process.cwd(), ".."),
-            absolutePath = PATH.join(beginning, filePath),
+            beginning = path.resolve(process.cwd(), ".."),
+            absolutePath = path.join(beginning, filePath),
             deferred = Q.defer();
 
         console.info(absolutePath);
@@ -346,19 +272,14 @@ var api = {
         return deferred.promise;
     },
 
-    /**
-     * 批量删除
-     * @param gallery
-     * @param rootFolder
-     * @returns {*|Promise|promise}
-     */
     batchRemove: function (gallery, rootFolder) {
         var promises = [],
             deferred = Q.defer();
 
+        console.info("==>   batchRemove");
         gallery.forEach(function (item) {
-            console.info("==>   batchRemove | Relative URL: " + item.imageurl);
-            promises.push(api.remove(PATH.join(rootFolder, item.imageurl)));
+            console.info(item.imageurl);
+            promises.push(api.remove(path.join(rootFolder, item.imageurl)));
         });
 
         Q.all(promises)

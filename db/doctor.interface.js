@@ -1,7 +1,7 @@
 module.exports =
     {
         fetchDoctorList: 'SELECT * FROM tb_doctor',
-        querySpecificDoctor: 'SELECT * FROM tb_doctor WHERE id = ?',
+        fetchSpecificDoctor: 'SELECT * FROM tb_doctor WHERE id = ?',
         fetchDoctorGallery: 'SELECT * FROM tb_gallery WHERE type = 2 AND relative = ?',
         addDoctor: 'INSERT INTO tb_doctor SET ?',
         insertDoctorGallery: 'INSERT INTO tb_gallery(imageurl, type, relative) VALUES ?',

@@ -11,35 +11,32 @@ function FileUploadService($http, $q) {
             length,
             formData = new FormData(),
             deferred = $q.defer();
+        console.info(files);
 
-        if (typeof files === "undefined" || files.length <= 0) {
-            deferred.reject("No file upload.");
-        } else {
-
-            for (i = 0, length = files.length; i < length; i++) {
-                console.info("Append file [" + i + "] into form data");
-                console.info(files[i]);
-                formData.append("file", files[i]);
-            }
-
-            $http.post(
-                targetUrl,
-                formData,
-                {
-                    transformRequest: angular.identity,
-                    headers: {"Content-Type": undefined}
-                })
-                .success(function (response) {
-                    if (response.code === 0) {
-                        deferred.resolve(response);
-                    } else {
-                        deferred.reject(response.msg);
-                    }
-                })
-                .error(function (error) {
-                    deferred.reject(error);
-                });
+        for (i = 0, length = files.length; i < length; i++) {
+            console.info("append file into form data");
+            console.info(files[i]);
+            formData.append("file", files[i]);
         }
+
+        $http.post(
+            targetUrl,
+            formData,
+            {
+                transformRequest: angular.identity,
+                headers: {"Content-Type": undefined}
+            })
+            .success(function (response) {
+                console.info(response);
+                if (response.code === 0) {
+                    deferred.resolve(response);
+                } else {
+                    deferred.reject(response.msg);
+                }
+            })
+            .error(function (error) {
+                deferred.reject(error);
+            });
 
         return deferred.promise;
     }
