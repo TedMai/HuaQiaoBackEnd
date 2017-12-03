@@ -115,8 +115,36 @@ var api = {
 
         HANDLER
             .setUpConnection({
+                execSQL: EXEC_SQL.fetchHospitalList,
+                values: null
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                if (result.code === 0) {
+                    response(result.msg);
+                } else {
+                    response([]);
+                }
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    /**
+     * 获取指定医院
+     * @param request
+     * @param response
+     */
+    querySpecificHospital: function (request, response) {
+
+        console.info("==>   querySpecificHospital");
+
+        HANDLER
+            .setUpConnection({
                 hospital: {
-                    sql: EXEC_SQL.fetchSpecificHospital,
+                    sql: EXEC_SQL.querySpecificHospital,
                     values: request.params.id
                 },
                 gallery: {
