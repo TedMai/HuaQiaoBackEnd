@@ -1,7 +1,7 @@
 module.exports =
     {
         fetchHospitalList: 'SELECT * FROM tb_hospital',
-        fetchSpecificHospital: 'SELECT * FROM tb_hospital WHERE hid = ?',
+        querySpecificHospital: 'SELECT * FROM tb_hospital WHERE hid = ?',
         fetchHospitalGallery: 'SELECT * FROM tb_gallery WHERE type = 0 AND relative = ?',
         addHospital: 'INSERT INTO tb_hospital SET ?',
         insertHospitalGallery: 'INSERT INTO tb_gallery(imageurl, type, relative) VALUES ?',
