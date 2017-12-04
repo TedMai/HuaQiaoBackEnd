@@ -136,6 +136,27 @@ var api = {
         }
     },
 
+    search: function (request, response) {
+
+        switch (request.params.name) {
+            case 'hospital':
+                // HOSPITAL.searchHosptials(request, response);
+                break;
+            case 'department':
+                DEPARTMENT.searchDepartments(request, response);
+                break;
+            case 'doctor':
+                // DOCTOR.searchDoctors(request, response);
+                break;
+            default:
+                response({
+                    code: CODE.failedCode,
+                    msg: "Parameter - " + request.params.name + " not found."
+                });
+                break;
+        }
+    },
+
     query: function (request, response) {
 
         switch (request.params.name) {

@@ -153,7 +153,7 @@ angular
                         .then(
                             function (result) {
                                 console.info(result);
-                                //$location.path("/");
+                                $location.path("/");
                             }, function (error) {
                                 console.error(error);
                                 $window.alert(error);

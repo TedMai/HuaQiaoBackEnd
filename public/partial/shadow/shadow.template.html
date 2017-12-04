@@ -37,20 +37,24 @@
 </h2>
 <input type="file" file-model="myFile">
 <button ng-click="$ctrl.batchInsert()">上传</button>
-<br>
+<br />
 <table>
     <thead>
     <tr>
-        <th>姓名</th>
+        <th>ID</th>
+        <th>名称</th>
+        <th>父科室</th>
         <th>隶属单位</th>
         <th>操作</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="department in $ctrl.departments">
+        <td>{{department.did}}</td>
         <td>
             <a ng-click="$ctrl.toDetail('#/Department', department)">{{department.name}}</a>
         </td>
+        <td>{{department.parent}}</td>
         <td>{{department.hospitalName}}</td>
         <td>
             <a ng-click="$ctrl.edit('department', department)">编辑</a>

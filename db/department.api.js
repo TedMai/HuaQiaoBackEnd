@@ -174,6 +174,27 @@ var api = {
             .catch(function (request) {
                 HANDLER.onReject(request, response);
             });
+    },
+
+    /**
+     * 搜索 -  科室
+     * @param request
+     * @param response
+     */
+    searchDepartments: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
 };
 

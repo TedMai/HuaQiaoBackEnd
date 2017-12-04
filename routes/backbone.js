@@ -51,6 +51,20 @@ router.get("/table/:name/id/:id", function (req, res, next) {
     });
 });
 
+router.get("/table/:name/field/:field/term/:term", function (req, res, next) {
+    console.log("backbone.js ==> search");
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.query);
+
+    BACKBONE.search(req, function (request) {
+        console.log("backbone.js ==> search ==> callback");
+        console.info(request);
+        res.json(request);
+    });
+});
+
+
 // router.get("/test/:name", function (req, res, next) {
 //     console.log("backbone.js ==> test");
 //     console.log(req.params);
