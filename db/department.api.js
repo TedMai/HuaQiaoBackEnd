@@ -185,12 +185,17 @@ var api = {
 
         HANDLER
             .setUpConnection({
-
+                execSQL: EXEC_SQL.searchDepartments,
+                values: [request.params.field, '%' + request.params.term + '%']
             })
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)
             .then(function (result) {
-                response(result);
+                if (result.code === 0) {
+                    response(result.msg);
+                } else {
+                    response([]);
+                }
             })
             .catch(function (request) {
                 HANDLER.onReject(request, response);
