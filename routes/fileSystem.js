@@ -1,9 +1,11 @@
 const Q = require('q');
 const fs = require('fs');
+const log4js = require("../services/log4js.service");
 const PATH = require('path');
 const FORMATTER = require('../db/utility.date');
 const IMAGEINFO = require('imageinfo');
 const XLSX = require('node-xlsx');
+const LOGGER = log4js.getLogger("default");
 const __MAX_UPLOAD_FILE_SIZE__ = 3 * 1024 * 1024;
 
 /**
@@ -187,7 +189,7 @@ var api = {
             fileInfo;
 
         filePath = PATH.join(PATH.resolve(process.cwd(), ".."), root, subFolder, file);
-        console.info("fileSystem.js ==> paint ==> path | " + filePath);
+        LOGGER.info("fileSystem.js ==> paint ==> path | " + filePath);
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {
             // 读取文件 --  同步

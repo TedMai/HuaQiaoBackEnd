@@ -3,7 +3,8 @@ const router = express.Router();
 const RENDER = require('./response');
 const BACKBONE = require('../db/shadow.api');
 const FILESYSTEM = require("./fileSystem");
-const LOGGER = require("../services/log4js.service");
+const log4js = require("../services/log4js.service");
+const LOGGER = log4js.getLogger("default");
 
 /**
  *   初始化 - 后台首页
@@ -112,10 +113,8 @@ router.post("/table/:name/id/:id", function (req, res, next) {
 router.get('/image/:root/:path/:file', function (req, res, next) {
     var result;
 
-    LOGGER.getLogger("log_file");
-    LOGGER.info("backbone.js ==> image preview");
-    console.info("backbone.js ==> image preview");
-    console.info(req.params);
+    LOGGER.debug("backbone.js ==> image preview");
+    LOGGER.info(req.params);
 
     try {
         result = FILESYSTEM.paint(req.params.root, req.params.path, req.params.file);

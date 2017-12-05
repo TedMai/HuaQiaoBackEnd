@@ -3,6 +3,7 @@
  * 源码及文档地址：https://github.com/nomiddlename/log4js-node
  */
 const log4js = require('log4js');
+const PATH = require('path');
 
 /**
  * 第一种：
@@ -20,7 +21,32 @@ const log4js = require('log4js');
  *
  */
 
-log4js.configure('./services/log4js.config.json');
+log4js.configure({
+    "appenders": {
+        "rule-console": {
+            "type": "console"
+        },
+        "rule-file": {
+            "type": "dateFile",
+            "filename": PATH.join(PATH.resolve(process.cwd(), ".."), "log", "huaqiao-backend-"),
+            "encoding": "utf-8",
+            "maxLogSize": 10000000,
+            "numBackups": 3,
+            "pattern": "yyyy-MM-dd.log",
+            "alwaysIncludePattern": true
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": [
+                "rule-console",
+                "rule-file"
+            ],
+            "level": "debug"
+        }
+    },
+    replaceConsole: true
+});
 
 /**
  * 第二种
@@ -50,5 +76,9 @@ log4js.configure('./services/log4js.config.json');
 module.exports = {
     getLogger: function (category) {
         return log4js.getLogger(category);
+    },
+
+    getConnector: function (logger, level) {
+        return log4js.connectLogger(logger, {level: level});
     }
 };
