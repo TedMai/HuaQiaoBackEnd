@@ -111,8 +111,20 @@ var api = {
      * @param request
      * @param response
      */
-    fetchSchedule: function (request, response) {
+    queryRelativeSchedule: function (request, response) {
 
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.fetchRelativeSchedule
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
 
     }
 };

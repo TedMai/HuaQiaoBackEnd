@@ -83,12 +83,12 @@ var api = {
              */
             Date.prototype.format = FORMATTER.format;
             folderName = new Date().format('yyyyMMdd');
-            rootPath = PATH.resolve(process.cwd(), "..") + PATH.sep + "temp";
+            rootPath = PATH.join(PATH.resolve(__dirname, '..', '..'), "temp");
             // 如果根目录不存在，则创建
             if (!fs.existsSync(rootPath)) {
                 fs.mkdirSync(rootPath);
             }
-            folderPath = rootPath + PATH.sep + folderName;
+            folderPath = PATH.join(rootPath, folderName);
             // 如果子目录不存在，则创建
             if (!fs.existsSync(folderPath)) {
                 fs.mkdirSync(folderPath);
@@ -107,7 +107,7 @@ var api = {
              * 完成后删除临时文件
              */
             source.on('end', function () {
-                console.info("-- END -- | delete temp file");
+                LOGGER.debug("-- END -- | delete temp file");
                 fs.unlinkSync(tmpFilePath);
                 deferred.resolve(
                     {
@@ -119,7 +119,7 @@ var api = {
             });   //delete
 
             source.on('error', function (err) {
-                console.info(err);
+                LOGGER.error(err);
                 deferred.reject(
                     {
                         code: -400,
@@ -139,6 +139,11 @@ var api = {
         return deferred.promise;
     },
 
+    /**
+     * 解析Excel文件
+     * @param upload
+     * @returns {Promise|*|promise}
+     */
     excelReader: function (upload) {
         var
             list,
@@ -188,7 +193,7 @@ var api = {
             content,
             fileInfo;
 
-        filePath = PATH.join(PATH.resolve(process.cwd(), ".."), root, subFolder, file);
+        filePath = PATH.join(PATH.resolve(__dirname, '..', '..'), root, subFolder, file);
         LOGGER.info("fileSystem.js ==> paint ==> path | " + filePath);
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {
@@ -222,7 +227,7 @@ var api = {
             reader,
             writer,
             deferred = Q.defer(),
-            beginning = PATH.resolve(process.cwd(), ".."),
+            beginning = PATH.resolve(__dirname, '..', '..'),
             source = PATH.join(beginning, sourceRootFolder, filePath),
             destination = PATH.join(beginning, destinationRootFolder, filePath);
 
@@ -320,11 +325,11 @@ var api = {
      */
     remove: function (filePath) {
         var
-            beginning = PATH.resolve(process.cwd(), ".."),
+            beginning = PATH.resolve(__dirname, "..", ".."),
             absolutePath = PATH.join(beginning, filePath),
             deferred = Q.defer();
 
-        console.info(absolutePath);
+        LOGGER.info("Try to delete [FILE] - " + absolutePath);
         if (fs.existsSync(absolutePath)) {
             fs.unlink(absolutePath, function (err) {
                 if (err) {

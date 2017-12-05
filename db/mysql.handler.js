@@ -4,6 +4,8 @@ const CODE = require('./mysql.code');
 const CONFIG = require('./mysql.config');
 const FORMAT = require('./utility.date');
 const FILESYSTEM = require('../routes/fileSystem');
+const log4js = require("../services/log4js.service");
+const LOGGER = log4js.getLogger("default");
 
 var handler =
     {
@@ -19,7 +21,7 @@ var handler =
             var deferred = Q.defer();
             // 从连接池获取连接
             this.pool.getConnection(function (err, connection) {
-                console.info("==> setUpConnection ==> callback | " + err);
+                LOGGER.info("==> setUpConnection ==> callback | " + err);
                 if (err) {
                     deferred.reject({
                         connection: connection,
@@ -44,7 +46,7 @@ var handler =
             var deferred = Q.defer();
             // 启动事务
             request.connection.beginTransaction(function (err) {
-                console.info("==> beginTransaction ==> callback |  " + err);
+                LOGGER.info("==> beginTransaction ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -67,7 +69,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.commit(function (err) {
-                console.info("==> commitTransaction ==> callback |  " + err);
+                LOGGER.info("==> commitTransaction ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -90,7 +92,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlBasicInfo, [request.params.information], function (err, result) {
-                console.info("==> setBasicInfo ==> callback |  " + err);
+                LOGGER.info("==> setBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -117,7 +119,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlUpdateInfo, request.params.information, function (err, result) {
-                console.info("==> updateBasicInfo ==> callback |  " + err);
+                LOGGER.info("==> updateBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -144,7 +146,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlDeleteInfo, request.params.information, function (err, result) {
-                console.info("==> deleteBasicInfo ==> callback |  " + err);
+                LOGGER.info("==> deleteBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -172,7 +174,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.query(request.params.execSQLs[request.params.index], request.params.information, function (err, result) {
-                console.info("==> oneStepDelete ==> callback |  " + err);
+                LOGGER.info("==> oneStepDelete ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -224,8 +226,8 @@ var handler =
             var
                 deferred = Q.defer();
 
-            console.info("==>   batchCopyWrapper");
-            console.info(request.params.gallery);
+            LOGGER.info("==>   batchCopyWrapper");
+            LOGGER.info(request.params.gallery);
             /**
              * 未找到上传图集 直接跳过
              */
@@ -276,8 +278,8 @@ var handler =
             var
                 deferred = Q.defer();
 
-            console.info("==>   batchRemoveWrapper");
-            console.info(request.result);
+            LOGGER.info("==>   batchRemoveWrapper");
+            LOGGER.info(request.result);
 
             if (request.result.length === 0) {
                 deferred.resolve({
@@ -319,8 +321,8 @@ var handler =
                 values = [],
                 deferred = Q.defer();
 
-            console.info("==>   insertGallery");
-            console.info(request.params.gallery);
+            LOGGER.info("==>   insertGallery");
+            LOGGER.info(request.params.gallery);
             /**
              * 未找到上传图集 直接跳过
              */
@@ -346,10 +348,10 @@ var handler =
                     ]
                     // request.params.gallery[i].relative = request.result.insertId;
                 }
-                console.info(values);
+                LOGGER.info(values);
 
                 request.connection.query(request.params.sqlInsertGallery, [values], function (err, result) {
-                    console.info("==> insertGallery ==> callback |  " + err);
+                    LOGGER.info("==> insertGallery ==> callback |  " + err);
                     if (err) {
                         deferred.reject({
                             connection: request.connection,
@@ -378,9 +380,9 @@ var handler =
                 values = [request.params.id],
                 deferred = Q.defer();
 
-            console.info("==>   removeGallery");
+            LOGGER.info("==>   removeGallery");
             request.connection.query(request.params.sqlDeleteGallery, [values], function (err, result) {
-                console.info("==> removeGallery ==> callback |  " + err);
+                LOGGER.info("==> removeGallery ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -410,9 +412,9 @@ var handler =
                 values = [request.params.id],
                 deferred = Q.defer();
 
-            console.info("==>   fetchGallery");
+            LOGGER.info("==>   fetchGallery");
             request.connection.query(request.params.sqlFetchGallery, [values], function (err, result) {
-                console.info("==> fetchGallery ==> callback |  " + err);
+                LOGGER.info("==> fetchGallery ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -438,7 +440,7 @@ var handler =
         fetchList: function (request) {
             var deferred = Q.defer();
 
-            console.info("==>   fetchList");
+            LOGGER.info("==>   fetchList");
             request.connection.query(request.params.execSQL, request.params.values, function (err, result) {
 
                 if (err) {
@@ -471,7 +473,7 @@ var handler =
                 promises = [],
                 deferred = Q.defer();
 
-            console.info("==>   fetchDataSet");
+            LOGGER.info("==>   fetchDataSet");
             for (item in request.params) {
                 value = {
                     connection: request.connection,
@@ -490,7 +492,7 @@ var handler =
                     function (result) {
                         var final = {};
 
-                        console.info("==>  Q.all  ==>  callback");
+                        LOGGER.info("==>  Q.all  ==>  callback");
                         result.forEach(function (element) {
                             final[element.tableName] = JSON.stringify(element.result);
                         });
@@ -517,7 +519,7 @@ var handler =
         cleanup: function (request) {
             var deferred = Q.defer();
 
-            console.info("==>   cleanup");
+            LOGGER.info("==>   cleanup");
             request.connection.release();
             deferred.resolve({
                 code: CODE.successCode,
@@ -537,7 +539,7 @@ var handler =
         deepClean: function (request) {
             var deferred = Q.defer();
 
-            console.info("==>   deepClean");
+            LOGGER.info("==>   deepClean");
             request.connection.release();
             if (request.params.hasOwnProperty("gallery") && request.params.gallery.length > 0) {
                 FILESYSTEM
@@ -572,7 +574,7 @@ var handler =
          * @param response
          */
         onReject: function (request, response) {
-            console.info("==>   onReject");
+            LOGGER.info("==>   onReject");
             if (request.code === CODE.failedCode) {
                 request.connection.release();
             }
@@ -589,10 +591,10 @@ var handler =
          * @param response
          */
         onRejectWithRollback: function (request, response) {
-            console.info("==>   onRejectWithRollback");
+            LOGGER.info("==>   onRejectWithRollback");
             if (request.code === CODE.failedCode) {
                 request.connection.rollback(function () {
-                    console.info("==>   onRejectWithRollback    ==>     rollback");
+                    LOGGER.info("==>   onRejectWithRollback    ==>     rollback");
                     request.connection.release();
                 });
             }
@@ -612,10 +614,10 @@ var handler =
         transformRequest: function (request) {
             var deferred = Q.defer();
 
-            console.info("==>   transformRequest");
+            LOGGER.info("==>   transformRequest");
             Date.prototype.format = FORMAT.format;
             request.body.information.founding = new Date(request.body.information.founding).format("yyyy-MM-dd");
-            console.info(request.body.information);
+            LOGGER.info(request.body.information);
 
             deferred.resolve(request);
 
@@ -628,13 +630,13 @@ var handler =
                 length,
                 deferred = Q.defer();
 
-            console.info("==>   transformResponse");
+            LOGGER.info("==>   transformResponse");
             for (i = 0, length = request.result.length; i < length; i++) {
-                console.info(request.result[i]);
+                LOGGER.info(request.result[i]);
                 if (request.result[i].hasOwnProperty("founding")) {
                     Date.prototype.format = FORMAT.format;
                     request.result[i].founding = new Date(request.result[i].founding).format("yyyy-MM-dd");
-                    console.info(request.result[i].founding);
+                    LOGGER.info(request.result[i].founding);
                 }
             }
 

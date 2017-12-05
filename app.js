@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 //var logger = require('morgan');
-var log4js = require('./services/log4js.service');
+// var log4js = require('./services/log4js.service');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -18,7 +18,7 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //app.use(logger('dev'));
-app.use(log4js.getConnector(log4js.getLogger("default"), "info"));
+// app.use(log4js.getConnector(log4js.getLogger("default"), "info"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());

@@ -3,7 +3,6 @@
 angular
     .module('fileReader.core')
     .directive('fileModel', ['$parse', function ($parse) {
-        console.info("fileReader.directive.js ==> load file-model");
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
