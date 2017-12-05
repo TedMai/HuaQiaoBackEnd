@@ -18,20 +18,18 @@ angular
                     },
                     {},
                     function (response) {
-                        if (response.code === 0) {
                             /**
                              *      基本信息
                              */
-                            that.hospital = JSON.parse(response.msg.hospital)[0];
+                            that.hospital = JSON.parse(response.hospital)[0];
                             console.info(that.hospital);
 
                             /**
                              *      图集
                              */
-                            that.gallery = JSON.parse(response.msg.gallery);
+                            that.gallery = JSON.parse(response.gallery);
                             console.info(that.gallery);
-                            (that.gallery.length > 0) && (that.focusImage = 'file/image/screenshot/' + that.gallery[0].imageurl);
-                        }
+                            (that.gallery.length > 0) && (that.focusImage = 'backbone/image/screenshot/' + that.gallery[0].imageurl);
                     },
                     function (err) {
                         console.error(err);

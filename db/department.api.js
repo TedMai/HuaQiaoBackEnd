@@ -133,11 +133,7 @@ var api = {
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)
             .then(function (result) {
-                if (result.code === 0) {
-                    response(result.msg);
-                } else {
-                    response([]);
-                }
+                response(result);
             })
             .catch(function (request) {
                 HANDLER.onReject(request, response);
@@ -191,11 +187,7 @@ var api = {
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)
             .then(function (result) {
-                if (result.code === 0) {
-                    response(result.msg);
-                } else {
-                    response([]);
-                }
+                response(result);
             })
             .catch(function (request) {
                 HANDLER.onReject(request, response);

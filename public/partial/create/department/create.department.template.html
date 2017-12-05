@@ -23,6 +23,6 @@
 <button ng-click=$ctrl.uploadFile()>上传</button>
 
 <div ng-repeat="item in $ctrl.album">
-    <img ng-src="{{'file/image/temp/' + item}}">
+    <img ng-src="{{'backbone/image/temp/' + item}}">
     <button ng-click=$ctrl.deleteFile(item)>删除</button>
 </div>

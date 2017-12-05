@@ -157,33 +157,6 @@ router.get("/temp/:type/:id", function (req, res, next) {
 });
 
 /**
- * 图片预览
- */
-router.get('/image/:root/:path/:file', function (req, res, next) {
-    var result;
-
-    console.info(" ==>   process.js ==> image preview");
-    console.info(req.params);
-
-    try {
-        result = fileSystem.paint(req.params.root, req.params.path, req.params.file);
-        if (result.code === 0) {
-            // setHeader(name, value) -  指定一个 HTTP 请求的头部
-            // name 参数是要设置的头部的名称。这个参数不应该包括空白、冒号或换行。
-            // value 参数是头部的值。这个参数不应该包括换行。
-            res.setHeader("Content-Type", result.info.mimeType);
-            res.writeHead(200, "Ok");
-            res.write(result.content, "binary");            //格式必须为 binary，否则会出错
-            res.end();
-        } else {
-            next(new Error(result.msg));
-        }
-    } catch (err) {
-        next(new Error(err));
-    }
-});
-
-/**
  * 删除图片
  */
 router.post("/remove/:root/:path", function (req, res, next) {

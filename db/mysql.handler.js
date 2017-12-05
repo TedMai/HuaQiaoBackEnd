@@ -108,28 +108,6 @@ var handler =
             return deferred.promise;
         },
 
-        //batchSetBasicInfo: function (request) {
-        //    var deferred = Q.defer();
-        //
-        //    request.connection.query(request.params.sqlBatchSetBasicInfo, request.params.information, function (err, result) {
-        //        console.info("==> setBasicInfo ==> callback |  " + err);
-        //        if (err) {
-        //            deferred.reject({
-        //                connection: request.connection,
-        //                code: CODE.failedCode,
-        //                errMsg: err
-        //            });
-        //        }
-        //        deferred.resolve({
-        //            connection: request.connection,
-        //            params: request.params,
-        //            result: result
-        //        });
-        //    });
-        //
-        //    return deferred.promise;
-        //},
-
         /**
          * 编辑 - 基本信息
          * @param request
