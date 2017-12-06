@@ -5,8 +5,8 @@ angular
     .component('doctor', {
         templateUrl: "partial/doctor/doctor.template.html",
         controller: [
-            'Table', 'Container',
-            function (Table, Container) {
+            'Table', 'Container', 'FileUpload', '$scope',
+            function (Table, Container, FileUpload, $scope) {
                 var that = this,
                     data = Container.get();
 
@@ -32,11 +32,31 @@ angular
                         console.info(that.gallery);
                         (that.gallery.length > 0) && (that.focusImage = 'backbone/image/screenshot/' + that.gallery[0].imageurl);
 
+                        /**
+                         *      排班
+                         */
+                        that.schedule = JSON.parse(response.schedule);
+                        console.info(that.schedule);
                     },
                     function (err) {
                         console.error(err);
                     }
-                )
+                );
+
+                /**
+                 * 添加批量插入功能
+                 */
+                this.batchInsert = function () {
+                    console.info("==>   batchInsert");
+                    FileUpload($scope.myFile, "/file/excel/schedule")
+                        .then(
+                            function (result) {
+                                console.info(result);
+                            }, function (error) {
+                                $window.alert(error);
+                            }
+                        );
+                };
             }
         ]
     });

@@ -4,8 +4,10 @@ const router = express.Router();
 const path = require('path');
 const multipart = require('connect-multiparty');
 const fileSystem = require("./fileSystem");
+const FORMAT = require('../db/utility.date');
 const gallery = require('../db/gallery.api');
 const __DEPARTMENT__ = require('../db/department.api');
+const __SCHEDULE__ = require('../db/schedule.api');
 const __MAX_UPLOAD_FILE_NUM__ = 9;
 
 /**
@@ -89,8 +91,9 @@ router.post('/image', multipart(), function (req, res, next) {
     }
 });
 
-router.post('/excel', multipart(), function (req, res, next) {
+router.post('/excel/:object', multipart(), function (req, res, next) {
     console.info("==>   processor.js | POST /excel");
+    console.info(req.params);
     console.info(req.files);
 
     if (typeof(req.files) === "undefined" || !req.files.hasOwnProperty('file')) {
@@ -106,13 +109,32 @@ router.post('/excel', multipart(), function (req, res, next) {
         .then(
             function (request) {
                 console.info("excelReader  ==>  callback ==> success");
-                console.info(request.data);
+                // console.info(request.data);
                 if (request.data instanceof Array && request.data.length > 1) {
                     // 第一行为字段名 - 弹出
                     request.data.shift();
-                    __DEPARTMENT__.batchInsertDepartment(request.data, function (request) {
-                        res.json(request);
-                    });
+                    switch (req.params["object"]) {
+                        case 'department':
+                            __DEPARTMENT__.batchInsertDepartment(request.data, function (request) {
+                                res.json(request);
+                            });
+                            break;
+                        case 'schedule':
+                            // for (var i = 0, length = request.data.length; i < length; i++) {
+                            //     console.info(request.data[i]);
+                            //     console.info(request.data[i][1]);
+                            //     Date.prototype.format = FORMAT.format;
+                            //     console.info(new Date().format("yyyy-MM-dd"));
+                            // }
+
+                            // __SCHEDULE__.batchInsertSchedule(request.data, function (request) {
+                            //     res.json(request);
+                            // });
+                            break;
+                        default:
+                            res.send("Parameter - " + that.tableName + " not found.");
+                            break;
+                    }
                 } else {
                     res.json({
                         code: -400,

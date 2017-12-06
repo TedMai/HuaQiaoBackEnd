@@ -18,8 +18,17 @@ angular
                 return $resource("/backbone/table/:name", {name: '@name'}, {});
             };
 
+            /**
+             * 取数 - 指定表格指定记录
+             * @returns {*}
+             * @private
+             */
             var _fetch = function () {
                 return $resource("/backbone/table/:name/id/:id", {name: '@name', id: '@id'}, {});
+            };
+
+            var _batch = function () {
+
             };
 
             return {

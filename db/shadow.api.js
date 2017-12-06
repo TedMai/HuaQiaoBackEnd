@@ -214,6 +214,9 @@ var api = {
             case 'doctor':
                 DOCTOR.fetchDoctorList(request, response);
                 break;
+            case 'schedule':
+                // SCHEDULE.queryRelativeSchedule(request, response);
+                break;
             default:
                 response({
                     code: CODE.failedCode,

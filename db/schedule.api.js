@@ -97,6 +97,22 @@ var api = {
             });
     },
 
+    fetchScheduleList: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.fetchRelativeSchedule
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
     /**
      * 批量插入 - 排班
      * @param request
@@ -104,6 +120,21 @@ var api = {
      */
     batchInsertSchedule: function (request, response) {
 
+        HANDLER
+            .setUpConnection({
+                sqlBasicInfo: EXEC_SQL.batchAddSchedule,
+                information: request
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.setBasicInfo)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onRejectWithRollback(request, response);
+            });
     },
 
     /**
@@ -115,7 +146,8 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                execSQL: EXEC_SQL.fetchRelativeSchedule
+                execSQL: EXEC_SQL.fetchRelativeSchedule,
+                values: [request.params.id]
             })
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)

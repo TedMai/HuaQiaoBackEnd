@@ -23,3 +23,13 @@
     </div>
     <hr>
 </div>
+
+<h3>排班信息</h3>
+<label>批量导入</label>
+<input type="file" file-model="myFile">
+<button ng-click="$ctrl.batchInsert()">上传</button>
+<hr>
+<div ng-repeat="item in $ctrl.schedule">
+    <h4>{{item.visiting}}</h4>
+    <h5>专家门诊：{{item.medicalFee}}</h5>
+</div>

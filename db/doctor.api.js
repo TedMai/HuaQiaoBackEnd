@@ -133,6 +133,10 @@ var api = {
                 gallery: {
                     sql: EXEC_SQL.fetchDoctorGallery,
                     values: request.params.id
+                },
+                schedule: {
+                    sql: EXEC_SQL.fetchRelativeSchedule,
+                    values: [request.params.id]
                 }
             })
             .then(HANDLER.fetchDataSet)
