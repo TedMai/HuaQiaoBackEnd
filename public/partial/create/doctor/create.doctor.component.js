@@ -17,6 +17,7 @@ angular
                 console.info(data);
                 this.doctor = angular.copy(data.data);
                 this.departmentSelect = data.select;
+                this.subordinateDepartment = [];
 
                 /**
                  * 添加图片上传服务
@@ -52,9 +53,9 @@ angular
                         {},
                         function (response) {
                             console.info(response);
-                            if(response.code === 0) {
+                            if (response.code === 0) {
                                 that.album = angular.copy(response.paths);
-                            }else{
+                            } else {
                                 that.album = [];
                             }
                         },
@@ -93,7 +94,6 @@ angular
                         length,
                         gallery = [];
 
-                    console.info("==>   Save");
                     for (i = 0, length = this.album.length; i < length; i++) {
                         gallery.push({
                             imageurl: this.album[i],
@@ -101,8 +101,6 @@ angular
                             relative: typeof(this.doctor.id) === "undefined" ? 0 : this.doctor.id
                         });
                     }
-                    console.info(gallery);
-                    console.info(this.doctor);
 
                     Table.repertory().save(
                         {
@@ -129,6 +127,32 @@ angular
                     );
                 };
                 /** end of save **/
+
+                /**
+                 * 初始化
+                 *  下一级目录
+                 * @param superiorDepartment
+                 */
+                this.getSubordinateDepartment = function (superiorDepartment) {
+                    if (typeof superiorDepartment === 'undefined') {
+                        return;
+                    }
+                    SelectHelper.subordinate().query(
+                        {
+                            name: "doctor",
+                            id: superiorDepartment
+                        },
+                        function (response) {
+                            that.subordinateDepartment = response;
+                        },
+                        function (error) {
+                            console.error(error);
+                        }
+                    );
+                };
+                if (typeof(this.doctor.department) !== "undefined") {
+                    this.getSubordinateDepartment(this.doctor.department);
+                }
 
             }   /** end of controller **/
         ]

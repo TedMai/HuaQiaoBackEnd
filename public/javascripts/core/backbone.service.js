@@ -44,7 +44,27 @@ angular
     ])
     .factory('SelectHelper', ['$resource',
         function ($resource) {
-            return $resource('/backbone/select/:name', {name: '@name'}, {});
+            /**
+             * 上一级
+             * @returns {*}
+             * @private
+             */
+            var _superior = function () {
+                return $resource('/backbone/select/:name', {name: '@name'}, {});
+            };
+            /**
+             * 下一级
+             * @returns {*}
+             * @private
+             */
+            var _subordinate = function () {
+                return $resource('/backbone/select/:name/id/:id', {name: '@name', id: '@id'}, {});
+            };
+
+            return {
+                superior: _superior,
+                subordinate: _subordinate
+            }
         }
     ])
     .factory("Gallery", ['$resource', function ($resource) {

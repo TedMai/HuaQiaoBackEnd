@@ -22,9 +22,13 @@
     <textarea name="doctorField" placeholder="请输入擅长领域" ng-model=$ctrl.doctor.field></textarea>
 
     <h3>隶属科室</h3>
-    <select name="departmentList" title="隶属科室" ng-model=$ctrl.doctor.department
-            ng-options="item.did as item.name for item in $ctrl.departmentSelect" required></select>
-    <span ng-show=doctorForm.departmentList.$error.required>* 必填项</span>
+    <select name="superior" title="隶属父科室" ng-model=$ctrl.doctor.department
+            ng-options="item.did as item.name for item in $ctrl.departmentSelect"
+            ng-click="$ctrl.getSubordinateDepartment($ctrl.doctor.department)" required >
+    </select>
+    <select name="subordinate" title="隶属子科室" ng-model=$ctrl.doctor.subordinate
+            ng-options="item.did as item.name for item in $ctrl.subordinateDepartment" required></select>
+    <span ng-show=doctorForm.subordinate.$error.required>* 必填项</span>
 
     <br/><br/>
     <button type="submit" ng-disabled="doctorForm.$invalid">提交</button>

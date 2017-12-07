@@ -17,14 +17,27 @@ router.get('/', function (req, res, next) {
 
 /**
  *   初始化 - select
+ *   上一级目录
  */
 router.get("/select/:name", function (req, res, next) {
-    LOGGER.info("backbone.js ==> Initialize select ..");
+    LOGGER.info("backbone.js ==> Initialize select | superior");
     LOGGER.info(req.params);
-    BACKBONE.selectOptions(req, function (request) {
-        LOGGER.info("backbone.js ==> selectOptions ==> callback");
-        LOGGER.info(request);
-        res.json(request);
+    BACKBONE.selectSuperior(req, function (request) {
+        LOGGER.info("backbone.js ==> selectSuperior ==> callback");
+        RENDER.renderPage(request, res, next);
+    });
+});
+
+/**
+ *   初始化 - select
+ *   下一级目录
+ */
+router.get("/select/:name/id/:id", function (req, res, next) {
+    LOGGER.info("backbone.js ==> Initialize select | subordinate");
+    LOGGER.info(req.params);
+    BACKBONE.selectSubordinate(req, function (request) {
+        LOGGER.info("backbone.js ==> selectSubordinate ==> callback");
+        RENDER.renderPage(request, res, next);
     });
 });
 

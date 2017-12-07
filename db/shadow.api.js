@@ -226,13 +226,14 @@ var api = {
         }
     },
 
-    selectOptions: function (request, response) {
+    selectSuperior: function (request, response) {
 
         switch (request.params.name) {
             case 'department':
                 HANDLER
                     .setUpConnection({
-                        execSQL: EXEC_SQL.extractHospitalSelect
+                        execSQL: EXEC_SQL.extractHospitalSelect,
+                        values: null
                     })
                     .then(HANDLER.fetchList)
                     .then(HANDLER.cleanup)
@@ -246,7 +247,36 @@ var api = {
             case 'doctor':
                 HANDLER
                     .setUpConnection({
-                        execSQL: EXEC_SQL.extractDepartmentSelect
+                        execSQL: EXEC_SQL.extractDepartmentSelect,
+                        values: null
+                    })
+                    .then(HANDLER.fetchList)
+                    .then(HANDLER.cleanup)
+                    .then(function (result) {
+                        response(result);
+                    })
+                    .catch(function (request) {
+                        HANDLER.onReject(request, response);
+                    });
+                break;
+            default:
+                response({
+                    code: CODE.failedCode,
+                    msg: "Parameter - " + request.params.name + " not found."
+                });
+                break;
+        }
+
+    },
+
+    selectSubordinate: function (request, response) {
+
+        switch (request.params.name) {
+            case 'doctor':
+                HANDLER
+                    .setUpConnection({
+                        execSQL: EXEC_SQL.extractSubordinateDepartment,
+                        values: [request.params.id]
                     })
                     .then(HANDLER.fetchList)
                     .then(HANDLER.cleanup)

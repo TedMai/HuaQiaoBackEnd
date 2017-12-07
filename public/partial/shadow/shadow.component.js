@@ -88,19 +88,17 @@ angular
                             if (data.hasOwnProperty("departmentName")) {
                                 delete data.departmentName;
                             }
-                            SelectHelper.get(
+                            SelectHelper.superior().query(
                                 {
                                     name: target
                                 },
                                 function (response) {
                                     console.log(response);
-                                    if (response.code === 0) {
-                                        Container.set({
-                                            data: data,
-                                            select: response.msg
-                                        });
-                                        $window.location = '#/Edit/' + target;
-                                    }
+                                    Container.set({
+                                        data: data,
+                                        select: response
+                                    });
+                                    $window.location = '#/Edit/' + target;
                                 },
                                 function (error) {
                                     console.error(error);
@@ -149,7 +147,7 @@ angular
                  */
                 this.batchInsert = function () {
                     console.info("==>   batchInsert");
-                    FileUpload($scope.myFile, "/file/excel")
+                    FileUpload($scope.myFile, "/file/excel/department")
                         .then(
                             function (result) {
                                 console.info(result);
