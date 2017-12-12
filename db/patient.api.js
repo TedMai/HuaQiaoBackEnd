@@ -106,7 +106,25 @@ var api = {
      */
     fetchPatient: function (request, response) {
 
+    },
 
+    queryRelativePatients: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                doctors: {
+                    sql: EXEC_SQL.fetchRelativePatients,
+                    values: request.params.id
+                }
+            })
+            .then(HANDLER.fetchDataSet)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
 };
 

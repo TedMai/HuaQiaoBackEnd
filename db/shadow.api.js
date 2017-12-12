@@ -193,6 +193,9 @@ var api = {
             case 'schedule':
                 SCHEDULE.queryRelativeSchedule(request, response);
                 break;
+            case 'patient':
+                PATIENT.queryRelativePatients(request, response);
+                break;
             default:
                 response({
                     code: CODE.failedCode,
