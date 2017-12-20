@@ -11,7 +11,7 @@ angular
 
                 /**
                  * 初始化
-                 * 设置模式对话框属性值
+                 * 设置确认模式对话框属性值
                  */
                 this.confirmModalTitle = "请您再次确认";
                 this.confirmModalBody = "";
@@ -19,6 +19,13 @@ angular
                 this.cancelButtonText = "取消";
                 this.targetTableName = "";
                 this.targetID = "";
+                /**
+                 * 初始化
+                 * 设置确认模式对话框属性值
+                 */
+                this.fileUploadModalTitle = "批量上传";
+                this.fileUploadButtonText = "上传";
+
 
                 /**
                  * 异步调用
@@ -159,6 +166,13 @@ angular
                     this.targetID = id;
                     this.confirmModalBody = hint;
                     $('#confirmModal').modal({
+                        keyboard: true,
+                        show: true
+                    });
+                };
+
+                this.showFileUploadModal = function () {
+                    $('#fileUploadModal').modal({
                         keyboard: true,
                         show: true
                     });

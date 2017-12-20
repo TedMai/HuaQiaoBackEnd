@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const log4js = require("../services/log4js.service");
+const LOGGER = log4js.getLogger("default");
+const SMS = require("../services/aliyun.sms.service");
 const RENDER = require('./response');
 const BACKBONE = require('../db/shadow.api');
 const FILESYSTEM = require("./fileSystem");
-const log4js = require("../services/log4js.service");
-const LOGGER = log4js.getLogger("default");
 
 /**
  *   初始化 - 后台首页
@@ -154,6 +155,23 @@ router.get('/image/:root/:path/:file', function (req, res, next) {
     } catch (err) {
         next(new Error(err));
     }
+});
+
+/**
+ *  发送短信
+ */
+router.get('/sms/:phone/type/:type', function (req, res, next) {
+    LOGGER.debug("backbone.js ==> send sms");
+    LOGGER.info(req.params);
+
+    SMS.send(req, function (request) {
+        if (request.hasOwnProperty("Code") && request.Code === "OK") {
+            res.json(request);
+        } else {
+            next(new Error(request.Message));
+        }
+    });
+
 });
 
 module.exports = router;
