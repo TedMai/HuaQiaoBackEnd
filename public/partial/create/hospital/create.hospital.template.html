@@ -1,42 +1,60 @@
-<form name="hospitalForm" ng-submit=save("hospital") novalidate>
+<div class="page-header text-center">
     <h1>添加医院</h1>
+</div>
+<form name="hospitalForm" ng-submit=save("hospital") novalidate role="form">
+    <div class="form-group">
+        <label for="hospitalName">名称：</label>
+        <input id="hospitalName" type="text" name="hospitalName" placeholder="请输入医院名称" ng-model="hospital.name"
+               required/>
+        <span ng-show=hospitalForm.hospitalName.$error.required>* 必填项</span>
+    </div>
 
-    <h3>名称：</h3>
-    <input type="text" name="hospitalName" placeholder="请输入医院名称" ng-model="hospital.name"
-           required/>
-    <span ng-show=hospitalForm.hospitalName.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="hospitalDescription">简介：</label>
+        <textarea id="hospitalDescription" name="hospitalDescription" placeholder="请输入医院简介"
+                  ng-model="hospital.description"
+                  required></textarea>
+        <span ng-show=hospitalForm.hospitalDescription.$error.required>* 必填项</span>
+    </div>
 
-    <h3>简介：</h3>
-    <textarea name="hospitalDescription" placeholder="请输入医院简介" ng-model="hospital.description"
-              required></textarea>
-    <span ng-show=hospitalForm.hospitalDescription.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="hospitalFounding">成立时间：</label>
+        <input type="date" id="hospitalFounding" name="hospitalFounding" title="成立时间" ng-model="hospital.founding"
+               required>
+        <span ng-show=hospitalForm.hospitalFounding.$error.required>* 必选项</span>
+    </div>
 
-    <h3>成立时间：</h3>
-    <input type="date" name="hospitalFounding" title="成立时间" ng-model="hospital.founding" required>
-    <span ng-show=hospitalForm.hospitalFounding.$error.required>* 必选项</span>
+    <div class="form-group">
+        <label for="hospitalAddress">地址：</label>
+        <input type="text" id="hospitalAddress" name="hospitalAddress" placeholder="请输入医院地址" ng-model="hospital.address"
+               required>
+        <span ng-show=hospitalForm.hospitalAddress.$error.required>* 必填项</span>
+    </div>
 
-    <h3>地址：</h3>
-    <input type="text" name="hospitalAddress" placeholder="请输入医院地址" ng-model="hospital.address" required>
-    <span ng-show=hospitalForm.hospitalAddress.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="hospitalPhone">电话：</label>
+        <input type="text" id="hospitalPhone" name="hospitalPhone" placeholder="请输入医院电话" ng-model="hospital.contact">
+    </div>
 
-    <h3>电话：</h3>
-    <input type="text" name="hospitalPhone" placeholder="请输入医院电话" ng-model="hospital.contact">
+    <div class="form-group">
+        <label for="hospitalAxisX">坐标：</label>
+        <input type="number" id="hospitalAxisX" name="hospitalAxisX" placeholder="经度" ng-model="hospital.axisX"
+               required> -
+        <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model="hospital.axisY" required>
+        <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required">* 必填项</span>
+    </div>
 
-    <h3>坐标：</h3>
-    <input type="number" name="hospitalAxisX" placeholder="经度" ng-model="hospital.axisX" required> -
-    <input type="number" name="hospitalAxisY" placeholder="纬度" ng-model="hospital.axisY" required>
-    <span ng-show="hospitalForm.hospitalAxisX.$error.required || hospitalForm.hospitalAxisY.$error.required">* 必填项</span>
-
-    <br/><br/>
-    <button type="submit" ng-disabled="hospitalForm.$invalid">提交</button>
+    <button type="submit" ng-disabled="hospitalForm.$invalid" class="btn btn-success">提交</button>
 </form>
 
-<h3>医院图片</h3>
+<div class="page-header text-center">
+    <h1>添加图片</h1>
+</div>
 <input type="file" file-model="myFile" multiple>
-<button ng-click=uploadFile()>上传</button>
+<button ng-click=uploadFile() type="button" class="btn btn-primary">上传</button>
 
 <div ng-repeat="item in album">
     <img ng-src="{{'backbone/image/temp/' + item}}">
-    <button ng-click=deleteFile(item)>删除</button>
+    <button ng-click=deleteFile(item) class="btn btn-danger">删除</button>
 </div>
 

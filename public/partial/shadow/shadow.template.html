@@ -1,97 +1,156 @@
-<h1>医院</h1>
-<h2>
-    <a ng-click="$ctrl.edit('hospital', {})">新增</a>
-</h2>
-<table>
-    <thead>
-    <tr>
-        <th>姓名</th>
-        <th>地址</th>
-        <th>电话</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="hospital in $ctrl.hospitals">
-        <td>
-            <a ng-click="$ctrl.toDetail('#/Hospital', hospital)">{{hospital.name}}</a>
-        </td>
-        <td>{{hospital.address}}</td>
-        <td>{{hospital.contact}}</td>
-        <td>
-            <a ng-click="$ctrl.edit('hospital', hospital)">编辑</a>
-            <a ng-click="$ctrl.delete('hospital', hospital.hid)">删除</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<header id="top"></header>
+<div class="page-header text-center">
+    <h1>医院</h1>
+</div>
+<button ng-click="$ctrl.edit('hospital', {})" type="button" class="btn btn-link">新增</button>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>地址</th>
+            <th>电话</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="hospital in $ctrl.hospitals">
+            <td>{{hospital.hid}}</td>
+            <td>
+                <button ng-click="$ctrl.toDetail('#/Hospital', hospital)" type="button" class="btn btn-link">
+                    {{hospital.name}}
+                </button>
+            </td>
+            <td>{{hospital.address}}</td>
+            <td>{{hospital.contact}}</td>
+            <td>
+                <button ng-click="$ctrl.edit('hospital', hospital)" type="button" class="btn btn-primary btn-sm">
+                    编辑
+                </button>
+                <!--<button ng-click="$ctrl.delete('hospital', hospital.hid)" type="button" class="btn btn-danger btn-sm">-->
+                <button ng-click="$ctrl.showConfirmModal('hospital', hospital.hid, '是否删除 '+ hospital.name + ' ?')"
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        data-toggle="modal" data-target="#confirmModal">
+                    删除
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<hr>
 
-<h1>科室</h1>
-<h2>
-    <a ng-click="$ctrl.edit('department', {})">新增</a>
-</h2>
-<label>
-    批量导入
-</label>
+
+
+<div class="page-header text-center">
+    <h1>科室</h1>
+</div>
+<button ng-click="$ctrl.edit('department', {})" type="button" class="btn btn-link">新增</button>
+<button type="button" class="btn btn-link">批量导入</button>
 <input type="file" file-model="myFile">
-<button ng-click="$ctrl.batchInsert()">上传</button>
-<br />
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>名称</th>
-        <th>父科室</th>
-        <th>隶属单位</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="department in $ctrl.departments">
-        <td>{{department.did}}</td>
-        <td>
-            <a ng-click="$ctrl.toDetail('#/Department', department)">{{department.name}}</a>
-        </td>
-        <td>{{department.parent}}</td>
-        <td>{{department.hospitalName}}</td>
-        <td>
-            <a ng-click="$ctrl.edit('department', department)">编辑</a>
-            <a ng-click="$ctrl.delete('department', department.did)">删除</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<button ng-click="$ctrl.batchInsert()" type="button" class="btn btn-primary btn-sm">上传</button>
+<br/>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>父科室</th>
+            <th>隶属医院</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="department in $ctrl.departments">
+            <td>{{department.did}}</td>
+            <td>
+                <button ng-click="$ctrl.toDetail('#/Department', department)" type="button" class="btn btn-link">
+                    {{department.name}}
+                </button>
+            </td>
+            <td>{{department.parent}}</td>
+            <td>{{department.hospitalName}}</td>
+            <td>
+                <button ng-click="$ctrl.edit('department', department)" type="button" class="btn btn-primary btn-sm">
+                    编辑
+                </button>
+                <button ng-click="$ctrl.showConfirmModal('department', department.did, '是否删除 '+ department.name + ' ?')"
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        data-toggle="modal" data-target="#confirmModal">
+                    删除
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<hr>
+<div class="page-header text-center">
+    <h1>医生</h1>
+</div>
+<button ng-click="$ctrl.edit('doctor', {})" type="button" class="btn btn-link">新增</button>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>职称</th>
+            <th>岗位</th>
+            <th>隶属科室</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="doctor in $ctrl.doctors">
+            <td>{{doctor.id}}</td>
+            <td>
+                <button ng-click="$ctrl.toDetail('#/Doctor', doctor)" type="button" class="btn btn-link">
+                    {{doctor.name}}
+                </button>
+            </td>
+            <td>{{doctor.title}}</td>
+            <td>{{doctor.position}}</td>
+            <td>{{doctor.departmentName}}</td>
+            <td>
+                <button ng-click="$ctrl.edit('doctor', doctor)" type="button" class="btn btn-primary btn-sm">
+                    编辑
+                </button>
+                <button ng-click="$ctrl.showConfirmModal('doctor', doctor.id, '是否删除 '+ doctor.name + ' ?')"
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        data-toggle="modal" data-target="#confirmModal">
+                    删除
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<h1>医生</h1>
-<h2>
-    <a ng-click="$ctrl.edit('doctor', {})">新增</a>
-</h2>
-<table>
-    <thead>
-    <tr>
-        <th>姓名</th>
-        <th>职称</th>
-        <th>岗位</th>
-        <th>科室</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="doctor in $ctrl.doctors">
-        <td>
-            <a ng-click="$ctrl.toDetail('#/Doctor', doctor)">{{doctor.name}}</a>
-        </td>
-        <td>{{doctor.title}}</td>
-        <td>{{doctor.position}}</td>
-        <td>{{doctor.departmentName}}</td>
-        <td>
-            <a ng-click="$ctrl.edit('doctor', doctor)">编辑</a>
-            <a ng-click="$ctrl.delete('doctor', doctor.id)">删除</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">{{ $ctrl.confirmModalTitle }}</h4>
+            </div>
+            <div class="modal-body">{{ $ctrl.confirmModalBody }}</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ $ctrl.cancelButtonText }}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="$ctrl.delete()">{{
+                    $ctrl.confirmButtonText }}
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 返回顶部 -->
+<div class="text-right">
+    <a href="#top" class="btn btn-primary btn-sm"> 返回顶部 </a>
+</div>

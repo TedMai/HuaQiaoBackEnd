@@ -11,6 +11,18 @@ angular
 
                 /**
                  * 初始化
+                 * 设置模式对话框属性值
+                 */
+                this.confirmModalTitle = "请您再次确认";
+                this.confirmModalBody = "";
+                this.confirmButtonText = "删除";
+                this.cancelButtonText = "取消";
+                this.targetTableName = "";
+                this.targetID = "";
+
+                /**
+                 * 异步调用
+                 * 获取页面初始数据
                  */
                 Pathfinder.get(
                     {},
@@ -22,7 +34,7 @@ angular
 
                         console.info(response);
                         /**
-                         * 数据
+                         * 返回数据
                          */
                         if (response.hasOwnProperty("hospital") && response.hospital) {
                             that.hospitals = JSON.parse(response.hospital);
@@ -112,35 +124,45 @@ angular
 
                 /**
                  * 删除
-                 * @param target
-                 * @param id
                  */
-                this.delete = function (target, id) {
-                    var hint = "请再次确认是否删除？";
-
-                    if (confirm(hint) === true) {
-                        console.info("==>   Delete");
-                        Cleaner.save(
-                            {
-                                name: target,
-                                id: id
-                            },
-                            {},
-                            function (response) {
-                                console.info(response);
-                                if (response.code === 0) {
-                                    $location.path("/");
-                                } else {
-                                    $window.alert(response.msg.code);
-                                }
-                            },
-                            function (error) {
-                                console.error(error);
-                                $window.alert(error);
-                            });
-                    }
+                this.delete = function () {
+                    console.info("==>   Delete");
+                    Cleaner.save(
+                        {
+                            name: this.targetTableName,
+                            id: this.targetID
+                        },
+                        {},
+                        function (response) {
+                            console.info(response);
+                            if (response.code === 0) {
+                                $location.path("/");
+                            } else {
+                                $window.alert(response.msg.code);
+                            }
+                        },
+                        function (error) {
+                            console.error(error);
+                            $window.alert(error);
+                        });
                 };
                 /*  end of delete */
+
+                /**
+                 * 显示模式对话框
+                 * @param target
+                 * @param id
+                 * @param hint
+                 */
+                this.showConfirmModal = function (target, id, hint) {
+                    this.targetTableName = target;
+                    this.targetID = id;
+                    this.confirmModalBody = hint;
+                    $('#confirmModal').modal({
+                        keyboard: true,
+                        show: true
+                    });
+                };
 
                 /**
                  * 添加批量插入功能

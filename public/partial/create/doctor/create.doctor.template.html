@@ -1,44 +1,60 @@
-<form name="doctorForm" ng-submit=$ctrl.save("doctor") novalidate>
+<div class="page-header text-center">
     <h1>添加医生</h1>
-    <h3>名称：</h3>
-    <input type="text" name="doctorName" placeholder="请输入医生名字" ng-model=$ctrl.doctor.name
-           required/>
-    <span ng-show=doctorForm.doctorName.$error.required>* 必填项</span>
+</div>
+<form name="doctorForm" ng-submit=$ctrl.save("doctor") novalidate role="form">
+    <div class="form-group">
+        <label for="doctorName">名称：</label>
+        <input type="text" id="doctorName" name="doctorName" placeholder="请输入医生名字" ng-model=$ctrl.doctor.name
+               required/>
+        <span ng-show=doctorForm.doctorName.$error.required>* 必填项</span>
+    </div>
 
-    <h3>职位：</h3>
-    <input type="text" name="doctorPosition" placeholder="请输入医生职位" ng-model=$ctrl.doctor.position
-           required/>
-    <span ng-show=doctorForm.doctorPosition.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="doctorPosition">职位：</label>
+        <input type="text" id="doctorPosition" name="doctorPosition" placeholder="请输入医生职位"
+               ng-model=$ctrl.doctor.position
+               required/>
+        <span ng-show=doctorForm.doctorPosition.$error.required>* 必填项</span>
+    </div>
 
-    <h3>职称：</h3>
-    <input type="text" name="doctorTitle" placeholder="请输入医生职称" ng-model=$ctrl.doctor.title
-           required/>
-    <span ng-show=doctorForm.doctorTitle.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="doctorTitle">职称：</label>
+        <input type="text" id="doctorTitle" name="doctorTitle" placeholder="请输入医生职称" ng-model=$ctrl.doctor.title
+               required/>
+        <span ng-show=doctorForm.doctorTitle.$error.required>* 必填项</span>
+    </div>
 
-    <h3>简历：</h3>
-    <textarea name="doctorResume" placeholder="请输入医生简历" ng-model=$ctrl.doctor.resume></textarea>
+    <div class="form-group">
+        <label for="doctorResume">简历：</label>
+        <textarea id="doctorResume" name="doctorResume" placeholder="请输入医生简历" ng-model=$ctrl.doctor.resume></textarea>
+    </div>
 
-    <h3>擅长领域：</h3>
-    <textarea name="doctorField" placeholder="请输入擅长领域" ng-model=$ctrl.doctor.field></textarea>
+    <div class="form-group">
+        <label for="doctorField">擅长领域：</label>
+        <textarea id="doctorField" name="doctorField" placeholder="请输入擅长领域" ng-model=$ctrl.doctor.field></textarea>
+    </div>
 
-    <h3>隶属科室</h3>
-    <select name="superior" title="隶属父科室" ng-model=$ctrl.doctor.department
-            ng-options="item.did as item.name for item in $ctrl.departmentSelect"
-            ng-click="$ctrl.getSubordinateDepartment($ctrl.doctor.department)" required >
-    </select>
-    <select name="subordinate" title="隶属子科室" ng-model=$ctrl.doctor.subordinate
-            ng-options="item.did as item.name for item in $ctrl.subordinateDepartment" required></select>
-    <span ng-show=doctorForm.subordinate.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="superior">隶属科室：</label>
+        <select id="superior" name="superior" title="隶属父科室" ng-model=$ctrl.doctor.department
+                ng-options="item.did as item.name for item in $ctrl.departmentSelect"
+                ng-click="$ctrl.getSubordinateDepartment($ctrl.doctor.department)" required>
+        </select>
+        <select name="subordinate" title="隶属子科室" ng-model=$ctrl.doctor.subordinate
+                ng-options="item.did as item.name for item in $ctrl.subordinateDepartment" required></select>
+        <span ng-show=doctorForm.subordinate.$error.required>* 必填项</span>
+    </div>
 
-    <br/><br/>
-    <button type="submit" ng-disabled="doctorForm.$invalid">提交</button>
+    <button type="submit" ng-disabled="doctorForm.$invalid" class="btn btn-success">提交</button>
 </form>
 
-<h3>医生图片</h3>
+<div class="page-header text-center">
+    <h1>添加图片</h1>
+</div>
 <input type="file" file-model="myFile" multiple>
-<button ng-click=$ctrl.uploadFile()>上传</button>
+<button ng-click=$ctrl.uploadFile() class="btn btn-primary">上传</button>
 
 <div ng-repeat="item in $ctrl.album">
     <img ng-src="{{'backbone/image/temp/' + item}}">
-    <button ng-click=$ctrl.deleteFile(item)>删除</button>
+    <button type="button" ng-click=$ctrl.deleteFile(item) class="btn btn-danger">删除</button>
 </div>

@@ -1,28 +1,39 @@
-<form name="departmentForm" ng-submit=$ctrl.save("department") novalidate>
+<div class="page-header text-center">
     <h1>添加科室</h1>
-    <h3>名称：</h3>
-    <input type="text" name="departmentName" placeholder="请输入科室名称" ng-model=$ctrl.department.name required/>
-    <span ng-show=departmentForm.departmentName.$error.required>* 必填项</span>
+</div>
+<form name="departmentForm" ng-submit=$ctrl.save("department") novalidate role="form">
+    <div class="form-group">
+        <label for="departmentName">名称：</label>
+        <input type="text" id="departmentName" name="departmentName" placeholder="请输入科室名称"
+               ng-model=$ctrl.department.name required/>
+        <span ng-show=departmentForm.departmentName.$error.required>* 必填项</span>
+    </div>
 
-    <h3>简介：</h3>
-    <textarea name="departmentDescription" placeholder="请输入科室简介" ng-model=$ctrl.department.description required>
-    </textarea>
-    <span ng-show=departmentForm.departmentDescription.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="departmentDescription">简介：</label>
+        <textarea id="departmentDescription" name="departmentDescription" placeholder="请输入科室简介"
+                  ng-model=$ctrl.department.description required>
+        </textarea>
+        <span ng-show=departmentForm.departmentDescription.$error.required>* 必填项</span>
+    </div>
 
-    <h3>隶属医院</h3>
-    <select name="hospitalList" title="隶属医院" ng-model=$ctrl.department.hospital
-            ng-options="item.hid as item.name for item in $ctrl.hospitalSelect" required></select>
-    <span ng-show=departmentForm.hospitalList.$error.required>* 必填项</span>
+    <div class="form-group">
+        <label for="hospitalList">隶属医院：</label>
+        <select id="hospitalList" name="hospitalList" title="隶属医院" ng-model=$ctrl.department.hospital
+                ng-options="item.hid as item.name for item in $ctrl.hospitalSelect" required></select>
+        <span ng-show=departmentForm.hospitalList.$error.required>* 必填项</span>
+    </div>
 
-    <br/><br/>
-    <button type="submit" ng-disabled="departmentForm.$invalid">提交</button>
+    <button type="submit" ng-disabled="departmentForm.$invalid" class="btn btn-success">提交</button>
 </form>
 
-<h3>科室图片</h3>
+<div class="page-header text-center">
+    <h1>添加图片</h1>
+</div>
 <input type="file" file-model="myFile" multiple>
-<button ng-click=$ctrl.uploadFile()>上传</button>
+<button ng-click=$ctrl.uploadFile() class="btn btn-primary">上传</button>
 
 <div ng-repeat="item in $ctrl.album">
     <img ng-src="{{'backbone/image/temp/' + item}}">
-    <button ng-click=$ctrl.deleteFile(item)>删除</button>
+    <button ng-click=$ctrl.deleteFile(item) class="btn btn-danger">删除</button>
 </div>
