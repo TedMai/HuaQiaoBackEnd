@@ -1,6 +1,6 @@
-const http = require('http');
-const log4js = require("../services/log4js.service");
 const querystring = require("querystring");
+const log4js = require("./log4js.service");
+const __REQUEST__ = require("./request.service");
 
 const __LOGGER__ = log4js.getLogger("default");
 const __CRYPTO__ = require('crypto');
@@ -33,35 +33,6 @@ var AliyunSMSService = {
         Version: '2017-05-25',
         RegionId: __PRODUCT_REGION__
     },
-    //发送POST请求
-    doPost: function (data, callback) {
-        const postData = querystring.stringify(data);
-        const options = {
-            host: __PRODUCT_DOMAIN__,
-            port: 80,
-            path: '',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-        };
-        const req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                __LOGGER__.info('返回结果：' + chunk);
-                callback(JSON.parse(chunk));
-            });
-            res.on('end', function () {
-                __LOGGER__.info('===== 结束 =====');
-            });
-        });
-        req.on('error', function (e) {
-            __LOGGER__.error(e.message);
-            callback({'Message': e.message});
-        });
-        req.write(postData);
-        req.end();
-    },
     //签名算法
     sign: function (param) {
         var json = {}, p = Object.keys(param).sort();
@@ -81,8 +52,8 @@ var AliyunSMSService = {
         data.Timestamp = new Date().toISOString();
         params = Object.assign(data, this.config);
         params.Signature = this.sign(params);
-        this.doPost(params, function (data) {
-            callback(data);
+        __REQUEST__.doHttpPost(__PRODUCT_DOMAIN__, 80, params, function (data) {
+            callback(JSON.parse(data));
         });
     },
     //发送 - 类别

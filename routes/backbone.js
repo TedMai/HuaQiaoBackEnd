@@ -5,7 +5,7 @@ const LOGGER = log4js.getLogger("default");
 const SMS = require("../services/aliyun.sms.service");
 const RENDER = require('./response');
 const BACKBONE = require('../db/shadow.api');
-const FILESYSTEM = require("./fileSystem");
+const FILESYSTEM = require("../services/file.system.service");
 
 /**
  *   初始化 - 后台首页

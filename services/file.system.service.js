@@ -1,6 +1,6 @@
 const Q = require('q');
 const fs = require('fs');
-const log4js = require("../services/log4js.service");
+const log4js = require("./log4js.service");
 const PATH = require('path');
 const FORMATTER = require('../db/utility.date');
 const IMAGEINFO = require('imageinfo');
