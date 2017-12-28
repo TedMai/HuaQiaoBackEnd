@@ -14,13 +14,13 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addAppointment,
-                // information: request.body.information,
-                information: {
-                    rid: RANDOM.getNonceStr(32),
-                    schedule: 3,
-                    patient: 4,
-                    appointment: new Date()
-                }
+                information: request.body.information
+                //information: {
+                //    rid: RANDOM.getNonceStr(32),
+                //    schedule: 3,
+                //    patient: 4,
+                //    appointment: new Date()
+                //}
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.setBasicInfo)
