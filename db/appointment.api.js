@@ -10,24 +10,35 @@ var api = {
      * @param response
      */
     addAppointment: function (request, response) {
+        const rid = RANDOM.getNonceStr(32);
+        const appointment = new Date();
 
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addAppointment,
-                information: request.body.information
-                //information: {
-                //    rid: RANDOM.getNonceStr(32),
-                //    schedule: 3,
-                //    patient: 4,
-                //    appointment: new Date()
-                //}
+                information: {
+                    rid: rid,
+                    schedule: request.body.schedule,
+                    patient: request.body.patient,
+                    appointment: appointment
+                }
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.setBasicInfo)
             .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
-                response(result);
+                // 修饰结果
+                // 添加插入ID数据
+                // 其余数据原路返回
+                response({
+                    code: result.code,
+                    msg: {
+                        insertId: rid,
+                        appointment: appointment,
+                        result: result.msg
+                    }
+                });
             })
             .catch(function (request) {
                 HANDLER.onRejectWithRollback(request, response);

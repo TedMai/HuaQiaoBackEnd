@@ -31,6 +31,9 @@ angular
             .when('/Edit/doctor', {
                 template: '<create.doctor></create.doctor>'
             })
+            .when('/Edit/appointment',{
+                template: '<create.appointment></create.appointment>'
+            })
             //  当浏览器地址不能匹配我们任何一个路由规则时，触发重定向到/Shadow
             .otherwise({
                 redirectTo: '/Shadow'

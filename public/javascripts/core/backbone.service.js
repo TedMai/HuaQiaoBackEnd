@@ -27,10 +27,6 @@ angular
                 return $resource("/backbone/table/:name/id/:id", {name: '@name', id: '@id'}, {});
             };
 
-            var _batch = function () {
-
-            };
-
             return {
                 repertory: _repertory,
                 librarian: _fetch
@@ -38,6 +34,11 @@ angular
         }
     ])
     .factory('Cleaner', ['$resource',
+        /**
+         * 删除
+         * @param $resource
+         * @returns {*}
+         */
         function ($resource) {
             return $resource("/backbone/table/:name/id/:id", {name: '@name', id: '@id'}, {});
         }

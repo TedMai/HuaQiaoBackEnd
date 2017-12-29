@@ -112,7 +112,7 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                doctors: {
+                patients: {
                     sql: EXEC_SQL.fetchRelativePatients,
                     values: request.params.id
                 }

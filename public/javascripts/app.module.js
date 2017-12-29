@@ -10,5 +10,6 @@ angular.module('ptHuaQiao', [
     'doctor',
     'create.hospital',
     'create.department',
-    'create.doctor'
+    'create.doctor',
+    'create.appointment'
 ]);
