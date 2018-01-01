@@ -131,6 +131,34 @@ router.post("/table/:name/id/:id", function (req, res, next) {
 });
 
 /**
+ *  登录
+ *      -   注册 | 更新账户信息
+ */
+router.post("/login/type/:type/action/:action", function (req, res, next) {
+    LOGGER.info("backbone.js ==> login");
+    LOGGER.info(req.params);
+    LOGGER.info(req.body);
+    LOGGER.info(req.query);
+    BACKBONE.login(req, function (request) {
+        LOGGER.info("backbone.js ==> login ==> callback");
+        res.json(request);
+    });
+});
+
+/**
+ *  删除账户
+ */
+router.post("/login/:name/id/:id", function (req, res, next) {
+    LOGGER.info("backbone.js ==> delete user");
+    LOGGER.info(req.params);
+    LOGGER.info(req.body);
+    LOGGER.info(req.query);
+    BACKBONE.delete(req, function (request) {
+        res.json(request);
+    });
+});
+
+/**
  *  图片预览
  */
 router.get('/image/:root/:path/:file', function (req, res, next) {

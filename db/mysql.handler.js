@@ -165,6 +165,64 @@ var handler =
         },
 
         /**
+         * 注册
+         * @param request
+         * @returns {jQuery.promise|promise|*|Promise}
+         */
+        register: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.sqlRegister, [request.params.extra], function (err, result) {
+                LOGGER.info("==> register ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                deferred.resolve({
+                    connection: request.connection,
+                    params: request.params,
+                    result: result
+                });
+            });
+
+            return deferred.promise;
+        },
+
+        isExist: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.sqlIsExist, request.params.information, function (err, result) {
+                LOGGER.info("==> isExist ==> callback ERROR - " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                LOGGER.info(result[0]);
+                if (result[0].number === 0) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.notFoundErrorCode,
+                        errMsg: 'Not found.'
+                    });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
+                }
+            });
+
+            return deferred.promise;
+        },
+
+        /**
          * 删除 - 基本信息
          * 用于串联操作，实现批量删除
          * @param request

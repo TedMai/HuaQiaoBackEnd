@@ -3,27 +3,111 @@ const EXEC_SQL = require('./user.interface');
 
 var api = {
 
+    /******************************************  第三方账户  ******************************************/
+
     /**
-     * 新增 - 平台用户
+     * 新增 - 微信登录
      * @param request
      * @param response
      */
-    addUser: function (request, response) {
+    addWeChat: function (request, response) {
 
+        HANDLER
+            .setUpConnection({
+                sqlBasicInfo: EXEC_SQL.addWeChat,
+                sqlRegister: EXEC_SQL.registerWeChat,
+                //information: {
+                //    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4',
+                //    nickname: '晕砰',
+                //    sex: 0,
+                //    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
+                //    country: '',
+                //    province: '',
+                //    city: ''
+                //},
+                //extra: {
+                //    wechat: 'osCkO0a1sPv2YDNBIAw7wFXlTib4'
+                //}
+                information: {
+                    openid: request.body.openid,
+                    nickname: request.body.nickname,
+                    sex: request.body.sex,
+                    headimgurl: request.body.headimgurl,
+                    country: request.body.country,
+                    province: request.body.province,
+                    city: request.body.city
+                },
+                extra: {
+                    wechat: request.body.openid
+                }
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.setBasicInfo)
+            .then(HANDLER.register)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onRejectWithRollback(request, response);
+            });
+    },
+
+    /**
+     * 编辑 - 微信登录
+     * @param request
+     * @param response
+     */
+    editWeChat: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                sqlUpdateInfo: EXEC_SQL.editWeChat,
+                // information: [request.body.information, request.query.id]
+                information: [
+                    //{
+                    //    nickname: '深瓜',
+                    //    sex: 1,
+                    //    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
+                    //    country: '美国',
+                    //    province: '德州',
+                    //    city: '电气城'
+                    //},
+                    {
+                        nickname: request.body.nickname,
+                        sex: request.body.sex,
+                        headimgurl: request.body.headimgurl,
+                        country: request.body.country,
+                        province: request.body.province,
+                        city: request.body.city
+                    },
+                    request.body.id
+                ]
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.updateBasicInfo)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    /******************************************  统一账户  ******************************************/
+
+    addUser: function (request, response) {
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addUser,
                 // information: request.body.information,
                 information: {
-                    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4',
-                    nickname: '晕砰',
-                    sex: 0,
-                    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
-                    country: '',
-                    province: '',
-                    city: '',
-                    phone: '18159393355',
-                    email: 'flowerinhouse@163.com'
+                    phone: request.body.phone,
+                    password: request.body.password,
+                    wechat: ''
                 }
             })
             .then(HANDLER.beginTransaction)
@@ -36,13 +120,9 @@ var api = {
             .catch(function (request) {
                 HANDLER.onRejectWithRollback(request, response);
             });
+
     },
 
-    /**
-     * 编辑 - 平台用户
-     * @param request
-     * @param response
-     */
     editUser: function (request, response) {
 
         HANDLER
@@ -51,16 +131,11 @@ var api = {
                 // information: [request.body.information, request.query.id]
                 information: [
                     {
-                        nickname: '深瓜',
-                        sex: 1,
-                        headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
-                        country: '美国',
-                        province: '德州',
-                        city: '电气城',
-                        phone: '18760598086',
-                        email: '18760598086@139.com'
+                        phone: request.body.phone,
+                        password: request.body.password,
+                        wechat: ''
                     },
-                    request.query.id
+                    request.body.id
                 ]
             })
             .then(HANDLER.beginTransaction)
@@ -76,7 +151,7 @@ var api = {
     },
 
     /**
-     * 删除 - 平台用户
+     * 删除 - 统一账户
      * @param request
      * @param response
      */
@@ -87,6 +162,7 @@ var api = {
                 index: 0,
                 execSQLs: [
                     EXEC_SQL.deleteRelativePatient,
+                    EXEC_SQL.deleteRelativeWeChat,
                     EXEC_SQL.deleteUser
                 ],
                 information: [request.params.id]
@@ -103,14 +179,26 @@ var api = {
             });
     },
 
-    /**
-     * 获取 - 平台用户
-     * @param request
-     * @param response
-     */
-    fetchUser: function (request, response) {
+    login: function (request, response) {
 
-
+        HANDLER
+            .setUpConnection({
+                sqlIsExist: EXEC_SQL.unionLogin,
+                information: [
+                    request.body.phone,
+                    request.body.password
+                ]
+            })
+            //.then(HANDLER.beginTransaction)
+            .then(HANDLER.isExist)
+            //.then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
 };
 

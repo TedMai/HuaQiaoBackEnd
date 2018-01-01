@@ -3,5 +3,5 @@ module.exports =
         addPatient: 'INSERT INTO tb_patient SET ?',
         editPatient: 'UPDATE tb_patient SET ? WHERE pid = ?',
         deletePatient: 'DELETE FROM tb_patient WHERE pid = ?',
-        fetchRelativePatients: 'SELECT * FROM tb_patient WHERE openid = ?'
+        fetchRelativePatients: 'SELECT * FROM tb_patient WHERE uid = ?'
     };
