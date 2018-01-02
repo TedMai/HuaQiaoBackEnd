@@ -58,18 +58,6 @@ var api = {
             case 'patient':
                 PATIENT.addPatient(request, response);
                 break;
-            //case 'user':
-            //    if (request.params.type === "union") {
-            //        USER.addUser(request, response);
-            //    } else if (request.params.type === "wechat") {
-            //        USER.addWeChat(request, response);
-            //    } else {
-            //        response({
-            //            code: CODE.failedCode,
-            //            msg: "Query - " + request.params.type + " not found."
-            //        });
-            //    }
-            //    break;
             default:
                 response({
                     code: CODE.failedCode,
@@ -100,18 +88,6 @@ var api = {
             case 'patient':
                 PATIENT.editPatient(request, response);
                 break;
-            //case 'user':
-            //    if (request.params.type === "union") {
-            //        USER.editUser(request, response);
-            //    } else if (request.params.type === "wechat") {
-            //        USER.editWeChat(request, response);
-            //    } else {
-            //        response({
-            //            code: CODE.failedCode,
-            //            msg: "Query - " + request.params.type + " not found."
-            //        });
-            //    }
-            //    break;
             default:
                 response({
                     code: CODE.failedCode,

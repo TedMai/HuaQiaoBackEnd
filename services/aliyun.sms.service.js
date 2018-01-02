@@ -27,6 +27,7 @@ var AliyunSMSService = {
      * 属性
      */
     verificationCode: '',
+    phone: '',
 
     /**
      *  参数配置
@@ -65,7 +66,9 @@ var AliyunSMSService = {
      * @param callback
      */
     trigger: function (data, callback) {
-        var params;
+        var
+            that = this,
+            params;
 
         data.SignatureNonce = Math.random().toString();
         data.Timestamp = new Date().toISOString();
@@ -73,7 +76,8 @@ var AliyunSMSService = {
         params.Signature = this.sign(params);
         __REQUEST__.doHttpPost(__PRODUCT_DOMAIN__, 80, params, function (data) {
             callback({
-
+                phoneNumber: that.phone,
+                verificationCode: that.verificationCode,
                 result: JSON.parse(data)
             });
         });
@@ -101,11 +105,12 @@ var AliyunSMSService = {
         switch (request.params.type) {
             case "0":   // 验证码
                 this.verificationCode = this.generate(__CODE_LENGTH__);
+                this.phone = request.params.phone;
                 __LOGGER__.debug("AliyunSMSService ==> send sms | " + this.verificationCode);
                 this.trigger({
                     SignName: __SMS_SIGN_NAME__,                        //短信签名
                     TemplateCode: __SMS_TEMPLATE_VERIFY_CODE__,         //短信模板
-                    PhoneNumbers: request.params.phone,                 //接收短信的手机，逗号隔开，最多20个号码
+                    PhoneNumbers: this.phone,                 //接收短信的手机，逗号隔开，最多20个号码
                     TemplateParam: JSON.stringify({                     //短信模板中参数指定
                         code: this.verificationCode
                     })

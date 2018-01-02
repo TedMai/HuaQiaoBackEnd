@@ -5,6 +5,7 @@ const LOGGER = log4js.getLogger("default");
 const SMS = require("../services/aliyun.sms.service");
 const RENDER = require('./response');
 const BACKBONE = require('../db/shadow.api');
+const MESSAGE = require('../db/sms.api');
 const FILESYSTEM = require("../services/file.system.service");
 
 /**
@@ -191,15 +192,15 @@ router.get('/image/:root/:path/:file', function (req, res, next) {
 router.get('/sms/:phone/type/:type', function (req, res, next) {
     LOGGER.debug("backbone.js ==> send sms");
     LOGGER.info(req.params);
-
     SMS.send(req, function (request) {
-        if (request.hasOwnProperty("Code") && request.Code === "OK") {
-            res.json(request);
+        if (request.hasOwnProperty("result") && request.result.Code === "OK") {
+            MESSAGE.addSms(request, function () {
+                res.json(request.result);
+            });
         } else {
             next(new Error(request.Message));
         }
     });
-
 });
 
 module.exports = router;
