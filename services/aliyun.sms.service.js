@@ -19,9 +19,18 @@ const __SMS_SIGN_NAME__ = "花管家";
 //短信模版
 const __SMS_TEMPLATE_NOTIFY_CODE__ = "SMS_76440023";
 const __SMS_TEMPLATE_VERIFY_CODE__ = "SMS_84460009";
+//验证码长度
+const __CODE_LENGTH__ = 6;
 
 var AliyunSMSService = {
-    //配置
+    /**
+     * 属性
+     */
+    verificationCode: '',
+
+    /**
+     *  参数配置
+     */
     config: {
         AccessKeyId: __ACCESS_KEY_ID__,
         AccessKeySecret: __ACCESS_KEY_SECRET__,
@@ -33,7 +42,12 @@ var AliyunSMSService = {
         Version: '2017-05-25',
         RegionId: __PRODUCT_REGION__
     },
-    //签名算法
+
+    /**
+     * 签名算法
+     * @param param
+     * @returns {*}
+     */
     sign: function (param) {
         var json = {}, p = Object.keys(param).sort();
         for (var i = 0; i < p.length; i++) {
@@ -44,7 +58,12 @@ var AliyunSMSService = {
             .update(new Buffer('POST&' + encodeURIComponent('/') + '&' + encodeURIComponent(querystring.stringify(json, '&', '=')), 'utf-8'))
             .digest('base64');
     },
-    //触发
+
+    /**
+     *  触发请求
+     * @param data
+     * @param callback
+     */
     trigger: function (data, callback) {
         var params;
 
@@ -53,23 +72,47 @@ var AliyunSMSService = {
         params = Object.assign(data, this.config);
         params.Signature = this.sign(params);
         __REQUEST__.doHttpPost(__PRODUCT_DOMAIN__, 80, params, function (data) {
-            callback(JSON.parse(data));
+            callback({
+
+                result: JSON.parse(data)
+            });
         });
     },
-    //发送 - 类别
+
+    generate: function (length) {
+        var
+            i,
+            chars = "0123456789",
+            verificationCode = "",
+            count = chars.length - 1;
+
+        for (i = 0; i < length; i++) {
+            verificationCode = verificationCode.concat(chars.substr(parseInt(Math.random() * count), 1));
+        }
+        return verificationCode;
+    },
+
+    /**
+     *  选择短信类别
+     * @param request
+     * @param response
+     */
     send: function (request, response) {
         switch (request.params.type) {
             case "0":   // 验证码
+                this.verificationCode = this.generate(__CODE_LENGTH__);
+                __LOGGER__.debug("AliyunSMSService ==> send sms | " + this.verificationCode);
                 this.trigger({
                     SignName: __SMS_SIGN_NAME__,                        //短信签名
                     TemplateCode: __SMS_TEMPLATE_VERIFY_CODE__,         //短信模板
                     PhoneNumbers: request.params.phone,                 //接收短信的手机，逗号隔开，最多20个号码
                     TemplateParam: JSON.stringify({                     //短信模板中参数指定
-                        code: "11111"
+                        code: this.verificationCode
                     })
                 }, response);
                 break;
             case "1":   // 确认短信
+                __LOGGER__.debug("AliyunSMSService ==> send sms");
                 this.trigger({
                     SignName: __SMS_SIGN_NAME__,                        //短信签名
                     TemplateCode: __SMS_TEMPLATE_NOTIFY_CODE__,         //短信模板

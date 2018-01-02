@@ -51,4 +51,4 @@ var CredentailService = {
     }
 };
 
-CredentailService.getRealtimeAccessToken();
+// CredentailService.getRealtimeAccessToken();
