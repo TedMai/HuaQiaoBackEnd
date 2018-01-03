@@ -1,7 +1,5 @@
 const HANDLER = require('./mysql.handler');
 const EXEC_SQL = require('./sms.interface');
-const log4js = require("../services/log4js.service");
-const LOGGER = log4js.getLogger("default");
 
 var api = {
 
@@ -13,7 +11,6 @@ var api = {
      * @param response
      */
     addSms: function (request, response) {
-        LOGGER.info(request.result);
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addSms,
@@ -21,7 +18,8 @@ var api = {
                     requestId: request.result.RequestId,
                     bizId: request.result.BizId,
                     phone: request.phoneNumber,
-                    verificationCode: request.verificationCode
+                    verificationCode: request.verificationCode,
+                    errCode: request.result.Code
                 }
             })
             .then(HANDLER.beginTransaction)
@@ -40,8 +38,25 @@ var api = {
 
     },
 
-    checkMessage: function (reqeust, response) {
-
+    checkSms: function (request, response) {
+        HANDLER
+            .setUpConnection({
+                sqlIsExist: EXEC_SQL.checkSms,
+                information: [
+                    request.body.requestId,
+                    request.body.bizId,
+                    request.body.phone,
+                    request.body.verificationCode
+                ]
+            })
+            .then(HANDLER.isExist)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
 };
 

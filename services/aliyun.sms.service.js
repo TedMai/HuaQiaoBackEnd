@@ -83,6 +83,11 @@ var AliyunSMSService = {
         });
     },
 
+    /**
+     *  生成验证码
+     * @param length
+     * @returns {string}
+     */
     generate: function (length) {
         var
             i,
@@ -110,7 +115,7 @@ var AliyunSMSService = {
                 this.trigger({
                     SignName: __SMS_SIGN_NAME__,                        //短信签名
                     TemplateCode: __SMS_TEMPLATE_VERIFY_CODE__,         //短信模板
-                    PhoneNumbers: this.phone,                 //接收短信的手机，逗号隔开，最多20个号码
+                    PhoneNumbers: this.phone,                          //接收短信的手机，逗号隔开，最多20个号码
                     TemplateParam: JSON.stringify({                     //短信模板中参数指定
                         code: this.verificationCode
                     })
@@ -118,10 +123,11 @@ var AliyunSMSService = {
                 break;
             case "1":   // 确认短信
                 __LOGGER__.debug("AliyunSMSService ==> send sms");
+                this.phone = request.params.phone;
                 this.trigger({
                     SignName: __SMS_SIGN_NAME__,                        //短信签名
                     TemplateCode: __SMS_TEMPLATE_NOTIFY_CODE__,         //短信模板
-                    PhoneNumbers: request.params.phone                  //接收短信的手机，逗号隔开，最多20个号码
+                    PhoneNumbers: this.phone                           //接收短信的手机，逗号隔开，最多20个号码
                 }, response);
                 break;
             default:

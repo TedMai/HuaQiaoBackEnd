@@ -8,6 +8,7 @@ const APPOINTMENT = require('./appointment.api');
 const PATIENT = require('./patient.api');
 const USER = require('./user.api');
 const CODE = require('./mysql.code');
+const MESSAGE = require('./sms.api');
 
 var api = {
     initialization: function (request, response) {
@@ -231,7 +232,19 @@ var api = {
                     USER.login(request, response);
                 }
                 else if (request.params.action === 'register') {
-                    USER.addUser(request, response);
+                    // 添加验证
+                    // 传入参数： requestId bizId phone code
+                    MESSAGE.checkSms(request, function (result) {
+                        if (result.code === 0) {
+                            USER.addUser(request, response);
+                        } else {
+                            response({
+                                code: CODE.failedCode,
+                                msg: "验证码输入有误！"
+                            });
+                        }
+                        /* end of if */
+                    });
                 }
                 else {
                     response({
