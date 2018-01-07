@@ -214,7 +214,7 @@ var handler =
                     deferred.resolve({
                         connection: request.connection,
                         params: request.params,
-                        result: result
+                        result: result[0]
                     });
                 }
             });

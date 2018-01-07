@@ -17,5 +17,5 @@ module.exports = {
     /**
      * 登录
      */
-    unionLogin: 'SELECT COUNT(*) AS number FROM tb_user WHERE phone = ? and password = ?'
+    unionLogin: 'SELECT uid, COUNT(uid) AS number FROM tb_user WHERE phone = ? and password = ? GROUP BY uid'
 };
