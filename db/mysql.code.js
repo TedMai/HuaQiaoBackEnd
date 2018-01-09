@@ -14,6 +14,10 @@ module.exports = {
     /**
      * 查询结果不存在code
      */
-    notFoundErrorCode: -400
+    notFoundErrorCode: -400,
+    /**
+     * 查询是否重复提交code
+     */
+    resubmitErrorCode: -500
 
 };

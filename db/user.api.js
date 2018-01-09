@@ -65,15 +65,7 @@ var api = {
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editWeChat,
                 // information: [request.body.information, request.query.id]
-                information: [
-                    //{
-                    //    nickname: '深瓜',
-                    //    sex: 1,
-                    //    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
-                    //    country: '美国',
-                    //    province: '德州',
-                    //    city: '电气城'
-                    //},
+                updateDataSet: [
                     {
                         nickname: request.body.nickname,
                         sex: request.body.sex,
@@ -129,7 +121,7 @@ var api = {
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editUser,
                 // information: [request.body.information, request.query.id]
-                information: [
+                updateDataSet: [
                     {
                         phone: request.body.phone,
                         password: request.body.password,
@@ -184,7 +176,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlIsExist: EXEC_SQL.unionLogin,
-                information: [
+                queryCondition: [
                     request.body.phone,
                     request.body.password
                 ]

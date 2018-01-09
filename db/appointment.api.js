@@ -16,14 +16,20 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addAppointment,
+                sqlIsRepeat: EXEC_SQL.checkRepeatAppointment,
                 information: {
                     rid: rid,
                     schedule: request.body.schedule,
                     patient: request.body.patient,
                     appointment: appointment
-                }
+                },
+                queryCondition: [
+                    request.body.schedule,
+                    request.body.patient
+                ]
             })
             .then(HANDLER.beginTransaction)
+            .then(HANDLER.isRepeat)
             .then(HANDLER.setBasicInfo)
             .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
@@ -56,7 +62,7 @@ var api = {
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editAppointment,
                 // information: [request.body.information, request.query.id]
-                information: [
+                updateDataSet: [
                     {
                         schedule: 3,
                         patient: 4,

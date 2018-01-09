@@ -63,7 +63,7 @@ var api = {
                 sqlFetchGallery: EXEC_SQL.fetchDepartmentGallery,
                 sqlInsertGallery: EXEC_SQL.insertDepartmentGallery,
                 sqlDeleteGallery: EXEC_SQL.deleteDepartmentGallery,
-                information: [request.body.information, request.query.id],
+                updateDataSet: [request.body.information, request.query.id],
                 gallery: request.body.gallery,
                 id: request.query.id
             })

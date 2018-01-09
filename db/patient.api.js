@@ -13,18 +13,32 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addPatient,
-                // information: request.body.information,
-                information: {
-                    name: '李云鹏',
-                    sex: 0,
-                    birthday: new Date(),
-                    identity: '350303198512050039',
-                    phone: '18159393355',
-                    address: '福建莆田',
-                    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4'
-                }
+                sqlUpdateInfo: EXEC_SQL.batchSetDefault,
+                sqlIsExist: EXEC_SQL.checkIsUserExist,
+                information: request.body,
+                // information: {
+                //     name: '2345234532',
+                //     sex: 1,
+                //     identity: '350303198845661250',
+                //     phone: '13956568878',
+                //     address: '',
+                //     isDefault: true,
+                //     uid: 24
+                // },
+                queryCondition: [
+                    request.body.uid
+                ],
+                updateDataSet: [
+                    {
+                        isDefault: 0
+                    },
+                    request.body.uid
+                ],
+                checkResult: request.body.isDefault === true
             })
             .then(HANDLER.beginTransaction)
+            .then(HANDLER.isExist)
+            .then(HANDLER.setColumnData)
             .then(HANDLER.setBasicInfo)
             .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
@@ -47,7 +61,7 @@ var api = {
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editPatient,
                 // information: [request.body.information, request.query.id]
-                information: [
+                updateDataSet: [
                     {
                         name: '李鹏',
                         sex: 1,

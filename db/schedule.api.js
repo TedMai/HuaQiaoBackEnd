@@ -46,7 +46,7 @@ var api = {
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editSchedule,
                 // information: [request.body.information, request.query.id]
-                information: [
+                updateDataSet: [
                     {
                         doctor: 25,
                         visiting: new Date(),

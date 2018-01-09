@@ -42,7 +42,7 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlIsExist: EXEC_SQL.checkSms,
-                information: [
+                queryCondition: [
                     request.body.requestId,
                     request.body.bizId,
                     request.body.phone,

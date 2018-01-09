@@ -118,7 +118,7 @@ var handler =
         updateBasicInfo: function (request) {
             var deferred = Q.defer();
 
-            request.connection.query(request.params.sqlUpdateInfo, request.params.information, function (err, result) {
+            request.connection.query(request.params.sqlUpdateInfo, request.params.updateDataSet, function (err, result) {
                 LOGGER.info("==> updateBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
@@ -191,10 +191,15 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 检查目标项是否存在
+         * @param request
+         * @returns {*|promise|Promise}
+         */
         isExist: function (request) {
             var deferred = Q.defer();
 
-            request.connection.query(request.params.sqlIsExist, request.params.information, function (err, result) {
+            request.connection.query(request.params.sqlIsExist, request.params.queryCondition, function (err, result) {
                 LOGGER.info("==> isExist ==> callback ERROR - " + err);
                 if (err) {
                     deferred.reject({
@@ -215,6 +220,37 @@ var handler =
                         connection: request.connection,
                         params: request.params,
                         result: result[0]
+                    });
+                }
+            });
+
+            return deferred.promise;
+        },
+
+        isRepeat: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.sqlIsRepeat, request.params.queryCondition, function (err, result) {
+                LOGGER.info("==> isRepeat ==> callback ERROR - " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                LOGGER.info(result[0]);
+                if (result[0].number === 0) {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result[0]
+                    });
+                } else {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.resubmitErrorCode,
+                        errMsg: 'Already done. Maybe resubmit.'
                     });
                 }
             });
@@ -566,8 +602,25 @@ var handler =
                 );
 
             return deferred.promise;
-        }
-        ,
+        },
+
+        /**
+         * 设置数据集
+         * @param request
+         * @returns {*|promise|Promise}
+         */
+        setColumnData: function (request) {
+            var promise,
+                deferred = Q.defer();
+
+            promise = Q(request);
+            LOGGER.info("==>   setColumnData | CheckResult: " + request.params.checkResult);
+            if (request.params.checkResult) {
+                promise = promise.then(handler.updateBasicInfo);
+            }
+
+            return promise;
+        },
 
         /**
          * 扫尾 - 释放连接

@@ -48,7 +48,7 @@ var api = {
                 sqlFetchGallery: EXEC_SQL.fetchHospitalGallery,
                 sqlInsertGallery: EXEC_SQL.insertHospitalGallery,
                 sqlDeleteGallery: EXEC_SQL.deleteHospitalGallery,
-                information: [request.body.information, request.query.id],
+                updateDataSet: [request.body.information, request.query.id],
                 gallery: request.body.gallery,
                 id: request.query.id
             })
