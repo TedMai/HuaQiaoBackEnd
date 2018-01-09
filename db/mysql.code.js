@@ -12,6 +12,10 @@ module.exports = {
      */
     databaseErrorCode: -200,
     /**
+     * 短信校验失败code
+     */
+    smsCheckErrorCode: -300,
+    /**
      * 查询结果不存在code
      */
     notFoundErrorCode: -400,

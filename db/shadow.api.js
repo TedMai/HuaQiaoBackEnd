@@ -239,7 +239,7 @@ var api = {
                             USER.addUser(request, response);
                         } else {
                             response({
-                                code: CODE.failedCode,
+                                code: CODE.smsCheckErrorCode,
                                 msg: "验证码输入有误！"
                             });
                         }
