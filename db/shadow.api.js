@@ -54,7 +54,8 @@ var api = {
                 SCHEDULE.addSchedule(request, response);
                 break;
             case 'appointment':
-                APPOINTMENT.addAppointment(request, response);
+                this.checkSmsValidity(request, response, APPOINTMENT.addAppointment);
+                // APPOINTMENT.addAppointment(request, response);
                 break;
             case 'patient':
                 PATIENT.addPatient(request, response);
@@ -232,19 +233,7 @@ var api = {
                     USER.login(request, response);
                 }
                 else if (request.params.action === 'register') {
-                    // 添加验证
-                    // 传入参数： requestId bizId phone code
-                    MESSAGE.checkSms(request, function (result) {
-                        if (result.code === 0) {
-                            USER.addUser(request, response);
-                        } else {
-                            response({
-                                code: CODE.smsCheckErrorCode,
-                                msg: "验证码输入有误！"
-                            });
-                        }
-                        /* end of if */
-                    });
+                    this.checkSmsValidity(request, response, USER.addUser);
                 }
                 else {
                     response({
@@ -274,6 +263,32 @@ var api = {
                 });
                 break;
         }
+    },
+
+    /**
+     * 验证手机有效性
+     *  --  传入参数
+     *          requestId
+     *          bizId
+     *          phone
+     *          code
+     * @param request
+     * @param response
+     * @param callback
+     */
+    checkSmsValidity: function (request, response, callback) {
+        // 添加验证
+        // 传入参数：
+        MESSAGE.checkSms(request, function (result) {
+            if (result.code === 0) {
+                callback(request, response);
+            } else {
+                response({
+                    code: CODE.smsCheckErrorCode,
+                    msg: "验证码输入有误！"
+                });
+            }
+        });
     },
 
     selectSuperior: function (request, response) {

@@ -208,8 +208,8 @@ var handler =
                         errMsg: err
                     });
                 }
-                LOGGER.info(result[0]);
-                if (result[0].number === 0) {
+                LOGGER.info(result);
+                if (result.length === 0 || result[0].number === 0) {
                     deferred.reject({
                         connection: request.connection,
                         code: CODE.notFoundErrorCode,

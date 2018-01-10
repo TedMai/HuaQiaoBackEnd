@@ -181,9 +181,7 @@ var api = {
                     request.body.password
                 ]
             })
-            //.then(HANDLER.beginTransaction)
             .then(HANDLER.isExist)
-            //.then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);
