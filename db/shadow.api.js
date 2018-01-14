@@ -192,6 +192,9 @@ var api = {
             case 'patient':
                 PATIENT.queryRelativePatients(request, response);
                 break;
+            case 'appointment':
+                APPOINTMENT.queryRelativeAppointments(request, response);
+                break;
             default:
                 response({
                     code: CODE.failedCode,
@@ -229,7 +232,7 @@ var api = {
 
         switch (request.params.type) {
             case 'union':
-                if (request.params.action === 'login') {
+                if (request.params.action === 'unionLogin') {
                     USER.login(request, response);
                 }
                 else if (request.params.action === 'register') {
@@ -243,11 +246,8 @@ var api = {
                 }
                 break;
             case 'wechat':
-                if (request.params.action === 'login') {
-                    USER.login(request, response);
-                }
-                else if (request.params.action === 'register') {
-                    USER.addWeChat(request, response);
+                if (request.params.action === 'weChatLogin') {
+                    USER.weChatLogin(request, response);
                 }
                 else {
                     response({

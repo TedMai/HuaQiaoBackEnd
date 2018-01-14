@@ -10,8 +10,11 @@ module.exports = {
     /**
      * 微信
      */
-    addWeChat: 'INSERT INTO tb_user_wechat SET ?',
+    fetchSpecificWeChat: 'SELECT * FROM tb_user WHERE wechat = ?',
+    fetchSpecificWeChat2: 'SELECT * FROM tb_user WHERE uid = ?',
+    isWeChatExist: 'SELECT COUNT(*) AS number FROM tb_user WHERE wechat = ?',
     registerWeChat: 'INSERT INTO tb_user SET ?',
+    addWeChat: 'INSERT INTO tb_user_wechat SET ?',
     editWeChat: 'UPDATE tb_user_wechat SET ? WHERE openid = ?',
     deleteWeChat: 'DELETE FROM tb_user_wechat WHERE openid = ?',
     /**

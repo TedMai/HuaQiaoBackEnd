@@ -111,13 +111,27 @@ var api = {
     },
 
     /**
-     * 获取 - 预约挂号信息
+     * 获取指定用户的预约挂号信息列表
      * @param request
      * @param response
      */
-    fetchAppointment: function (request, response) {
+    queryRelativeAppointments: function (request, response) {
 
-
+        HANDLER
+            .setUpConnection({
+                appointments: {
+                    sql: EXEC_SQL.fetchRelativeAppointments,
+                    values: request.params.id
+                }
+            })
+            .then(HANDLER.fetchDataSet)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
 };
 

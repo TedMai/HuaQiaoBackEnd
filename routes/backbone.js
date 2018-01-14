@@ -3,10 +3,12 @@ const router = express.Router();
 const log4js = require("../services/log4js.service");
 const LOGGER = log4js.getLogger("default");
 const SMS = require("../services/aliyun.sms.service");
+const CREDENTIAL = require("../services/credential.service");
+const FILESYSTEM = require("../services/file.system.service");
 const RENDER = require('./response');
 const BACKBONE = require('../db/shadow.api');
 const MESSAGE = require('../db/sms.api');
-const FILESYSTEM = require("../services/file.system.service");
+const USER = require('../db/user.api');
 
 /**
  *   初始化 - 后台首页
@@ -157,6 +159,31 @@ router.post("/login/:name/id/:id", function (req, res, next) {
     BACKBONE.delete(req, function (request) {
         res.json(request);
     });
+});
+
+/**
+ *  第三方登录
+ */
+router.get('/knock/:code', function (req, res, next) {
+    LOGGER.debug("backbone.js ==> fetch openid, session_key, unionId through code");
+    LOGGER.info(req.params);
+    CREDENTIAL.fetchUserOpenId(req.params.code, function (request) {
+        /**
+         * 如果openid存在，则启动注册流程
+         * 否则，返回错误信息
+         */
+        if (request.hasOwnProperty('openid')) {
+            USER.registerByWeChat({params: {openid: request.openid}},
+                function (request) {
+                    res.json(request);
+                });
+        } else {
+            res.json({
+                code: request.errcode,
+                msg: request.errmsg
+            });
+        }
+    })
 });
 
 /**

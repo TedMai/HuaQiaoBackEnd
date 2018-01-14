@@ -6,44 +6,64 @@ var api = {
     /******************************************  第三方账户  ******************************************/
 
     /**
-     * 新增 - 微信登录
+     * 微信
+     *      --  注册
      * @param request
      * @param response
      */
-    addWeChat: function (request, response) {
+    registerByWeChat: function (request, response) {
 
         HANDLER
             .setUpConnection({
-                sqlBasicInfo: EXEC_SQL.addWeChat,
+                execSQL: EXEC_SQL.fetchSpecificWeChat,
+                sqlIsRepeat: EXEC_SQL.isWeChatExist,
                 sqlRegister: EXEC_SQL.registerWeChat,
-                //information: {
-                //    openid: 'osCkO0a1sPv2YDNBIAw7wFXlTib4',
-                //    nickname: '晕砰',
-                //    sex: 0,
-                //    headimgurl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epUM6YMGgk050cJfxfal6w039ZDD5787lqW7cpl6whKjDmibAjSnJn54wFOtZ9vyu54a5kh8iaNk6mw/0',
-                //    country: '',
-                //    province: '',
-                //    city: ''
-                //},
-                //extra: {
-                //    wechat: 'osCkO0a1sPv2YDNBIAw7wFXlTib4'
-                //}
-                information: {
-                    openid: request.body.openid,
-                    nickname: request.body.nickname,
-                    sex: request.body.sex,
-                    headimgurl: request.body.headimgurl,
-                    country: request.body.country,
-                    province: request.body.province,
-                    city: request.body.city
-                },
+                values: [
+                    request.params.openid
+                ],
+                queryCondition: [
+                    request.params.openid
+                ],
                 extra: {
-                    wechat: request.body.openid
+                    wechat: request.params.openid
                 }
             })
             .then(HANDLER.beginTransaction)
+            .then(HANDLER.isRepeat)
+            .then(
+                HANDLER.register,
+                HANDLER.fetchList
+            )
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onRejectWithRollback(request, response);
+            });
+    },
+
+    /**
+     * 微信
+     *      --  登录
+     * @param request
+     * @param response
+     */
+    weChatLogin: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                sqlFetchUser: EXEC_SQL.fetchSpecificWeChat2,
+                sqlDeleteInfo: EXEC_SQL.deleteWeChat,
+                sqlBasicInfo: EXEC_SQL.addWeChat,
+                uid: request.body.uid,
+                userInfo: request.body.userInfo
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.fetchWeChatAccount)
+            .then(HANDLER.deleteBasicInfo)
             .then(HANDLER.setBasicInfo)
-            .then(HANDLER.register)
             .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
@@ -92,6 +112,7 @@ var api = {
     /******************************************  统一账户  ******************************************/
 
     addUser: function (request, response) {
+
         HANDLER
             .setUpConnection({
                 sqlBasicInfo: EXEC_SQL.addUser,
@@ -120,7 +141,6 @@ var api = {
         HANDLER
             .setUpConnection({
                 sqlUpdateInfo: EXEC_SQL.editUser,
-                // information: [request.body.information, request.query.id]
                 updateDataSet: [
                     {
                         phone: request.body.phone,
@@ -171,6 +191,12 @@ var api = {
             });
     },
 
+    /**
+     * 登录
+     *      --   统一账户
+     * @param request
+     * @param response
+     */
     login: function (request, response) {
 
         HANDLER
@@ -190,6 +216,8 @@ var api = {
                 HANDLER.onReject(request, response);
             });
     }
+
+
 };
 
 module.exports = api;

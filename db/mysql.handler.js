@@ -145,7 +145,7 @@ var handler =
         deleteBasicInfo: function (request) {
             var deferred = Q.defer();
 
-            request.connection.query(request.params.sqlDeleteInfo, request.params.information, function (err, result) {
+            request.connection.query(request.params.sqlDeleteInfo, request.params.deleteDataSet, function (err, result) {
                 LOGGER.info("==> deleteBasicInfo ==> callback |  " + err);
                 if (err) {
                     deferred.reject({
@@ -200,7 +200,7 @@ var handler =
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlIsExist, request.params.queryCondition, function (err, result) {
-                LOGGER.info("==> isExist ==> callback ERROR - " + err);
+                LOGGER.info("==> isExist ==> callback | " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -227,11 +227,17 @@ var handler =
             return deferred.promise;
         },
 
+        /**
+         * 同样是检查目标项是否存在
+         * 与isExist相反，如果不存在就正常执行下面流程
+         * @param request
+         * @returns {promise|jQuery.promise|*|Promise}
+         */
         isRepeat: function (request) {
             var deferred = Q.defer();
 
             request.connection.query(request.params.sqlIsRepeat, request.params.queryCondition, function (err, result) {
-                LOGGER.info("==> isRepeat ==> callback ERROR - " + err);
+                LOGGER.info("==> isRepeat ==> callback | " + err);
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
@@ -239,8 +245,8 @@ var handler =
                         errMsg: err
                     });
                 }
-                LOGGER.info(result[0]);
-                if (result[0].number === 0) {
+                LOGGER.info(result);
+                if (result.length === 0 || result[0].number === 0) {
                     deferred.resolve({
                         connection: request.connection,
                         params: request.params,
@@ -249,8 +255,58 @@ var handler =
                 } else {
                     deferred.reject({
                         connection: request.connection,
+                        params: request.params,
                         code: CODE.resubmitErrorCode,
-                        errMsg: 'Already done. Maybe resubmit.'
+                        errMsg: 'Already have one. Maybe resubmit.'
+                    });
+                }
+            });
+
+            return deferred.promise;
+        },
+
+        /**
+         * 获取微信账户
+         * @param request
+         * @returns {jQuery.promise|*|promise|Promise}
+         */
+        fetchWeChatAccount: function (request) {
+            var deferred = Q.defer();
+
+            LOGGER.info("==> fetchWeChatAccount | SQL - " + request.params.sqlFetchUser + " | uid - " + request.params.uid);
+            request.connection.query(request.params.sqlFetchUser, request.params.uid, function (err, result) {
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                }
+                LOGGER.info(result);
+                if (result.length === 0) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.notFoundErrorCode,
+                        errMsg: 'Not found.'
+                    });
+
+                } else {
+                    request.params.deleteDataSet = [
+                        result[0].wechat
+                    ];
+                    request.params.information = {
+                        openid: result[0].wechat,
+                        nickname: request.params.userInfo.nickName,
+                        sex: request.params.userInfo.gender,
+                        headimgurl: request.params.userInfo.avatarUrl,
+                        country: request.params.userInfo.country,
+                        province: request.params.userInfo.province,
+                        city: request.params.userInfo.city
+                    };
+
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params
                     });
                 }
             });
@@ -534,8 +590,9 @@ var handler =
         fetchList: function (request) {
             var deferred = Q.defer();
 
-            LOGGER.info("==>   fetchList");
+            LOGGER.info("==>   fetchList | execSQL: " + request.params.execSQL);
             request.connection.query(request.params.execSQL, request.params.values, function (err, result) {
+                LOGGER.info("==> fetchList ==> callback |  " + err);
 
                 if (err) {
                     deferred.reject({
