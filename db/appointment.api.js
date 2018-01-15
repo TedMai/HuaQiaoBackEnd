@@ -111,6 +111,29 @@ var api = {
     },
 
     /**
+     * 查询指定的预约订单详情
+     * @param request
+     * @param response
+     */
+    querySpecificAppointment: function (request, response) {
+        HANDLER
+            .setUpConnection({
+                appointment: {
+                    sql: EXEC_SQL.fetchSpecificAppointment,
+                    values: request.params.id
+                }
+            })
+            .then(HANDLER.fetchDataSet)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    /**
      * 获取指定用户的预约挂号信息列表
      * @param request
      * @param response

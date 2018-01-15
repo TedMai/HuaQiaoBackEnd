@@ -55,7 +55,6 @@ var api = {
                 break;
             case 'appointment':
                 this.checkSmsValidity(request, response, APPOINTMENT.addAppointment);
-                // APPOINTMENT.addAppointment(request, response);
                 break;
             case 'patient':
                 PATIENT.addPatient(request, response);
@@ -89,6 +88,9 @@ var api = {
                 break;
             case 'patient':
                 PATIENT.editPatient(request, response);
+                break;
+            case 'user':
+                this.checkSmsValidity(request, response, USER.editUser);
                 break;
             default:
                 response({
@@ -164,6 +166,12 @@ var api = {
                 break;
             case 'doctor':
                 DOCTOR.querySpecificDoctor(request, response);
+                break;
+            case 'appointment':
+                APPOINTMENT.querySpecificAppointment(request, response);
+                break;
+            case 'user':
+                USER.querySpecificUser(request, response);
                 break;
             default:
                 response({

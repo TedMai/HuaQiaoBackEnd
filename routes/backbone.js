@@ -225,7 +225,8 @@ router.get('/sms/:phone/type/:type', function (req, res, next) {
                 res.json(request.result);
             });
         } else {
-            next(new Error(request.Message));
+            // next(new Error(request.Message));
+            res.json(request.Message);
         }
     });
 });

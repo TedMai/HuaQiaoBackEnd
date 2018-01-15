@@ -54,7 +54,7 @@ var api = {
 
         HANDLER
             .setUpConnection({
-                sqlFetchUser: EXEC_SQL.fetchSpecificWeChat2,
+                sqlFetchUser: EXEC_SQL.fetchSpecificUser,
                 sqlDeleteInfo: EXEC_SQL.deleteWeChat,
                 sqlBasicInfo: EXEC_SQL.addWeChat,
                 uid: request.body.uid,
@@ -143,11 +143,9 @@ var api = {
                 sqlUpdateInfo: EXEC_SQL.editUser,
                 updateDataSet: [
                     {
-                        phone: request.body.phone,
-                        password: request.body.password,
-                        wechat: ''
+                        phone: request.body.phone
                     },
-                    request.body.id
+                    request.query.id
                 ]
             })
             .then(HANDLER.beginTransaction)
@@ -208,6 +206,23 @@ var api = {
                 ]
             })
             .then(HANDLER.isExist)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    querySpecificUser: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.fetchSpecificUser,
+                values: [request.params.id]
+            })
+            .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)
             .then(function (result) {
                 response(result);
