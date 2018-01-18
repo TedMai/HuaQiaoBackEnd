@@ -220,13 +220,13 @@ router.get('/sms/:phone/type/:type', function (req, res, next) {
     LOGGER.debug("backbone.js ==> send sms");
     LOGGER.info(req.params);
     SMS.send(req, function (request) {
-        if (request.hasOwnProperty("result") && request.result.Code === "OK") {
+        if (request.result.Code === "OK") {
             MESSAGE.addSms(request, function () {
                 res.json(request.result);
             });
         } else {
             // next(new Error(request.Message));
-            res.json(request.Message);
+            res.json(request.result.Message);
         }
     });
 });

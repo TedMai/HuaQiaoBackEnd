@@ -170,6 +170,9 @@ var api = {
             case 'appointment':
                 APPOINTMENT.querySpecificAppointment(request, response);
                 break;
+            case 'patient':
+                PATIENT.querySpecificPatient(request, response);
+                break;
             case 'user':
                 USER.querySpecificUser(request, response);
                 break;

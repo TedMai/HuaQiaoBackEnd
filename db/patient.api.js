@@ -118,10 +118,28 @@ var api = {
      * @param request
      * @param response
      */
-    fetchPatient: function (request, response) {
+    querySpecificPatient: function (request, response) {
 
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.querySpecificPatient,
+                values: [request.params.id]
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     },
 
+    /**
+     * 获取当前用户下的所有就诊人信息
+     * @param request
+     * @param response
+     */
     queryRelativePatients: function (request, response) {
 
         HANDLER
