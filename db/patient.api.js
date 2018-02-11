@@ -97,6 +97,7 @@ var api = {
             .setUpConnection({
                 index: 0,
                 execSQLs: [
+                    EXEC_SQL.deleteRelativeAppointment,
                     EXEC_SQL.deletePatient
                 ],
                 information: [request.params.id]
