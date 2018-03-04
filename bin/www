@@ -8,26 +8,27 @@ var app = require('../app');
 var debug = require('debug')('node:server');
 var fs = require('fs');
 var path = require('path');
+var http = require('http');
 var https = require('https');
 var credentials = {
     key: fs.readFileSync(path.join(path.resolve(__dirname, '..'), 'cert', '214208225870010.key')),
     cert: fs.readFileSync(path.join(path.resolve(__dirname, '..'), 'cert', '214208225870010.pem'))
 };
-// var http = require('http');
+
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = https.createServer(credentials, app);
-// var server = http.createServer(app);
+//var server = https.createServer(credentials, app);
+var server = http.createServer(app);
 //https.createServer(credentials, function (req, res) {
 //    res.writeHead(200);
 //    res.end('hello world\n');

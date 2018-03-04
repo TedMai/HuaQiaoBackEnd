@@ -4,10 +4,8 @@ const router = express.Router();
 const path = require('path');
 const multipart = require('connect-multiparty');
 const fileSystem = require("../services/file.system.service");
-const FORMAT = require('../db/utility.date');
 const gallery = require('../db/gallery.api');
 const __DEPARTMENT__ = require('../db/department.api');
-const __SCHEDULE__ = require('../db/schedule.api');
 const __MAX_UPLOAD_FILE_NUM__ = 9;
 
 /**

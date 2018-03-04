@@ -9,8 +9,28 @@ const PATIENT = require('./patient.api');
 const USER = require('./user.api');
 const CODE = require('./mysql.code');
 const MESSAGE = require('./sms.api');
+const __CRYPTO__ = require('crypto');
 
 var api = {
+    wechatServerConfig: function (request, response) {
+        var echostr, nonce, signature, timestamp;
+        var currSign, tmp;
+        const token = 'rf11dpshMx3vi2qLND1t';
+
+        signature = request.query.signature;
+        timestamp = request.query.timestamp;
+        nonce = request.query.nonce;
+        echostr = request.query.echostr;
+
+        tmp = [token, timestamp, nonce].sort().join("");
+        currSign = __CRYPTO__.createHash("sha1").update(tmp).digest("hex");
+        if (currSign === signature) {
+            return response(echostr);
+        } else {
+            return response('FAILED');
+        }
+    },
+
     initialization: function (request, response) {
 
         HANDLER

@@ -1,5 +1,5 @@
-const log4js = require("../services/log4js.service");
-const LOGGER = log4js.getLogger("default");
+//const log4js = require("../services/log4js.service");
+//const LOGGER = log4js.getLogger("default");
 
 module.exports = {
 
