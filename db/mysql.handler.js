@@ -28,11 +28,12 @@ var handler =
                         code: CODE.databaseErrorCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: connection,
+                        params: parameters
+                    });
                 }
-                deferred.resolve({
-                    connection: connection,
-                    params: parameters
-                });
             });
             return deferred.promise;
         },
@@ -53,8 +54,9 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve(request);
                 }
-                deferred.resolve(request);
             });
 
             return deferred.promise;
@@ -76,8 +78,9 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve(request);
                 }
-                deferred.resolve(request);
             });
 
             return deferred.promise;
@@ -99,12 +102,13 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -126,12 +130,13 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -153,12 +158,13 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -180,12 +186,13 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -207,20 +214,21 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
-                }
-                LOGGER.info(result);
-                if (result.length === 0 || result[0].number === 0) {
-                    deferred.reject({
-                        connection: request.connection,
-                        code: CODE.notFoundErrorCode,
-                        errMsg: 'Not found.'
-                    });
                 } else {
-                    deferred.resolve({
-                        connection: request.connection,
-                        params: request.params,
-                        result: result[0]
-                    });
+                    LOGGER.info(result);
+                    if (result.length === 0 || result[0].number === 0) {
+                        deferred.reject({
+                            connection: request.connection,
+                            code: CODE.notFoundErrorCode,
+                            errMsg: 'Not found.'
+                        });
+                    } else {
+                        deferred.resolve({
+                            connection: request.connection,
+                            params: request.params,
+                            result: result[0]
+                        });
+                    }
                 }
             });
 
@@ -244,21 +252,22 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
-                }
-                LOGGER.info(result);
-                if (result.length === 0 || result[0].number === 0) {
-                    deferred.resolve({
-                        connection: request.connection,
-                        params: request.params,
-                        result: result[0]
-                    });
                 } else {
-                    deferred.reject({
-                        connection: request.connection,
-                        params: request.params,
-                        code: CODE.resubmitErrorCode,
-                        errMsg: 'Already have one. Maybe resubmit.'
-                    });
+                    LOGGER.info(result);
+                    if (result.length === 0 || result[0].number === 0) {
+                        deferred.resolve({
+                            connection: request.connection,
+                            params: request.params,
+                            result: result[0]
+                        });
+                    } else {
+                        deferred.reject({
+                            connection: request.connection,
+                            params: request.params,
+                            code: CODE.resubmitErrorCode,
+                            errMsg: 'Already have one. Maybe resubmit.'
+                        });
+                    }
                 }
             });
 
@@ -281,33 +290,34 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
-                }
-                LOGGER.info(result);
-                if (result.length === 0) {
-                    deferred.reject({
-                        connection: request.connection,
-                        code: CODE.notFoundErrorCode,
-                        errMsg: 'Not found.'
-                    });
-
                 } else {
-                    request.params.deleteDataSet = [
-                        result[0].wechat
-                    ];
-                    request.params.information = {
-                        openid: result[0].wechat,
-                        nickname: request.params.userInfo.nickName,
-                        sex: request.params.userInfo.gender,
-                        headimgurl: request.params.userInfo.avatarUrl,
-                        country: request.params.userInfo.country,
-                        province: request.params.userInfo.province,
-                        city: request.params.userInfo.city
-                    };
+                    LOGGER.info(result);
+                    if (result.length === 0) {
+                        deferred.reject({
+                            connection: request.connection,
+                            code: CODE.notFoundErrorCode,
+                            errMsg: 'Not found.'
+                        });
 
-                    deferred.resolve({
-                        connection: request.connection,
-                        params: request.params
-                    });
+                    } else {
+                        request.params.deleteDataSet = [
+                            result[0].wechat
+                        ];
+                        request.params.information = {
+                            openid: result[0].wechat,
+                            nickname: request.params.userInfo.nickName,
+                            sex: request.params.userInfo.gender,
+                            headimgurl: request.params.userInfo.avatarUrl,
+                            country: request.params.userInfo.country,
+                            province: request.params.userInfo.province,
+                            city: request.params.userInfo.city
+                        };
+
+                        deferred.resolve({
+                            connection: request.connection,
+                            params: request.params
+                        });
+                    }
                 }
             });
 
@@ -331,11 +341,11 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    request.params.index = request.params.index + 1;
+                    request.result = result;
+                    deferred.resolve(request);
                 }
-
-                request.params.index = request.params.index + 1;
-                request.result = result;
-                deferred.resolve(request);
             });
 
             return deferred.promise;
@@ -437,7 +447,6 @@ var handler =
                     params: request.params
                 });
             } else {
-
                 FILESYSTEM
                     .batchRemove(request.result, "screenshot")
                     .then(
@@ -530,7 +539,6 @@ var handler =
                 values = [request.params.id],
                 deferred = Q.defer();
 
-            LOGGER.info("==>   removeGallery");
             request.connection.query(request.params.sqlDeleteGallery, [values], function (err, result) {
                 LOGGER.info("==> removeGallery ==> callback |  " + err);
                 if (err) {
@@ -539,14 +547,15 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: {
+                            insertId: request.params.id
+                        }
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: {
-                        insertId: request.params.id
-                    }
-                });
             });
 
             return deferred.promise;
@@ -562,7 +571,6 @@ var handler =
                 values = [request.params.id],
                 deferred = Q.defer();
 
-            LOGGER.info("==>   fetchGallery");
             request.connection.query(request.params.sqlFetchGallery, [values], function (err, result) {
                 LOGGER.info("==> fetchGallery ==> callback |  " + err);
                 if (err) {
@@ -571,12 +579,13 @@ var handler =
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    params: request.params,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -593,19 +602,19 @@ var handler =
             LOGGER.info("==>   fetchList | execSQL: " + request.params.execSQL);
             request.connection.query(request.params.execSQL, request.params.values, function (err, result) {
                 LOGGER.info("==> fetchList ==> callback |  " + err);
-
                 if (err) {
                     deferred.reject({
                         connection: request.connection,
                         code: CODE.failedCode,
                         errMsg: err
                     });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        tableName: request.params.tableName,
+                        result: result
+                    });
                 }
-                deferred.resolve({
-                    connection: request.connection,
-                    tableName: request.params.tableName,
-                    result: result
-                });
             });
 
             return deferred.promise;
@@ -738,14 +747,13 @@ var handler =
 
         /**
          * 错误处理
+         * 如果不释放链接，当连接数达connectionLimit后，会无法获取新链接，而发生死锁
          * @param request
          * @param response
          */
         onReject: function (request, response) {
-            LOGGER.info("==>   onReject");
-            if (request.code === CODE.failedCode) {
-                request.connection.release();
-            }
+            LOGGER.info("==>   onReject - release connection");
+            request.connection.release();
             response({
                 code: request.code,
                 msg: request.errMsg
@@ -760,12 +768,10 @@ var handler =
          */
         onRejectWithRollback: function (request, response) {
             LOGGER.info("==>   onRejectWithRollback");
-            if (request.code === CODE.failedCode) {
-                request.connection.rollback(function () {
-                    LOGGER.info("==>   onRejectWithRollback    ==>     rollback");
-                    request.connection.release();
-                });
-            }
+            request.connection.rollback(function () {
+                LOGGER.info("==>   onRejectWithRollback    ==>     rollback");
+                request.connection.release();
+            });
             response({
                 code: request.code,
                 msg: request.errMsg
@@ -818,4 +824,24 @@ var handler =
     }
 ;
 
-module.exports = handler;
+// module.exports = handler;
+for (var i = 0; i < 5; i++) {
+    handler
+        .setUpConnection({
+            sqlIsExist: 'SELECT uid, COUNT(uid) AS number FROM tb_user WHERE phone = ? and password = ? GROUP BY uid',
+            queryCondition: [
+                '18120995333',
+                '1234567'
+            ]
+        })
+        .then(handler.isExist)
+        .then(handler.cleanup)
+        .then(function (result) {
+            LOGGER.info(result)
+        })
+        .catch(function (request) {
+            handler.onReject(request, function (err) {
+                LOGGER.error(err)
+            });
+        });
+}

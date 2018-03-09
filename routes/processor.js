@@ -17,6 +17,11 @@ router.post('/image', multipart(), function (req, res, next) {
         length,
         promises = [];
 
+    /**
+     * In Express 4, req.files is no longer available on the req object by default.
+     * To access uploaded files on the req.files object, use multipart-handling middleware
+     * like busboy, multer, formidable, multiparty, connect-multiparty, or pez.
+     */
     console.info("==>   processor.js | POST /image");
     console.info(req.files);
 
