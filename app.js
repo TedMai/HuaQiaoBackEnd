@@ -3,7 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-const wechat = require('./routes/wechat.js');
+const judge = require('./routes/judge.js');
 const backbone = require('./routes/backbone.js');
 const processor = require('./routes/processor.js');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,6 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //                                   app.use([path,] callback [, callback...])
@@ -92,8 +91,8 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 /*
  *  Middleware functions are executed sequentially, therefore the order of middleware inclusion is important.
  */
-// app.use("/", wechat);
 app.use("/backbone", backbone);
+app.use("/authorization", judge);
 app.use("/upload", processor);
 app.use("/file", processor);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

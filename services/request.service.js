@@ -19,7 +19,7 @@ var RequestService = {
                 callback(chunk);
             });
             response.on('end', function () {
-                __LOGGER__.info('===== 结束');
+                __LOGGER__.info('===== 结束【doHttpsGet】 =====');
             });
         }).on('error', function (error) {
             __LOGGER__.error(error);
@@ -55,7 +55,7 @@ var RequestService = {
                 callback(chunk);
             });
             res.on('end', function () {
-                __LOGGER__.info('===== 结束');
+                __LOGGER__.info('===== 结束【doHttpsPost】=====');
             });
         });
         req.on('error', function (e) {
@@ -93,7 +93,7 @@ var RequestService = {
                 callback(chunk);
             });
             res.on('end', function () {
-                __LOGGER__.info('===== 结束');
+                __LOGGER__.info('===== 结束【doHttpPost】 =====');
             });
         });
         req.on('error', function (e) {
@@ -101,7 +101,7 @@ var RequestService = {
         });
         req.write(postData);
         req.end();
-    },
+    }
 
 
 };

@@ -824,24 +824,4 @@ var handler =
     }
 ;
 
-// module.exports = handler;
-for (var i = 0; i < 5; i++) {
-    handler
-        .setUpConnection({
-            sqlIsExist: 'SELECT uid, COUNT(uid) AS number FROM tb_user WHERE phone = ? and password = ? GROUP BY uid',
-            queryCondition: [
-                '18120995333',
-                '1234567'
-            ]
-        })
-        .then(handler.isExist)
-        .then(handler.cleanup)
-        .then(function (result) {
-            LOGGER.info(result)
-        })
-        .catch(function (request) {
-            handler.onReject(request, function (err) {
-                LOGGER.error(err)
-            });
-        });
-}
+module.exports = handler;
