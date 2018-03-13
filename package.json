@@ -27,5 +27,8 @@
     "pug": "^2.0.0-rc.4",
     "q": "^1.5.1",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "html2canvas": "^1.0.0-alpha.10"
   }
 }

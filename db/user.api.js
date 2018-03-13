@@ -1,3 +1,4 @@
+const Q = require('q');
 const HANDLER = require('./mysql.handler');
 const EXEC_SQL = require('./user.interface');
 
@@ -45,7 +46,84 @@ var api = {
     },
 
     /**
-     * 微信
+     * 微信公众号
+     *  --  网页授权
+     * @param request
+     * @returns {*|Promise|promise}
+     */
+    weChatWebpageLogin: function (request) {
+        var deferred = Q.defer();
+
+        HANDLER
+            .setUpConnection({
+                /**
+                 *  1. 根据 openid 查询用户是否存在
+                 */
+                sqlIsRepeat: EXEC_SQL.isWeChatExist,
+                queryCondition: [
+                    request.openid
+                ],
+                /**
+                 *  2.1 如果不存在，注册
+                 */
+                sqlRegister: EXEC_SQL.registerWeChat,
+                extra: {
+                    wechat: request.openid
+                },
+                /**
+                 *  2.2 如果存在，更新用户表
+                 */
+                sqlUpdateInfo: EXEC_SQL.updateWeChat,
+                updateDataSet: [
+                    {
+                        "wechat": request.openid,
+                        "3rd_session": "123"
+                    },
+                    request.openid],
+                /**
+                 *  3. 根据 openid 删除微信用户表 user_info
+                 */
+                sqlDeleteInfo: EXEC_SQL.deleteWeChat,
+                deleteDataSet: request.openid,
+                /**
+                 *  4. 把 user_info 插入微信用户表
+                 */
+                sqlBasicInfo: EXEC_SQL.addWeChat,
+                information: {
+                    openid: request.openid,
+                    nickname: request.nickname,
+                    sex: request.sex,
+                    // language: request.language,
+                    city: request.city,
+                    province: request.province,
+                    country: request.country,
+                    headimgurl: request.headimgurl
+                }
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.isRepeat)
+            .then(
+                HANDLER.register,
+                HANDLER.updateBasicInfo
+            )
+            .then(HANDLER.deleteBasicInfo)
+            .then(HANDLER.setBasicInfo)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                deferred.resolve(request);
+            })
+            .catch(function (request) {
+                HANDLER.onRejectWithRollback(request, function (err) {
+                    deferred.reject(err)
+                });
+            });
+
+        return deferred.promise;
+    },
+
+    /**
+     * 微信小程序
      *      --  登录
      * @param request
      * @param response
@@ -57,8 +135,8 @@ var api = {
                 sqlFetchUser: EXEC_SQL.fetchSpecificUser,
                 sqlDeleteInfo: EXEC_SQL.deleteWeChat,
                 sqlBasicInfo: EXEC_SQL.addWeChat,
-                uid: request.body.uid,
-                userInfo: request.body.userInfo
+                deleteDataSet: request.body.uid,
+                information: request.body.userInfo
             })
             .then(HANDLER.beginTransaction)
             .then(HANDLER.fetchWeChatAccount)

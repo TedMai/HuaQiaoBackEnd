@@ -205,6 +205,7 @@ var CredentailService = {
     requestForCode: function (path) {
         var deferred = Q.defer();
         const redirectUri = encodeURIComponent("https://www.thinmelon.cc/authorization/oauth2");
+        // const redirectUri = encodeURIComponent("https://www.thinmelon.cc/oauth2");
         const requestForCodeUri = util.format(__REQ_CODE__, __APP_ID__, redirectUri, 'code', 'snsapi_userinfo', encodeURIComponent(path));
 
         __LOGGER__.info("URI: " + requestForCodeUri);
@@ -304,4 +305,4 @@ var CredentailService = {
 
 module.exports = CredentailService;
 
-CredentailService.requestForCode('list/department');
+CredentailService.requestForCode('report');

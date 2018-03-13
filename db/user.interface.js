@@ -14,6 +14,7 @@ module.exports = {
     fetchSpecificWeChat: 'SELECT * FROM tb_user WHERE wechat = ?',
     isWeChatExist: 'SELECT COUNT(*) AS number FROM tb_user WHERE wechat = ?',
     registerWeChat: 'INSERT INTO tb_user SET ?',
+    updateWeChat: 'UPDATE tb_user SET ? WHERE wechat = ?',
     addWeChat: 'INSERT INTO tb_user_wechat SET ?',
     editWeChat: 'UPDATE tb_user_wechat SET ? WHERE openid = ?',
     deleteWeChat: 'DELETE FROM tb_user_wechat WHERE openid = ?',
