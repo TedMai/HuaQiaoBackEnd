@@ -274,13 +274,16 @@ var CredentialService = {
 
 module.exports = CredentialService;
 
-// CredentialService
-//     .getRealtimeAccessToken({url: 'http://www.thinmelon.cc/report/list'})
-//     .then(CredentialService.getRealJsapiTicket)
-//     .then(CredentialService.getSignature)
-//     .then(function (result) {
-//         __LOGGER__.debug(result);
-//     })
-//     .catch(function (err) {
-//         __LOGGER__.error(err);
-//     });
+//CredentialService
+//    .requestForCode('report');
+
+//CredentialService
+//    .getRealtimeAccessToken({url: 'http://www.thinmelon.cc/report/list'})
+//    .then(CredentialService.getRealJsapiTicket)
+//    .then(CredentialService.getSignature)
+//    .then(function (result) {
+//        __LOGGER__.debug(result);
+//    })
+//    .catch(function (err) {
+//        __LOGGER__.error(err);
+//    });

@@ -54,6 +54,7 @@ var api = {
      */
     weChatWebpageLogin: function (request) {
         var deferred = Q.defer();
+        var nonceStr = CREDENTIAL.getNonceStr(32);
 
         HANDLER
             .setUpConnection({
@@ -78,7 +79,7 @@ var api = {
                 updateDataSet: [
                     {
                         "wechat": request.openid,
-                        "3rd_session": CREDENTIAL.getNonceStr(32)
+                        "3rd_session": nonceStr
                     },
                     request.openid],
                 /**
@@ -112,6 +113,7 @@ var api = {
             .then(HANDLER.commitTransaction)
             .then(HANDLER.cleanup)
             .then(function (result) {
+                request.nonceStr = nonceStr;
                 deferred.resolve(request);
             })
             .catch(function (request) {

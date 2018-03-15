@@ -78,7 +78,7 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
                              */
                             __LOGGER__.info("==> redirect 至报告单页面");
 
-                            res.redirect(__UTIL__.format('http://www.thinmelon.cc/report/list;s=%s', __CREDENTIAL__.getNonceStr(32)));
+                            res.redirect(__UTIL__.format('http://www.thinmelon.cc/report/list;s=%s', result.nonceStr));
                         }
                         __LOGGER__.info("========================== END ==========================");
                     });
