@@ -2,11 +2,20 @@ const __EXPRESS__ = require('express');
 const __ROUTER__ = __EXPRESS__.Router();
 const __LOG4JS__ = require("../services/log4js.service");
 const __LOGGER__ = __LOG4JS__.getLogger("default");
-const __BACKBONE__ = require('../db/shadow.api');
+const __UTIL__ = require('util');
+const __RENDER__ = require('./response');
+
+/**
+ * 服务
+ */
 const __CREDENTIAL__ = require("../services/credential.service");
+/**
+ * 数据库
+ */
+const __BACKBONE__ = require('../db/shadow.api');
 const __USER__ = require('../db/user.api');
 const __PATIENT_ID_CARD__ = require('../db/patient.idcard.api');
-// const __UTIL__ = require('util');
+const __REPORT__ = require('../db/report.api');
 
 /**
  *   设置微信公众号的服务器配置
@@ -24,7 +33,8 @@ __ROUTER__.get('/', function (req, res, next) {
 });
 
 /**
- * 用户同意授权后，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
+ *  微信网页授权
+ *  用户同意授权后，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
  */
 __ROUTER__.get('/oauth2', function (req, res, next) {
     __LOGGER__.info("========================== 用户同意授权获取code ==========================");
@@ -67,7 +77,8 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
                              * redirect 至报告单页面
                              */
                             __LOGGER__.info("==> redirect 至报告单页面");
-                            res.redirect('http://www.thinmelon.cc/report/list');
+
+                            res.redirect(__UTIL__.format('http://www.thinmelon.cc/report/list;s=%s', __CREDENTIAL__.getNonceStr(32)));
                         }
                         __LOGGER__.info("========================== END ==========================");
                     });
@@ -93,6 +104,45 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
     __LOGGER__.error("==> redirect 至错误页面");
     // res.redirect(__UTIL__.format('http://www.thinmelon.cc/%s', req.query.state));
     __LOGGER__.info("========================== END ==========================");
+});
+
+/**
+ *  签名 - 微信JS-SDK接口调用
+ */
+__ROUTER__.get('/sign', function (req, res, next) {
+    __LOGGER__.info("========================== 签名 ==========================");
+    __LOGGER__.info(req.params);
+    __LOGGER__.info(req.body);
+    __LOGGER__.info(req.query);
+    __CREDENTIAL__
+        .getRealtimeAccessToken({url: req.query.source})
+        .then(__CREDENTIAL__.getRealJsapiTicket)
+        .then(__CREDENTIAL__.getSignature)
+        .then(function (result) {
+            __LOGGER__.debug(result);
+            res.json(result);
+            __LOGGER__.info("========================== END ==========================");
+        })
+        .catch(function (err) {
+            __LOGGER__.error(err);
+            res.json(err);
+            __LOGGER__.info("========================== END ==========================");
+        });
+});
+
+/**
+ * 查询报告单
+ *  -   查询条件 日期范围及SessionKey
+ */
+__ROUTER__.get('/table/:name/:from-:to', function (req, res, next) {
+    __LOGGER__.info("========================== 查询报告单 ==========================");
+    __LOGGER__.info(req.params);
+    __LOGGER__.info(req.body);
+    __LOGGER__.info(req.query);
+    __REPORT__.queryRelativeReport(req, function (result) {
+        __RENDER__.renderPage(result, res, next);
+        __LOGGER__.info("========================== END ==========================");
+    });
 });
 
 module.exports = __ROUTER__;

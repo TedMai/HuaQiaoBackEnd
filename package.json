@@ -9,7 +9,6 @@
     "apply": "^0.0.0",
     "body-parser": "~1.18.2",
     "bootstrap": "^4.0.0-beta.2",
-    "cnpm": "^5.1.1",
     "connect-multiparty": "^2.1.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -26,9 +25,8 @@
     "popper.js": "^1.12.9",
     "pug": "^2.0.0-rc.4",
     "q": "^1.5.1",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "sha1": "^1.1.1"
   },
-  "devDependencies": {
-    "html2canvas": "^1.0.0-alpha.10"
-  }
+  "devDependencies": {}
 }

@@ -3,6 +3,7 @@ const util = require('util');
 const log4js = require("../services/log4js.service");
 const __REQUEST__ = require("../services/request.service");
 const __LOGGER__ = log4js.getLogger("default");
+const sha1 = require('sha1');
 /**
  * 微信公众号网页
  *  --  测试账号
@@ -12,7 +13,6 @@ const __LOGGER__ = log4js.getLogger("default");
  */
 //const __APP_ID__ = "wx1133464776a7a161";
 //const __APP_SECRET__ = "c3eceda5d7c37f7fd74b7f5da2638638";
-//const __REQ_ACCESS_TOKEN__ = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + __APP_ID__ + "&secret=" + __APP_SECRET__;
 /**
  * 微信公众号网页
  *  --  莆田华侨医院
@@ -45,11 +45,18 @@ const __REQ_WEBPAGE_ACCESS_TOKEN__ = "https://api.weixin.qq.com/sns/oauth2/acces
 const __REQ_USER_INFO__ = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
 /**
  * 基础支持中的access_token
+ * access_token（有效期7200秒，开发者必须在自己的服务全局缓存access_token）
  * 该access_token用于调用其他接口
  * @type {string}
  * @private
  */
 const __REQ_API_ACCESS_TOKEN__ = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + __APP_ID__ + "&secret=" + __APP_SECRET__;
+/**
+ * jsapi_ticket（有效期7200秒，开发者必须在自己的服务全局缓存jsapi_ticket)）
+ * @type {string}
+ * @private
+ */
+const __REQ_API_JSAPI_TICKET__ = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=%s";
 /**
  * 微信小程序
  *  --  深瓜
@@ -63,24 +70,14 @@ const __REQ_OPENID__ = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&se
 
 var CredentialService = {
     /**
-     * 微信公众号网页
+     * 微信网页JS-SDK
+     */
+    /**
+     * 返回AppID
+     * @returns {string}
      */
     getAppID: function () {
         return __APP_ID__;
-    },
-
-    getRealtimeAccessToken: function () {
-        const deferred = Q.defer();
-        __REQUEST__.doHttpsGet(__REQ_API_ACCESS_TOKEN__, function (data) {
-            __LOGGER__.info("==> getRealtimeAccessToken: " + data);
-            const result = JSON.parse(data);
-            if (result.hasOwnProperty('access_token')) {
-                deferred.resolve(result.access_token);
-            } else {
-                deferred.reject(result);
-            }
-        });
-        return deferred.promise;
     },
 
     /**
@@ -97,7 +94,6 @@ var CredentialService = {
         __REQUEST__.doHttpsGet(requestForCodeUri, function (data) {
             __LOGGER__.info("RESULT: " + data);
         });
-
         return deferred.promise;
     },
 
@@ -132,7 +128,6 @@ var CredentialService = {
                 });
             }
         });
-
         return deferred.promise;
     },
 
@@ -173,10 +168,99 @@ var CredentialService = {
                 deferred.resolve(JSON.parse(data));
             }
         });
-
         return deferred.promise;
     },
 
+    /**
+     *
+     * 获取签名（供客户端调用）
+     *
+     * 一、 签名生成规则
+     * 1. 参与签名的字段
+     *    noncestr（随机字符串）, 有效的jsapi_ticket, timestamp（时间戳）, url（当前网页的URL，不包含#及其后面部分）
+     * 2. 签名算法
+     *    （1）对所有待签名参数按照字段名的ASCII 码从小到大排序（字典序）后，
+     *    （2）使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串string1。
+     * 3. 注意事项：
+     *    - 所有参数名均为小写字符。对string1作sha1加密，字段名和字段值都采用原始值，不进行URL 转义。
+     *    - 签名用的noncestr和timestamp必须与wx.config中的nonceStr和timestamp相同
+     *    - 签名用的url必须是调用JS接口页面的完整URL
+     *    - 出于安全考虑，开发者必须在服务器端实现签名的逻辑
+     *    - 确保你获取用来签名的url是动态获取的
+     *      如果是html的静态页面在前端通过ajax将url传到后台签名，前端需要用js获取当前页面除去'#'hash部分的链接
+     *      （可用location.href.split('#')[0]获取,而且需要encodeURIComponent）
+     *      因为页面一旦分享，微信客户端会在你的链接末尾加入其它参数，如果不是动态获取当前链接，将导致分享后的页面签名失败
+     */
+
+    /**
+     * 拉取AccessToken
+     * @returns {*|jQuery.promise|promise|Promise}
+     */
+    getRealtimeAccessToken: function (params) {
+        const deferred = Q.defer();
+        __REQUEST__.doHttpsGet(__REQ_API_ACCESS_TOKEN__, function (data) {
+            __LOGGER__.info("==> getRealtimeAccessToken: " + data);
+            const result = JSON.parse(data);
+            if (result.hasOwnProperty('access_token')) {
+                deferred.resolve({
+                    params: params,
+                    accessToken: result.access_token
+                });
+            } else {
+                deferred.reject(result);
+            }
+        });
+        return deferred.promise;
+    },
+
+    /**
+     * 拉取jsapi_ticket
+     * @param request
+     * @returns {*|jQuery.promise|promise|Promise}
+     */
+    getRealJsapiTicket: function (request) {
+        const deferred = Q.defer();
+        const requestForJsapiTicketUrl = util.format(__REQ_API_JSAPI_TICKET__, request.accessToken, 'jsapi');
+        __REQUEST__.doHttpsGet(requestForJsapiTicketUrl, function (data) {
+            __LOGGER__.info("==> getRealJsapiTicket: " + data);
+            const result = JSON.parse(data);
+            if (result.hasOwnProperty('ticket')) {
+                deferred.resolve({
+                    params: request.params,
+                    jsApiTicket: result.ticket
+                });
+            } else {
+                deferred.reject(result);
+            }
+        });
+        return deferred.promise;
+    },
+
+    getNonceStr: function (length) {
+        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const count = chars.length;
+        var i, nonceStr = "";
+        for (i = 0; i < length; i++) {
+            nonceStr += chars.substr(Math.floor(Math.random() * (count - 1) + 1), 1);
+        }
+        return nonceStr;
+    },
+
+    getSignature: function (request) {
+        const deferred = Q.defer();
+        const nonceStr = CredentialService.getNonceStr(16);
+        const timestamp = new Date().getTime();
+        var rawString = util.format("jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s",
+            request.jsApiTicket, nonceStr, timestamp, request.params.url);
+
+        __LOGGER__.info("==> getSignature - RAW: " + rawString);
+        deferred.resolve({
+            timestamp: timestamp,               // 必填，生成签名的时间戳
+            nonceStr: nonceStr,                 // 必填，生成签名的随机串
+            signature: sha1(rawString)          // 必填，签名，见附录1
+        });
+        return deferred.promise;
+    },
     /**
      * 微信小程序
      */
@@ -190,4 +274,13 @@ var CredentialService = {
 
 module.exports = CredentialService;
 
-//CredentialService.requestForCode('report');
+// CredentialService
+//     .getRealtimeAccessToken({url: 'http://www.thinmelon.cc/report/list'})
+//     .then(CredentialService.getRealJsapiTicket)
+//     .then(CredentialService.getSignature)
+//     .then(function (result) {
+//         __LOGGER__.debug(result);
+//     })
+//     .catch(function (err) {
+//         __LOGGER__.error(err);
+//     });

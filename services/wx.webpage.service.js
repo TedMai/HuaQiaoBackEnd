@@ -1,31 +1,32 @@
 const Q = require('q');
 const util = require('util');
 const credential = require('./credential.service');
-const log4js = require("../services/log4js.service");
-const __LOGGER__ = log4js.getLogger("default");
 const __REQUEST__ = require("../services/request.service");
 
 /**
- * 微信公众号网页
- *  --  设置菜单栏
- *  --  删除菜单项
+ * 重定向URL
+ * @type {string}
  */
-const __REQ_CREATE_MENU__ = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
-const __REQ_DELETE_MENU__ = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s";
-
 const redirectUrl = encodeURIComponent("https://www.thinmelon.cc/authorization/oauth2");
-
-const baiduMap = util.format(
-    "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
-    credential.getAppID(), redirectUrl, 'map');
-
+/**
+ * 百度导航链接地址
+ * @type {string}
+ */
+const baiduMap = "http://www.thinmelon.cc/tools/map";
+/**
+ * 报告单链接地址
+ * - state report
+ */
 const reportList = util.format(
     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
     credential.getAppID(), redirectUrl, 'report');
-
+/**
+ * 个人中心链接地址
+ * - state user
+ */
 const newCard = util.format(
     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
-    credential.getAppID(), redirectUrl, 'card');
+    credential.getAppID(), redirectUrl, 'user');
 
 const params =
     {
@@ -49,20 +50,27 @@ const params =
             }
         ]
     };
-
+/**
+ * 微信公众号网页
+ *  --  设置菜单栏
+ *  --  删除菜单项
+ */
+const __REQ_CREATE_MENU__ = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
+const __REQ_DELETE_MENU__ = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s";
 var wxWebpageService = {
+
     /**
-     *
-     * @param accessToken
+     * 设置菜单栏
+     * @param request
      * @returns {*|promise|jQuery.promise|Promise}
      */
-    addMenu: function (accessToken) {
+    addMenu: function (request) {
         const deferred = Q.defer();
-        const req = util.format(__REQ_CREATE_MENU__, accessToken);
+        const req = util.format(__REQ_CREATE_MENU__, request.accessToken);
         __REQUEST__.doHttpsPost(req, params, function (data) {
             const result = JSON.parse(data);
             if (result.hasOwnProperty('errcode') && 0 === result.errcode) {
-                deferred.resolve(accessToken);
+                deferred.resolve(request);
             } else {
                 deferred.reject(result);
             }
@@ -70,18 +78,19 @@ var wxWebpageService = {
         });
         return deferred.promise;
     },
+
     /**
-     *
-     * @param accessToken
+     * 删除菜单项
+     * @param request
      * @returns {*|promise|jQuery.promise|Promise}
      */
-    deleteMenu: function (accessToken) {
+    deleteMenu: function (request) {
         const deferred = Q.defer();
-        const req = util.format(__REQ_DELETE_MENU__, accessToken);
+        const req = util.format(__REQ_DELETE_MENU__, request.accessToken);
         __REQUEST__.doHttpsPost(req, {}, function (data) {
             const result = JSON.parse(data);
             if (result.hasOwnProperty('errcode') && 0 === result.errcode) {
-                deferred.resolve(accessToken);
+                deferred.resolve(request);
             } else {
                 deferred.reject(result);
             }
@@ -92,10 +101,10 @@ var wxWebpageService = {
 
 module.exports = wxWebpageService;
 
-//credential
-//    .getRealtimeAccessToken()
+// credential
+//    .getRealtimeAccessToken({})
 //    .then(wxWebpageService.deleteMenu)
 //    .then(wxWebpageService.addMenu)
 //    .catch(function (err) {
-//        __LOGGER__.error(err);
+//        console.error(err);
 //    });

@@ -1,6 +1,7 @@
 const Q = require('q');
 const HANDLER = require('./mysql.handler');
 const EXEC_SQL = require('./user.interface');
+const CREDENTIAL = require('../services/credential.service');
 
 var api = {
 
@@ -77,7 +78,7 @@ var api = {
                 updateDataSet: [
                     {
                         "wechat": request.openid,
-                        "3rd_session": "123"
+                        "3rd_session": CREDENTIAL.getNonceStr(32)
                     },
                     request.openid],
                 /**
