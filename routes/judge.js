@@ -78,7 +78,11 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
                              */
                             __LOGGER__.info("==> redirect 至报告单页面");
 
-                            res.redirect(__UTIL__.format('http://www.thinmelon.cc/report/list;s=%s', result.nonceStr));
+                            res.redirect(
+                                __UTIL__.format('http://www.thinmelon.cc/report/list;s=%s;n=%s;g=%s',
+                                    result.nonceStr,
+                                    result.nickname,
+                                    result.sex));
                         }
                         __LOGGER__.info("========================== END ==========================");
                     });
@@ -140,6 +144,20 @@ __ROUTER__.get('/table/:name/:from-:to', function (req, res, next) {
     __LOGGER__.info(req.body);
     __LOGGER__.info(req.query);
     __REPORT__.queryRelativeReport(req, function (result) {
+        __RENDER__.renderPage(result, res, next);
+        __LOGGER__.info("========================== END ==========================");
+    });
+});
+
+/**
+ * 查询报告单详情
+ */
+__ROUTER__.get('/table/:name/id/:id', function (req, res, next) {
+    __LOGGER__.info("========================== 查询报告单详情 ==========================");
+    __LOGGER__.info(req.params);
+    __LOGGER__.info(req.body);
+    __LOGGER__.info(req.query);
+    __REPORT__.queryRelativeInspection(req, function (result) {
         __RENDER__.renderPage(result, res, next);
         __LOGGER__.info("========================== END ==========================");
     });

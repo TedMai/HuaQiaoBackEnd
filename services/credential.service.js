@@ -274,7 +274,7 @@ var CredentialService = {
 
 module.exports = CredentialService;
 
-//CredentialService
+// CredentialService
 //    .requestForCode('report');
 
 //CredentialService
