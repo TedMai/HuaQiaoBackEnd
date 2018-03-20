@@ -23,7 +23,7 @@ var api = {
                 values: [
                     request.params.openid
                 ],
-                queryCondition: [
+                checkCondition: [
                     request.params.openid
                 ],
                 extra: {
@@ -62,7 +62,7 @@ var api = {
                  *  1. 根据 openid 查询用户是否存在
                  */
                 sqlIsRepeat: EXEC_SQL.isWeChatExist,
-                queryCondition: [
+                checkCondition: [
                     request.openid
                 ],
                 /**
@@ -311,9 +311,24 @@ var api = {
             .catch(function (request) {
                 HANDLER.onReject(request, response);
             });
+    },
+
+    getUserInfo: function (request, response) {
+
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.getUserInfo,
+                values: [request.query.session]
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
     }
-
-
 };
 
 module.exports = api;

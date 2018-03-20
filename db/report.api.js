@@ -58,8 +58,9 @@ var api = {
         HANDLER
             .setUpConnection({
                 execSQL: EXEC_SQL.queryReportInRange,
-                // values: ['kt9fTuF8i5AbMhywJfvIGA15XD6qwm0p', '2018/3/2', '2018/3/15']
+                // values: ['VcT2yIm0rCPsGsmmgVX01IGKZ3gxvZhH', '2018/3/2', '2018/3/15']
                 values: [request.query.session, request.params.from, request.params.to]
+                //values: ['VcT2yIm0rCPsGsmmgVX01IGKZ3gxvZhH', request.params.from, request.params.to]
             })
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)

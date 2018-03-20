@@ -18,6 +18,7 @@ module.exports = {
     addWeChat: 'INSERT INTO tb_user_wechat SET ?',
     editWeChat: 'UPDATE tb_user_wechat SET ? WHERE openid = ?',
     deleteWeChat: 'DELETE FROM tb_user_wechat WHERE openid = ?',
+    getUserInfo: 'SELECT nickname, sex, headimgurl FROM tb_user_wechat WHERE openid in (SELECT wechat FROM tb_user WHERE 3rd_session = ?)',
     /**
      * 登录
      */

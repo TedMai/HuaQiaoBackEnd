@@ -244,7 +244,7 @@ var handler =
         isRepeat: function (request) {
             var deferred = Q.defer();
 
-            request.connection.query(request.params.sqlIsRepeat, request.params.queryCondition, function (err, result) {
+            request.connection.query(request.params.sqlIsRepeat, request.params.checkCondition, function (err, result) {
                 LOGGER.info("==> isRepeat ==> callback | " + err);
                 if (err) {
                     deferred.reject({
@@ -612,6 +612,36 @@ var handler =
                     deferred.resolve({
                         connection: request.connection,
                         tableName: request.params.tableName,
+                        result: result
+                    });
+                }
+            });
+
+            return deferred.promise;
+        }
+        ,
+
+        /**
+         * 获取指定行
+         * @param request
+         * @returns {*|jQuery.promise|promise|Promise}
+         */
+        fetchSpecificRow: function (request) {
+            var deferred = Q.defer();
+
+            LOGGER.info("==>   fetchSpecificRow | execSQL: " + request.params.sqlSpecificRow);
+            request.connection.query(request.params.sqlSpecificRow, request.params.specificCondition, function (err, result) {
+                LOGGER.info("==> fetchSpecificRow ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                } else {
+                    deferred.resolve({
+                        connection: request.connection,
+                        params: request.params,
                         result: result
                     });
                 }

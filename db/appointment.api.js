@@ -23,7 +23,7 @@ var api = {
                     patient: request.body.patient,
                     appointment: appointment
                 },
-                queryCondition: [
+                checkCondition: [
                     request.body.schedule,
                     request.body.patient
                 ]
@@ -106,7 +106,7 @@ var api = {
                 response(result);
             })
             .catch(function (request) {
-                HANDLER.onReject(request, response);
+                HANDLER.onRejectWithRollback(request, response);
             });
     },
 

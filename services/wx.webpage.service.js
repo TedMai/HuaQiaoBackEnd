@@ -12,7 +12,11 @@ const redirectUrl = encodeURIComponent("https://www.thinmelon.cc/authorization/o
  * 百度导航链接地址
  * @type {string}
  */
-const baiduMap = "http://www.thinmelon.cc/tools/map";
+const redirectToMap = encodeURIComponent("http://www.thinmelon.cc/tools/map");
+const baiduMap = util.format(
+    "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
+    credential.getAppID(), redirectToMap, 'map');
+;
 /**
  * 报告单链接地址
  * - state report
@@ -24,7 +28,7 @@ const reportList = util.format(
  * 个人中心链接地址
  * - state user
  */
-const newCard = util.format(
+const myProfile = util.format(
     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
     credential.getAppID(), redirectUrl, 'user');
 
@@ -33,7 +37,7 @@ const params =
         "button": [
             {
                 "type": "view",
-                "name": "百度地图",
+                "name": "医院导航",
                 "url": baiduMap
             },
             {
@@ -46,7 +50,7 @@ const params =
 
                 "type": "view",
                 "name": "个人中心",
-                "url": newCard
+                "url": myProfile
             }
         ]
     };
@@ -101,10 +105,10 @@ var wxWebpageService = {
 
 module.exports = wxWebpageService;
 
-// credential
-//    .getRealtimeAccessToken({})
-//    .then(wxWebpageService.deleteMenu)
-//    .then(wxWebpageService.addMenu)
-//    .catch(function (err) {
-//        console.error(err);
-//    });
+credential
+    .getRealtimeAccessToken({})
+    .then(wxWebpageService.deleteMenu)
+    .then(wxWebpageService.addMenu)
+    .catch(function (err) {
+        console.error(err);
+    });
