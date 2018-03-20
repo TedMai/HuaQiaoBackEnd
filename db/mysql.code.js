@@ -22,6 +22,9 @@ module.exports = {
     /**
      * 查询是否重复提交code
      */
-    resubmitErrorCode: -500
-
+    resubmitErrorCode: -500,
+    /**
+     * 出现未知错误code
+     */
+    unknownErrorCode: -600
 };

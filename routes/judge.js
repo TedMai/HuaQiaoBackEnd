@@ -155,7 +155,7 @@ __ROUTER__.get('/sign', function (req, res, next) {
  * 查询列表
  */
 __ROUTER__.get('/table/:name', function (req, res, next) {
-    __LOGGER__.info("========================== 查询就诊卡列表 ==========================");
+    __LOGGER__.info("========================== 查询列表 ==========================");
     //req = {params: {name: 'user'}, query: {session: '9287592'}};
     __LOGGER__.info(req.params);
     __LOGGER__.info(req.body);
@@ -167,7 +167,7 @@ __ROUTER__.get('/table/:name', function (req, res, next) {
 });
 
 /**
- * 查询报告单
+ * 查询报告单列表
  *  -   查询条件 日期范围及SessionKey
  */
 __ROUTER__.get('/table/:name/:from-:to', function (req, res, next) {
@@ -176,7 +176,8 @@ __ROUTER__.get('/table/:name/:from-:to', function (req, res, next) {
     __LOGGER__.info(req.body);
     __LOGGER__.info(req.query);
     __REPORT__.queryRelativeReport(req, function (result) {
-        __RENDER__.renderPage(result, res, next);
+        // __RENDER__.renderPage(result, res, next);
+        res.json(result);
         __LOGGER__.info("========================== END ==========================");
     });
 });
@@ -319,7 +320,25 @@ __ROUTER__.post('/unbind', function (req, res, next) {
                 code: -300,
                 msg: "验证码输入有误！"
             });
+            __LOGGER__.info("========================== END ==========================");
         }
+    });
+});
+
+__ROUTER__.post('/default/:card', function (req, res, next) {
+    __LOGGER__.info("========================== Set Default Patient ID Card ==========================");
+    // req = {
+    //     body: {
+    //         session: 'AiUQLp3C4jFgUS9vqgpGVMNmWrLeV90C',
+    //         cardid: 'B26935700'
+    //     }
+    // };
+    __LOGGER__.info(req.params);
+    __LOGGER__.info(req.body);
+    __LOGGER__.info(req.query);
+    __PATIENT_ID_CARD__.setDefaultPatientIdCard(req, function (result) {
+        res.json(result);
+        __LOGGER__.info("========================== END ==========================");
     });
 });
 

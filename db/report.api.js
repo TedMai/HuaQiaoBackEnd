@@ -1,6 +1,6 @@
 const HANDLER = require('./mysql.handler');
 const EXEC_SQL = require('./report.interface');
-const __CREDENTIAL__ = require("../services/credential.service");
+// const __CREDENTIAL__ = require("../services/credential.service");
 
 var api = {
 
@@ -53,15 +53,32 @@ var api = {
             });
     },
 
+    /**
+     * 查询报告单
+     * @param request
+     * @param response
+     */
     queryRelativeReport: function (request, response) {
 
         HANDLER
             .setUpConnection({
+                /**
+                 *  1. 根据session查找就诊卡
+                 */
+                sqlIsExist: EXEC_SQL.isBindPatientIdCard,
+                queryCondition: [request.query.session],
+                // queryCondition: ['oVHsn4EX8gxJE4NDYcXMzTyXd0yYQwfu'],
+                /**
+                 *  2. 如果已绑定就诊卡，查询
+                 */
                 execSQL: EXEC_SQL.queryReportInRange,
-                // values: ['VcT2yIm0rCPsGsmmgVX01IGKZ3gxvZhH', '2018/3/2', '2018/3/15']
+                // values: ['oVHsn4EX8gxJE4NDYcXMzTyXd0yYQwfu', '2018/3/2', '2018/3/20']
                 values: [request.query.session, request.params.from, request.params.to]
-                //values: ['VcT2yIm0rCPsGsmmgVX01IGKZ3gxvZhH', request.params.from, request.params.to]
+                /**
+                 *  3. 未绑定，返回错误提示
+                 */
             })
+            .then(HANDLER.isExist)
             .then(HANDLER.fetchList)
             .then(HANDLER.cleanup)
             .then(function (result) {

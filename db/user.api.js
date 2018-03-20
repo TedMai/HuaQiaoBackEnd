@@ -70,7 +70,8 @@ var api = {
                  */
                 sqlRegister: EXEC_SQL.registerWeChat,
                 extra: {
-                    wechat: request.openid
+                    "wechat": request.openid,
+                    "3rd_session": nonceStr
                 },
                 /**
                  *  2.2 如果存在，更新用户表

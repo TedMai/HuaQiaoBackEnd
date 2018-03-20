@@ -325,8 +325,8 @@ var handler =
         },
 
         /**
-         * 删除 - 基本信息
-         * 用于串联操作，实现批量删除
+         * 一步 - 删除（实验）
+         * 用于实现批量操作（串联）
          * @param request
          * @returns {*|Promise|promise}
          */
@@ -365,6 +365,59 @@ var handler =
 
             for (i = 0, length = request.params.execSQLs.length; i < length; i++) {
                 tasks.push(handler.oneStepDelete);
+            }
+
+            promise = Q(request);
+
+            for (i = 0, length = tasks.length; i < length; i++) {
+                promise = promise.then(tasks[i]);
+            }
+
+            return promise;
+        },
+
+        /**
+         * 一步 - 正式
+         * 在批量删除的基础上进行改进
+         * 在执行SQL语句同时，遍历传入的参数
+         * @param request
+         * @returns {promise|jQuery.promise|*|Promise}
+         */
+        oneStep: function (request) {
+            var deferred = Q.defer();
+
+            request.connection.query(request.params.execSQLs[request.params.index], request.params.execSQLParams[request.params.index], function (err, result) {
+                LOGGER.info("==> oneStep ==> callback |  " + err);
+                if (err) {
+                    deferred.reject({
+                        connection: request.connection,
+                        code: CODE.failedCode,
+                        errMsg: err
+                    });
+                } else {
+                    request.params.index = request.params.index + 1;
+                    request.result = result;
+                    deferred.resolve(request);
+                }
+            });
+
+            return deferred.promise;
+        },
+
+        /**
+         * 依次执行execSQLs中的指令
+         * 参数数组与SQL指令数组相对应
+         * @param request
+         * @returns {*}
+         */
+        executeInOrder: function (request) {
+            var i,
+                length,
+                promise,
+                tasks = [];
+
+            for (i = 0, length = request.params.execSQLs.length; i < length; i++) {
+                tasks.push(handler.oneStep);
             }
 
             promise = Q(request);
@@ -783,11 +836,18 @@ var handler =
          */
         onReject: function (request, response) {
             LOGGER.info("==>   onReject - release connection");
-            request.connection.release();
-            response({
-                code: request.code,
-                msg: request.errMsg
-            });
+            if (request.hasOwnProperty('connection')) {
+                request.connection.release();
+                response({
+                    code: request.code,
+                    msg: request.errMsg
+                });
+            } else {
+                response({
+                    code: CODE.unknownErrorCode,
+                    msg: '发生未知错误'
+                });
+            }
         }
         ,
 
@@ -798,14 +858,21 @@ var handler =
          */
         onRejectWithRollback: function (request, response) {
             LOGGER.info("==>   onRejectWithRollback");
-            request.connection.rollback(function () {
-                LOGGER.info("==>   onRejectWithRollback    ==>     rollback");
-                request.connection.release();
-            });
-            response({
-                code: request.code,
-                msg: request.errMsg
-            });
+            if (request.hasOwnProperty('connection')) {
+                request.connection.rollback(function () {
+                    LOGGER.info("==>   onRejectWithRollback    ==>     rollback");
+                    request.connection.release();
+                });
+                response({
+                    code: request.code,
+                    msg: request.errMsg
+                });
+            } else {
+                response({
+                    code: CODE.unknownErrorCode,
+                    msg: '发生未知错误'
+                });
+            }
         }
         ,
 

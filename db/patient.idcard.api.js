@@ -6,6 +6,11 @@ const LOGGER = log4js.getLogger("default");
 
 var api = {
 
+    /**
+     * 绑定就诊卡
+     * @param request
+     * @param response
+     */
     bindPatientIDCard: function (request, response) {
         HANDLER
             .setUpConnection({
@@ -39,6 +44,11 @@ var api = {
             });
     },
 
+    /**
+     * 根据上次执行结果，调整下次执行的传入参数
+     * @param request
+     * @returns {promise|jQuery.promise|*|Promise}
+     */
     modifyParams: function (request) {
         var deferred = Q.defer();
 
@@ -51,6 +61,11 @@ var api = {
         return deferred.promise;
     },
 
+    /**
+     * 解绑
+     * @param request
+     * @param response
+     */
     removePatientIdCard: function (request, response) {
         HANDLER
             .setUpConnection({
@@ -72,6 +87,53 @@ var api = {
             });
     },
 
+    /**
+     * 根据用户的session获取就诊卡的列表
+     * @param request
+     * @param response
+     */
+    fetchCardList: function (request, response) {
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.fetchCardList,
+                values: [request.query.session]
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    /**
+     * 获取与就诊卡关联的手机号码
+     * @param request
+     * @param response
+     */
+    getPhoneInCard: function (request, response) {
+        HANDLER
+            .setUpConnection({
+                execSQL: EXEC_SQL.getPhoneInCard,
+                values: [request.body.cardid]
+            })
+            .then(HANDLER.fetchList)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onReject(request, response);
+            });
+    },
+
+    /**
+     * 判断该用户是否绑定就诊卡
+     * @param request
+     * @param response
+     */
     isPatientIDCardExist: function (request, response) {
         HANDLER
             .setUpConnection({
@@ -90,38 +152,11 @@ var api = {
             });
     },
 
-    fetchCardList: function (request, response) {
-        HANDLER
-            .setUpConnection({
-                execSQL: EXEC_SQL.fetchCardList,
-                values: [request.query.session]
-            })
-            .then(HANDLER.fetchList)
-            .then(HANDLER.cleanup)
-            .then(function (result) {
-                response(result);
-            })
-            .catch(function (request) {
-                HANDLER.onReject(request, response);
-            });
-    },
-
-    getPhoneInCard: function (request, response) {
-        HANDLER
-            .setUpConnection({
-                execSQL: EXEC_SQL.getPhoneInCard,
-                values: [request.body.cardid]
-            })
-            .then(HANDLER.fetchList)
-            .then(HANDLER.cleanup)
-            .then(function (result) {
-                response(result);
-            })
-            .catch(function (request) {
-                HANDLER.onReject(request, response);
-            });
-    },
-
+    /**
+     * 判断用户是否已经绑定该张就诊卡
+     * @param request
+     * @param response
+     */
     isBound: function (request, response) {
         /**
          * 1. 验证手机号码有效性
@@ -148,6 +183,51 @@ var api = {
             .catch(function (request) {
                 HANDLER.onReject(request, response);
             });
+    },
+
+    /**
+     * 设置该用户的默认就诊卡
+     * @param request
+     * @param response
+     */
+    setDefaultPatientIdCard: function (request, response) {
+        HANDLER
+            .setUpConnection({
+                /**
+                 *  1. 根据session查找就诊卡
+                 */
+                sqlIsExist: EXEC_SQL.isBound,
+                queryCondition: [
+                    request.body.session,
+                    request.body.cardid
+                ],
+                /**
+                 *  2. 设置该用户下所有的就诊卡状态为非绑定
+                 *  3. 设置该卡为默认卡
+                 */
+                index: 0,
+                execSQLs: [
+                    EXEC_SQL.batchSetPatientIdCards,
+                    EXEC_SQL.setDefaultPatientIdCard,
+                    EXEC_SQL.setMockData                    // 测试数据
+                ],
+                execSQLParams: [
+                    request.body.session,
+                    request.body.cardid,
+                    request.body.cardid                     // 测试数据
+                ]
+            })
+            .then(HANDLER.beginTransaction)
+            .then(HANDLER.isExist)
+            .then(HANDLER.executeInOrder)
+            .then(HANDLER.commitTransaction)
+            .then(HANDLER.cleanup)
+            .then(function (result) {
+                response(result);
+            })
+            .catch(function (request) {
+                HANDLER.onRejectWithRollback(request, response);
+            });
     }
 };
 
@@ -160,3 +240,12 @@ module.exports = api;
 //api.fetchCardList({query: {session: 'VcT2yIm0rCPsGsmmgVX01IGKZ3gxvZhH'}}, function (result) {
 //    console.log(result);
 //});
+
+// api.setDefaultPatientIdCard({
+//     body: {
+//         session: 'AiUQLp3C4jFgUS9vqgpGVMNmWrLeV90C',
+//         cardid: 'kgAQ4UBvd'
+//     }
+// }, function (response) {
+//     console.log(response);
+// });

@@ -274,8 +274,8 @@ var CredentialService = {
 
 module.exports = CredentialService;
 
- CredentialService
-    .requestForCode('report');
+// CredentialService
+//    .requestForCode('user');
 
 //CredentialService
 //    .getRealtimeAccessToken({url: 'http://www.thinmelon.cc/report/list'})
