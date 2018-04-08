@@ -96,12 +96,13 @@ const params =
                     {
                         "type": "view_limited",
                         "name": "医院简介",
-                        "media_id": "mbbZc8pJImZyiP69DaZ9WOxldQ5jwOAfRSRJ7S9Y3YA"
+                        "media_id": "mbbZc8pJImZyiP69DaZ9WN_D2Yneh83LMnRvPqtd258"
                     },
                     {
-                        "type": "view_limited",
-                        "name": "医师风采",
-                        "media_id": "mbbZc8pJImZyiP69DaZ9WOxldQ5jwOAfRSRJ7S9Y3YA"
+                        "type": "view",
+                        "name": "科室简介",
+                        "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzAwMTAyMDY4MA==&hid=1&sn=267810d4c94f42f8fa50910497f3be7c#wechat_redirect"
+                        // "media_id": "mbbZc8pJImZyiP69DaZ9WOWw8kR6jTruH3xpPh1H5_4"
                     },
                     {
                         "type": "view_limited",
@@ -111,24 +112,27 @@ const params =
                 ]
             },
             {
+                "type": "view",
                 "name": "医院导航",
-                "sub_button": [
-                    {
-                        "type": "view",
-                        "name": "百度地图",
-                        "url": baiduMap
-                    },
-                    {
-                        "type": "view",
-                        "name": "腾讯地图",
-                        "url": tencentMap
-                    },
-                    {
-                        "type": "view",
-                        "name": "高德地图",
-                        "url": alibabaMap
-                    }
-                ]
+                "url": baiduMap
+                // "name": "医院导航",
+                // "sub_button": [
+                //     {
+                //         "type": "view",
+                //         "name": "百度地图",
+                //         "url": baiduMap
+                //     },
+                //     {
+                //         "type": "view",
+                //         "name": "腾讯地图",
+                //         "url": tencentMap
+                //     },
+                //     {
+                //         "type": "view",
+                //         "name": "高德地图",
+                //         "url": alibabaMap
+                //     }
+                // ]
             }
         ]
     };
@@ -195,7 +199,7 @@ var wxWebpageService = {
         const req = util.format(__REQ_GET_NEWS_LIST__, request.accessToken);
         __REQUEST__.doHttpsPost(req, {
                 "type": "news",
-                "offset": 0,
+                "offset": 1,
                 "count": 1
             },
             function (data) {
@@ -220,9 +224,9 @@ credential
         console.error(err);
     });
 
-//credential
-//    .getRealtimeAccessToken({})
-//    .then(wxWebpageService.getNewsList)
-//    .catch(function (err) {
-//        console.error(err);
-//    });
+// credential
+//     .getRealtimeAccessToken({})
+//     .then(wxWebpageService.getNewsList)
+//     .catch(function (err) {
+//         console.error(err);
+//     });
