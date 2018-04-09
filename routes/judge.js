@@ -67,29 +67,30 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
                      *  查询就诊卡信息
                      */
                     __PATIENT_ID_CARD__.isPatientIDCardExist(result, function (response) {
+                        var uri;
                         if (response.code === -400) {
                             /**
                              * 未找到就诊卡记录
                              * redirect 至添加就诊卡页面
                              */
+                            uri = __UTIL__.format('http://www.thinmelon.cc/transfer/%s/path/%s',
+                                result.nonceStr,
+                                'NewCard');
                             __LOGGER__.info("==> redirect 至添加就诊卡页面");
-                            //res.redirect('http://www.thinmelon.cc/card/new');
-                            res.redirect(
-                                __UTIL__.format('http://www.thinmelon.cc/report/list;s=%s;n=%s;g=%s',
-                                    result.nonceStr,
-                                    result.nickname,
-                                    result.sex));
+                            __LOGGER__.debug(uri);
+                            res.redirect(uri);
                         } else {
                             /**
                              * redirect 至报告单页面
                              */
+                            uri = __UTIL__.format('http://www.thinmelon.cc/transfer/%s/path/%s;n=%s;g=%s',
+                                result.nonceStr,
+                                'ReportList',
+                                result.nickname,
+                                result.sex);
                             __LOGGER__.info("==> redirect 至报告单页面");
-
-                            res.redirect(
-                                __UTIL__.format('http://www.thinmelon.cc/report/list;s=%s;n=%s;g=%s',
-                                    result.nonceStr,
-                                    result.nickname,
-                                    result.sex));
+                            __LOGGER__.debug(uri);
+                            res.redirect(uri);
                         }
                         __LOGGER__.info("========================== END ==========================");
                     });
@@ -98,11 +99,12 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
                     /**
                      * redirect 至个人中心页面
                      */
+                    const uri = __UTIL__.format('http://www.thinmelon.cc/transfer/%s/path/%s',
+                        result.nonceStr,
+                        'UserDetail');
                     __LOGGER__.info("==> redirect 至个人中心页面");
-
-                    res.redirect(
-                        __UTIL__.format('http://www.thinmelon.cc/user/detail;s=%s',
-                            result.nonceStr));
+                    __LOGGER__.debug(uri);
+                    res.redirect(uri);
                     break;
                 default:
                     /**
@@ -123,7 +125,7 @@ __ROUTER__.get('/oauth2', function (req, res, next) {
      * redirect 至错误页面
      */
     __LOGGER__.error("==> redirect 至错误页面");
-    // res.redirect(__UTIL__.format('http://www.thinmelon.cc/%s', req.query.state));
+    res.redirect(__UTIL__.format('http://www.thinmelon.cc/%s', req.query.state));
     __LOGGER__.info("========================== END ==========================");
 });
 
@@ -156,7 +158,6 @@ __ROUTER__.get('/sign', function (req, res, next) {
  */
 __ROUTER__.get('/table/:name', function (req, res, next) {
     __LOGGER__.info("========================== 查询列表 ==========================");
-    //req = {params: {name: 'user'}, query: {session: '9287592'}};
     __LOGGER__.info(req.params);
     __LOGGER__.info(req.body);
     __LOGGER__.info(req.query);
@@ -260,7 +261,7 @@ __ROUTER__.post('/bind', function (req, res, next) {
 });
 
 /**
- * 绑定前的安全检查
+ * 解绑前的安全检查
  */
 __ROUTER__.post('/safety', function (req, res, next) {
     __LOGGER__.info("========================== Safety Inspection Before Unbind ==========================");
