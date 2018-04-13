@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const finance = require('./routes/finance.js');
 const judge = require('./routes/judge.js');
 const backbone = require('./routes/backbone.js');
 const processor = require('./routes/processor.js');
@@ -17,7 +18,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //                                   app.use([path,] callback [, callback...])
@@ -84,17 +85,18 @@ app.use(cookieParser());
 //  If you run the express app from another directory, it’s safer to use the absolute path of the directory that you want to serve:
 //     --    app.use('/static', express.static(path.join(__dirname, 'public')))
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 /*
  *  Middleware functions are executed sequentially, therefore the order of middleware inclusion is important.
  */
-app.use("/backbone", backbone);
-app.use("/authorization", judge);
-app.use("/upload", processor);
-app.use("/file", processor);
+app.use("/backbone", backbone);             // 微信小程序
+app.use("/authorization", judge);           // 微信公众号网页
+app.use("/upload", processor);              // 管理后台
+app.use("/file", processor);                //
+app.use("/finance", finance);               // 财经
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //                                                error handler

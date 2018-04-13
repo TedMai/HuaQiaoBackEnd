@@ -27,6 +27,26 @@ var RequestService = {
     },
 
     /**
+     * GET 请求 -- HTTPS
+     * @param url
+     * @param callback
+     */
+    doHttpGet: function (url, callback) {
+        __LOGGER__.info("doHttpGet ==> " + url);
+        http.get(url, function (response) {
+            response.on('data', function (chunk) {
+                __LOGGER__.info('=====  返回结果：' + chunk);
+                callback(chunk);
+            });
+            response.on('end', function () {
+                __LOGGER__.info('===== 结束【doHttpsGet】 =====');
+            });
+        }).on('error', function (error) {
+            __LOGGER__.error(error);
+        });
+    },
+
+    /**
      * POST 请求 -- HTTPS
      * @param url
      * @param data
