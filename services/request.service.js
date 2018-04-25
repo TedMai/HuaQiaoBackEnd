@@ -1,9 +1,9 @@
 const http = require('http');
 const https = require('https');
 const urlparser = require('url');
-const querystring = require("querystring");
-const log4js = require("../services/log4js.service");
-const __LOGGER__ = log4js.getLogger("default");
+const querystring = require('querystring');
+const log4js = require('../services/log4js.service');
+const __LOGGER__ = log4js.getLogger(__filename);
 
 var RequestService = {
     /**
@@ -12,14 +12,16 @@ var RequestService = {
      * @param callback
      */
     doHttpsGet: function (url, callback) {
-        __LOGGER__.info("doHttpsGet ==> " + url);
+        __LOGGER__.info('doHttpsGet ==> ' + url);
         https.get(url, function (response) {
+            var data = '';
             response.on('data', function (chunk) {
-                __LOGGER__.info('=====  返回结果：' + chunk);
-                callback(chunk);
+                data += chunk;
             });
             response.on('end', function () {
                 __LOGGER__.info('===== 结束【doHttpsGet】 =====');
+                __LOGGER__.debug('=====  返回结果：' + data);
+                callback(data);
             });
         }).on('error', function (error) {
             __LOGGER__.error(error);
@@ -32,14 +34,16 @@ var RequestService = {
      * @param callback
      */
     doHttpGet: function (url, callback) {
-        __LOGGER__.info("doHttpGet ==> " + url);
+        __LOGGER__.info('doHttpGet ==> ' + url);
         http.get(url, function (response) {
+            var data = '';
             response.on('data', function (chunk) {
-                __LOGGER__.info('=====  返回结果：' + chunk);
-                callback(chunk);
+                data += chunk;
             });
             response.on('end', function () {
                 __LOGGER__.info('===== 结束【doHttpsGet】 =====');
+                // __LOGGER__.debug('=====  返回结果：' + data);
+                callback(data);
             });
         }).on('error', function (error) {
             __LOGGER__.error(error);
@@ -55,7 +59,7 @@ var RequestService = {
     doHttpsPost: function (url, data, callback) {
         const tmp = urlparser.parse(url);
         const postData = JSON.stringify(data);
-        __LOGGER__.info("=====  doHttpPost2 ==> postData: " + postData);
+        __LOGGER__.info('=====  doHttpPost2 ==> postData: ' + postData);
         const isHttp = tmp.protocol === 'http:';
         const options = {
             host: tmp.hostname,
@@ -67,8 +71,8 @@ var RequestService = {
                 'Content-Length': Buffer.byteLength(postData)
             }
         };
-        __LOGGER__.info("=====  doHttpPost2 ==> URL: " + url);
-        __LOGGER__.info("=====  doHttpPost2 ==> options: " + JSON.stringify(options));
+        __LOGGER__.info('=====  doHttpPost2 ==> URL: ' + url);
+        __LOGGER__.info('=====  doHttpPost2 ==> options: ' + JSON.stringify(options));
         const req = https.request(options, function (res) {
             res.on('data', function (chunk) {
                 __LOGGER__.info('=====  返回结果：' + chunk);
@@ -106,7 +110,7 @@ var RequestService = {
                 'Content-Length': Buffer.byteLength(postData)
             }
         };
-        __LOGGER__.info("=====  doHttpPost ==> options: " + JSON.stringify(options));
+        __LOGGER__.info('=====  doHttpPost ==> options: ' + JSON.stringify(options));
         const req = http.request(options, function (res) {
             res.on('data', function (chunk) {
                 __LOGGER__.info('=====  返回结果：' + chunk);

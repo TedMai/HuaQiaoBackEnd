@@ -326,6 +326,10 @@ __ROUTER__.post('/unbind', function (req, res, next) {
     });
 });
 
+/**
+ *  设置为默认就诊卡
+ *      -   查询报告单时，使用默认卡
+ */
 __ROUTER__.post('/default/:card', function (req, res, next) {
     __LOGGER__.info("========================== Set Default Patient ID Card ==========================");
     // req = {
